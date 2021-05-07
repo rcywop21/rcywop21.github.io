@@ -33,7 +33,7 @@ const Header = (props: HeaderProps): React.ReactElement => {
             if (deadline == null) {
                 setTimeLeft(null);
             } else {
-                setTimeLeft(deadline - new Date());
+                setTimeLeft(deadline.valueOf() - Date.now());
             }
         }, UPDATE_INTERVAL);
         return () => clearInterval(timer);
