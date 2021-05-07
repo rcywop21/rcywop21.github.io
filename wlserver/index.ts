@@ -1,7 +1,10 @@
 import express from 'express';
+import { expressLogger } from './src/logger';
 
 const app = express();
 const PORT = 8000;
+
+app.use(expressLogger);
 
 app.get('/', (_, res) => res.send('Express + TypeScript Server'));
 
