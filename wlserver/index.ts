@@ -1,25 +1,30 @@
 import express from 'express';
 import logger, { expressLogger } from './src/logger';
 import http from 'http';
-import { Server, Socket } from 'socket.io';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { Server } from 'socket.io';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
+const ALLOWED_ORIGINS = (process.env.ORIGINS && process.env.ORIGINS.split(',')) || '*'
+
 const server = http.createServer(app);
-const io = new Server(server);
+logger.log('info', ALLOWED_ORIGINS);
+
+const io = new Server(server, {
+    cors: { origin: ALLOWED_ORIGINS }
+});
 
 app.use(expressLogger);
 
-app.get('/', (_, res) => res.send('Express + TypeScript Server'));
+app.get('/', (_, res) => res.send('This is a backend server.'));
 
-io.on('connection', (socket: Socket<DefaultEventsMap, DefaultEventsMap>): void => {
+io.on('connection', (socket) => {
     logger.log('info', 'New client connected');
-    socket.on('disconnect', (): void => {
+    socket.on('disconnect', () => {
         logger.log('info', 'Client disconnected');
     })
 })
 
-app.listen(PORT, () => {
-    console.log(`[server]: Server is running at https://localhost:${PORT}`)
+server.listen(PORT, () => {
+    logger.log('info', '[server]: Server is running on *:{PORT}')
 })
