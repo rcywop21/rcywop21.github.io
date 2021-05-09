@@ -1,25 +1,37 @@
 import React from 'react';
 import './App.css';
 import Header from './components/Header';
-import io from 'socket.io-client';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Main from './pages/Main';
+import Mentor from './pages/Mentor';
 
-const ENDPOINT = process.env.REACT_APP_ENDPOINT || 'http://localhost:8000';
+export interface AppProps {
+    children?: React.ReactNode
+}
 
 function App(): React.ReactElement {
-
-    React.useEffect(() => {
-        const socket = io(ENDPOINT);
-        console.log('socket');
-        return () => {
-            socket.disconnect();
-        }
-    }, []);
+    
+    const [chapter, setChapter] = React.useState<number | undefined>(undefined);
+    const [deadline, setDeadline] = React.useState<Date | null>(null);
 
     return (
-        <div className="App">
-            <Header chapter={1} deadline={new Date('2021-05-08T01:59:59')} />
-            <div className="App-container">Test2</div>
-        </div>
+        <Router><div className="App">
+            <Header
+                chapter={chapter}
+                deadline={deadline}
+                />
+            <Switch>
+                <Route path="/mentor">
+                    <Mentor 
+                        chapter={chapter} 
+                        setChapter={setChapter} 
+                        deadline={deadline}
+                        setDeadline={setDeadline}
+                    />
+                </Route>
+                <Route path="/"><Main /></Route>
+            </Switch>
+        </div></Router>
     );
 }
 

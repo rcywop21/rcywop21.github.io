@@ -10,7 +10,7 @@
     font-size: calc(10px + 1vmin);
 }
 
-.App-container {
+main {
     flex-grow: 1;
     padding-top: 4.5rem;
 }

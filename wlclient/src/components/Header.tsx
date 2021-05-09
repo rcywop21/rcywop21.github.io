@@ -3,7 +3,7 @@ import './Header.css';
 
 export interface HeaderProps {
     chapter?: number;
-    deadline?: Date;
+    deadline: Date | null;
 }
 
 const UPDATE_INTERVAL = 1000 / 25;
