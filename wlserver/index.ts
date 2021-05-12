@@ -27,5 +27,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(PORT, () => {
-    logger.log('info', '[server]: Server is running on *:{PORT}');
+    logger.log('info', `[server]: Server is running on *:${PORT}`);
 });
