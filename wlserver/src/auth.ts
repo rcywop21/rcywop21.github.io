@@ -1,8 +1,20 @@
 import { createHash } from "crypto";
 import { FileHandle, open } from "fs/promises";
-import logger from "./logger";
 
 export type ClientType = 'player' | 'mentor' | 'admin';
+
+export const asValidClientType = (x: string): ClientType | null => {
+    switch (x) {
+        case 'player':
+            return 'player';
+        case 'mentor':
+            return 'mentor';
+        case 'admin':
+            return 'admin';
+        default:
+            return null;
+    }
+}
 
 const AUTH_DETAILS = 'env/users.json';
 
@@ -56,6 +68,5 @@ async function auth(mode: ClientType, id: number, pass: string): Promise<AuthTok
         await fileHandle?.close()
     }
 }
-
 
 export default auth;
