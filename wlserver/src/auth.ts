@@ -16,7 +16,7 @@ export const asValidClientType = (x: string): ClientType | null => {
     }
 }
 
-const AUTH_DETAILS = 'env/users.json';
+const AUTH_DETAILS = process.env.AUTH_DETAILS;
 
 interface AuthEntry {
     id: number;
