@@ -49,6 +49,7 @@ async function auth(mode: ClientType, id: number, pass: string): Promise<AuthTok
 
     // development environment
     if (process.env.NODE_ENV !== 'production') {
+        if (id < 0 || id > 9) throw `unknown user id ${id} for mode ${mode}`
         if (pass !== '0000') throw `wrong password for user mode ${mode} id ${id}`;
         return makeAuthToken(mode, id);
     }
