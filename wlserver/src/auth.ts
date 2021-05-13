@@ -1,4 +1,3 @@
-import { createHash } from 'crypto';
 import { FileHandle, open } from 'fs/promises';
 
 export type ClientType = 'player' | 'mentor' | 'admin';
@@ -30,24 +29,11 @@ export interface AuthToken {
     validUntil: number;
 }
 
-const h = createHash('sha256');
-
-const hash = (id: number, expiry: number): string => {
-    h.update(id.toString());
-    h.update(expiry.toString());
-    return h.digest('base64');
-};
-
-const makeAuthToken = (mode: ClientType, id: number): AuthToken => {
-    const validUntil = Date.now() + 3 * 3600 * 1000;
-    return { payload: hash(id, validUntil), validUntil, id, type: mode };
-};
-
 async function auth(
     mode: ClientType,
     id: number,
     pass: string
-): Promise<AuthToken> {
+): Promise<true> {
     /*yes, passcodes are stored in plaintext and there is no hashing or salting
     this use case does not require a rigorous authentication process*/
 
@@ -56,7 +42,7 @@ async function auth(
         if (id < 0 || id > 9) throw `unknown user id ${id} for mode ${mode}`;
         if (pass !== '0000')
             throw `wrong password for user mode ${mode} id ${id}`;
-        return makeAuthToken(mode, id);
+        return true;
     }
 
     // production environment
@@ -72,7 +58,7 @@ async function auth(
         if (entry === undefined) throw `unknown user id ${id} for mode ${mode}`;
         if (entry.pass !== pass)
             throw `wrong password for user mode ${mode} id ${id}`;
-        return makeAuthToken(mode, id);
+        return true;
     } finally {
         await fileHandle?.close();
     }
