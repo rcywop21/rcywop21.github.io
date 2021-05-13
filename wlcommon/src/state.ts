@@ -5,6 +5,7 @@ export type Action = string;
 
 export interface GameState {
     global: GlobalState;
+    players: PlayerState[];
 }
 
 export interface GlobalState {
@@ -43,4 +44,5 @@ export const startingPlayerState: PlayerState = {
     knowsCrimson: false,
     knowsLanguage: false,
     foundEngraving: false,
+    streamCooldownExpiry: {},
 }
