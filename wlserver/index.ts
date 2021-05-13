@@ -28,22 +28,29 @@ io.on('connection', (socket) => {
         const { id, mode, pass } = payload;
 
         try {
-            if (typeof id === 'number' && typeof pass === 'string' && asValidClientType(mode)) {
+            if (
+                typeof id === 'number' &&
+                typeof pass === 'string' &&
+                asValidClientType(mode)
+            ) {
                 const token = await auth(mode, id, pass);
                 registerToken(token);
                 socket.emit('auth_ok', token);
                 logger.log('info', `Auth success: mode ${mode} id ${id}`);
                 socket.on('disconnect', () => {
                     deregisterToken(token);
-                    logger.log('info', `Authenticated user disconnected: mode ${mode} id ${id}`)
+                    logger.log(
+                        'info',
+                        `Authenticated user disconnected: mode ${mode} id ${id}`
+                    );
                 });
             } else {
                 throw 'malformed_request';
             }
-        } catch(e) {
+        } catch (e) {
             socket.emit('error', e);
         }
-    })
+    });
 });
 
 server.listen(PORT, () => {

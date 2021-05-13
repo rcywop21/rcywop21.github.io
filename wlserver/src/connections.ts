@@ -1,4 +1,4 @@
-import { AuthToken } from "./auth";
+import { AuthToken } from './auth';
 
 const connections: Record<string, AuthToken> = {};
 
@@ -21,5 +21,5 @@ export function cleanup(): void {
         if (value.validUntil <= Date.now()) {
             delete connections[key];
         }
-    })
+    });
 }
