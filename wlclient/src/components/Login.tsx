@@ -9,8 +9,8 @@ export interface LoginProps {
 
 const Login = (props: LoginProps): React.ReactElement => {
     const { updateLoggedIn } = props;
-    const [ groupName, setGroupName ] =  useState("");
-    const [ password, setPassword ] =  useState("");
+    const [groupName, setGroupName] = useState('');
+    const [password, setPassword] = useState('');
 
     const socket = React.useContext(SocketContext);
 
@@ -32,10 +32,20 @@ const Login = (props: LoginProps): React.ReactElement => {
     return (
         <div className="login">
             <div className="block">Group Name</div>
-            <input className="block" value={ groupName } onChange={(e) => setGroupName(e.target.value)}></input>
+            <input
+                className="block"
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+            ></input>
             <div className="block">Password</div>
-            <input className="block" value={ password } onChange={(e) => setPassword(e.target.value)}></input>
-            <div><button onClick={handleLogin}>Login</button></div>
+            <input
+                className="block"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            ></input>
+            <div>
+                <button onClick={handleLogin}>Login</button>
+            </div>
         </div>
     );
 };
