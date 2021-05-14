@@ -13,6 +13,12 @@ const Login = (props: LoginProps): React.ReactElement => {
 
     const socket = React.useContext(SocketContext);
 
+    React.useEffect(() => { 
+        if (socket != null) {
+            socket.emit('auth', { id: +groupName, type: 'mentor', pass: password })
+        }
+    })
+
     const handleLogin = () => {
         if (groupName === undefined) return; // handle empty group name error
 

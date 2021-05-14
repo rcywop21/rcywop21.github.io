@@ -1,7 +1,23 @@
 import React from 'react';
+import Login from '../components/Login';
 
-const Main = (): React.ReactElement => {
-    return <main>WIP</main>;
+export interface MainProps {
+    loggedIn: boolean;
+    updateLoggedIn: (x: boolean) => void;
+}
+
+const Main = (props: MainProps): React.ReactElement => {
+    const { loggedIn, updateLoggedIn } = props;
+
+    if (!loggedIn) {
+        return (
+            <div>
+                <Login updateLoggedIn={updateLoggedIn} />
+            </div>
+        );
+    }
+
+    return <div>Logged in! WIP</div>;
 };
 
 export default Main;
