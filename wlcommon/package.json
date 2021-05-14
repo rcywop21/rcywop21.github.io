@@ -1,9 +1,11 @@
 {
     "name": "wlcommon",
-    "version": "0.1.0",
+    "version": "0.2.1",
     "description": "Common packages between wlserver and wlclient",
     "license": "MIT",
     "private": true,
+    "main": "./build/exports.js",
+    "types": "./build/exports.d.ts",
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^4.23.0",
         "@typescript-eslint/parser": "^4.23.0",
@@ -14,6 +16,10 @@
         "typescript": "^4.2.4"
     },
     "scripts": {
-        "format": "prettier --write . && yarn run eslint --fix ."
+        "format": "prettier --write . && yarn run eslint --fix .",
+        "build": "tsc --declaration"
+    },
+    "dependencies": {
+        "wlcommon": "file:../wlcommon"
     }
 }

@@ -1,3 +1,5 @@
+import { ItemRecord } from "./items";
+
 export type QuestId = number;
 export type QuestStatus = 'completed' | 'incomplete' | 'hidden';
 
