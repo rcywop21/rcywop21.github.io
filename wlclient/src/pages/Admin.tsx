@@ -1,18 +1,18 @@
 import React from 'react';
 import Login from '../components/Login';
 
-export interface MentorProps {
+export interface AdminProps {
     loggedIn: boolean;
     updateLoggedIn: (x: boolean) => void;
 }
 
-const Mentor = (props: MentorProps): React.ReactElement => {
+const Admin = (props: AdminProps): React.ReactElement => {
     const { loggedIn, updateLoggedIn } = props;
 
     if (!loggedIn) {
         return (
             <div>
-                <Login updateLoggedIn={updateLoggedIn} mode="mentor" />
+                <Login updateLoggedIn={updateLoggedIn} mode="admin" />
             </div>
         );
     }
@@ -20,4 +20,4 @@ const Mentor = (props: MentorProps): React.ReactElement => {
     return <div>Logged in! WIP</div>;
 };
 
-export default Mentor;
+export default Admin;

@@ -4,18 +4,19 @@ import './Login.css';
 
 export interface LoginProps {
     updateLoggedIn: (x: boolean) => void;
+    mode: string;
 }
 
 const Login = (props: LoginProps): React.ReactElement => {
-    const { updateLoggedIn } = props;
+    const { updateLoggedIn, mode } = props;
     const [groupName, setGroupName] = React.useState<number | undefined>(undefined);
     const [password, setPassword] = React.useState('');
 
     const socket = React.useContext(SocketContext);
 
     React.useEffect(() => { 
-        if (socket != null) {
-            socket.emit('auth', { id: +groupName, type: 'mentor', pass: password })
+        if (socket != null && groupName != undefined) {
+            socket.emit('auth', { id: +groupName, type: mode, pass: password })
         }
     })
 
@@ -27,7 +28,7 @@ const Login = (props: LoginProps): React.ReactElement => {
             socket.on('connect', () => {
                 socket.emit(
                     'authenticate', 
-                    { id: groupName, mode: 'player', pass: password }, 
+                    { id: groupName, mode: mode, pass: password }, 
                     (eventType: string, payload: string | Record<string, unknown>) => {
                         if (eventType === 'auth_ok') {
                             updateLoggedIn(true);
