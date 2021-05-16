@@ -17,6 +17,11 @@ function App(): React.ReactElement {
     const [chapter, setChapter] = React.useState<number | undefined>(undefined);
     const [deadline, setDeadline] = React.useState<Date | null>(null);
 
+    React.useEffect(() => () => {
+        socket.disconnect();
+        setLoggedIn(false)
+    }, []);
+
     return (
         <Router>
             <SocketContext.Provider value={socket}>
