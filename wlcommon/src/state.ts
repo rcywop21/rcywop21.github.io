@@ -36,4 +36,3 @@ export interface PlayerState {
     knowsLanguage: boolean;
     foundEngraving: boolean;
 }
-

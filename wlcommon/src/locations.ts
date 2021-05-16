@@ -28,23 +28,23 @@ class LocationBuilder {
         this._undersea = true;
     }
 
-    description(x: string) { 
+    description(x: string) {
         this._description = x;
-        return this; 
-    }
-
-    oxygenStream(x = true) { 
-        this._hasOxygenStream = x; 
         return this;
     }
 
-    hidden(x = true) { 
-        this._hidden = x; 
+    oxygenStream(x = true) {
+        this._hasOxygenStream = x;
         return this;
     }
 
-    surface() { 
-        this._undersea = false; 
+    hidden(x = true) {
+        this._hidden = x;
+        return this;
+    }
+
+    surface() {
+        this._undersea = false;
         return this;
     }
 
@@ -55,27 +55,42 @@ class LocationBuilder {
             oxygenStream: this._hasOxygenStream,
             description: this._description,
             hidden: this._hidden,
-            undersea: this._undersea
-        }
+            undersea: this._undersea,
+        };
     }
 }
 
+export const locationIds = {
+    SHORES: 'Shores',
+    SHALLOWS: 'Shallows',
+    CORALS: 'Corals',
+    STORE: 'Store',
+};
+
 const locations: Location[] = [
-    new LocationBuilder('Shores', 'Sleepy Shores')
-        .description("The closest point on land to the Undersea. You can return here by Resurfacing.")
-        .surface().make(),
-    new LocationBuilder('Shallows')
-        .description('The shallowest part of the Undersea, most will pass through the Shallows on their way to the Undersea.')
+    new LocationBuilder(locationIds.SHORES, 'Sleepy Shores')
+        .description(
+            'The closest point on land to the Undersea. You can return here by Resurfacing.'
+        )
+        .surface()
         .make(),
-    new LocationBuilder('Corals', 'Memorial Corals')
-        .description('A location of historical importance. There are various exhibits about Undersea civilization in the reef.')
-        .oxygenStream().make(),
-    new LocationBuilder('Store', 'General Store')
-        .description('A shop where everyone in the Undersea comes to get their supplies. Payment is made in Oxygen.')
-        .make()
-]
+    new LocationBuilder(locationIds.SHALLOWS)
+        .description(
+            'The shallowest part of the Undersea, most will pass through the Shallows on their way to the Undersea.'
+        )
+        .make(),
+    new LocationBuilder(locationIds.CORALS, 'Memorial Corals')
+        .description(
+            'A location of historical importance. There are various exhibits about Undersea civilization in the reef.'
+        )
+        .oxygenStream()
+        .make(),
+    new LocationBuilder(locationIds.STORE, 'General Store')
+        .description(
+            'A shop where everyone in the Undersea comes to get their supplies. Payment is made in Oxygen.'
+        )
+        .make(),
+];
 
-const locationsMapping: Record<string, Location> = {};
-locations.forEach((location) => locationsMapping[location.id] = location);
-
-export default locationsMapping;
+export const locationsMapping: Record<string, Location> = {};
+locations.forEach((location) => (locationsMapping[location.id] = location));
