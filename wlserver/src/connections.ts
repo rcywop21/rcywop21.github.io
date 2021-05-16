@@ -1,6 +1,8 @@
 import auth, { asValidClientType, ClientType } from "./auth";
 import { SocketHandler } from './socketHandlers';
 import logger from "./logger";
+import { gameState } from "./stateMgr";
+import { GlobalState, PlayerState } from "wlcommon";
 
 export interface Credentials {
     groupNum: number;
@@ -24,6 +26,12 @@ export interface PayloadAuth {
     pass: string;
 }
 
+export interface AuthOkPayload {
+    socketId: string;
+    globalState: GlobalState;
+    playerState: PlayerState;
+}
+
 const userCredentialsMap: Record<string, Credentials> = {};
 
 const authenticateSocket: SocketHandler<PayloadAuth> = async (
@@ -45,9 +53,12 @@ const authenticateSocket: SocketHandler<PayloadAuth> = async (
                 if (mode === 'mentor') {
                     socket.join(ROOMS.MENTORS[id]);
                 }
+                reply('auth_ok', {
+                    socketId: socket.id,
+                    globalState: gameState.global,
+                    playerState: gameState.players[id],
+                });
             }
-
-            reply('auth_ok', socket.id);
 
             socket.on('disconnect', () => {
                 delete userCredentialsMap[socket.id];
