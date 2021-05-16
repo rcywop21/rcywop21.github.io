@@ -4,6 +4,7 @@ import Header from './components/Header';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Main from './pages/Main';
 import Mentor from './pages/Mentor';
+import Admin from './pages/Admin';
 import { socket, SocketContext } from './socket/socket';
 
 export interface AppProps {
@@ -29,7 +30,14 @@ function App(): React.ReactElement {
                             />
                         </Route>
                         <Route path="/">
-                            <Main />
+                            <Main
+                                loggedIn={loggedIn}
+                                updateLoggedIn={setLoggedIn}/>
+                        </Route>
+                        <Route path="/admin">
+                            <Admin
+                                loggedIn={loggedIn}
+                                updateLoggedIn={setLoggedIn}/>
                         </Route>
                     </Switch>
                 </div>
