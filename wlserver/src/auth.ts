@@ -39,9 +39,9 @@ async function auth(
 
     // development environment
     if (process.env.NODE_ENV !== 'production') {
-        if (id < 0 || id > 9) throw `unknown user id ${id} for mode ${mode}`;
+        if (id < 0 || id > 9) throw `Group name should be a number between 0 to 9`;
         if (pass !== '0000')
-            throw `wrong password for user mode ${mode} id ${id}`;
+            throw `Incorrect Password`;
         return true;
     }
 
@@ -55,9 +55,9 @@ async function auth(
         );
 
         const entry = data[mode].find((e: AuthEntry) => e.id === id);
-        if (entry === undefined) throw `unknown user id ${id} for mode ${mode}`;
+        if (entry === undefined) throw `Group name should be a number between 0 to 9`;
         if (entry.pass !== pass)
-            throw `wrong password for user mode ${mode} id ${id}`;
+            throw `Incorrect Password`;
         return true;
     } finally {
         await fileHandle?.close();
