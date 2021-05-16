@@ -4,38 +4,43 @@ import './Login.css';
 
 export interface LoginProps {
     updateLoggedIn: (x: boolean) => void;
+    mode: string;
 }
 
 const Login = (props: LoginProps): React.ReactElement => {
-    const { updateLoggedIn } = props;
+    const { updateLoggedIn, mode } = props;
     const [groupName, setGroupName] = React.useState<number | undefined>(undefined);
     const [password, setPassword] = React.useState('');
+    const [hasErrorMessage, setHasErrorMessage] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
 
     const socket = React.useContext(SocketContext);
 
     React.useEffect(() => { 
-        if (socket != null) {
-            socket.emit('auth', { id: +groupName, type: 'mentor', pass: password })
+        if (socket != null && groupName != undefined) {
+            socket.emit('auth', { id: +groupName, type: mode, pass: password })
         }
     })
 
     const handleLogin = () => {
         if (groupName === undefined) return; // handle empty group name error
-
+        
         if (socket !== null) {
             socket.connect();
             socket.on('connect', () => {
                 socket.emit(
                     'authenticate', 
-                    { id: groupName, mode: 'player', pass: password }, 
+                    { id: groupName, mode: mode, pass: password }, 
                     (eventType: string, payload: string | Record<string, unknown>) => {
                         if (eventType === 'auth_ok') {
                             updateLoggedIn(true);
                             socket.on('disconnect', () => updateLoggedIn(false));
                             // TODO: update local copy of game state (wait for game state to be polished first)
                         } else if (eventType === 'error') {
-                            // TODO: handle error
-                            // TODO: error details are inside payload
+                            setHasErrorMessage(true);
+                            if (typeof payload === "string") {
+                                setErrorMessage(payload);
+                            }
                         }
                     }
                 );
@@ -55,20 +60,28 @@ const Login = (props: LoginProps): React.ReactElement => {
 
     return (
         <div className="login">
-            <div className="block">Group Name</div>
+            <div className="title">Group Name</div>
             <input
-                className="block"
                 value={groupName === undefined ? '' : groupName.toString()}
                 onChange={onGroupNameChange}
             ></input>
-            <div className="block">Passcode</div>
+            <div className="title">Passcode</div>
             <input
-                className="block"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             ></input>
             <div>
                 <button onClick={handleLogin}>Login</button>
+            </div>
+            <div>
+                { hasErrorMessage && (
+                    <div className="errorMessage">{ errorMessage }</div>
+                )}
+                { !hasErrorMessage && (
+                    <div>
+                        <br></br>
+                    </div>
+                )}
             </div>
         </div>
     );
