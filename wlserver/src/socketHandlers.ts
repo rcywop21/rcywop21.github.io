@@ -1,7 +1,6 @@
-import { group } from "console";
 import { Server, Socket as BaseSocket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { Actions } from "wlcommon";
+import { Actions, Locations } from "wlcommon";
 import applyAction from "./actions";
 import { getCredentials, ROOMS } from "./connections";
 import logger from "./logger";
@@ -66,4 +65,32 @@ export const onAcceptHandler: SocketHandler<undefined> = async (socket, _, reply
     notifyPlayerState(socketServer, credentials.groupNum);
     socketServer.in(ROOMS.GROUPS[credentials.groupNum]).emit('message', msg);
     notifyGameState(socketServer);
+}
+
+export const onTravelHandler: SocketHandler<string> = async (socket, payload, reply, socketServer) => {
+    const credentials = getCredentials(socket.id);
+    if (credentials === undefined) return reply('error', 'Not authenticated');
+
+    if (Locations.locationsMapping[payload] === undefined)
+    return reply('error', 'Not a valid location.');
+
+    const playerState = gameState.players[credentials.groupNum];
+    const source = Locations.locationsMapping[playerState.locationId];
+    const destination = Locations.locationsMapping[payload];
+
+    if (source.undersea !== destination.undersea) {
+        return reply('error', 'Cannot travel directly between undersea and surface locations.')
+    }
+
+    if (
+        (destination.needsMap && !playerState.hasMap) ||
+        (payload === Locations.locationIds.ALCOVE && !playerState.unlockedAlcove) ||
+        (payload === Locations.locationIds.SHRINE && !playerState.unlockedShrine) ||
+        (payload === Locations.locationIds.WOODS && !playerState.unlockedWoods)
+    )
+        return reply('error', 'Cannot travel to that location.')
+
+
+    gameState.players[credentials.groupNum].locationId = payload;
+    logger.log('info', `Group ${credentials.groupNum} has travelled to ${payload}.`);
 }
