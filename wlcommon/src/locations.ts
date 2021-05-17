@@ -7,6 +7,7 @@ export interface Location {
     oxygenStream: boolean;
     hidden: boolean;
     undersea: boolean;
+    needsMap: boolean;
 }
 
 class LocationBuilder {
@@ -16,6 +17,7 @@ class LocationBuilder {
     private _hasOxygenStream: boolean;
     private _hidden: boolean;
     private _undersea: boolean;
+    private _needsMap: boolean;
 
     constructor(name: string);
     constructor(id: string, name: string);
@@ -26,6 +28,7 @@ class LocationBuilder {
         this._hasOxygenStream = false;
         this._hidden = false;
         this._undersea = true;
+        this._needsMap = true;
     }
 
     description(x: string) {
@@ -48,6 +51,11 @@ class LocationBuilder {
         return this;
     }
 
+    needsMap(need = true) {
+        this._needsMap = need;
+        return this;
+    }
+
     make(): Location {
         return {
             id: this.id,
@@ -56,6 +64,7 @@ class LocationBuilder {
             description: this._description,
             hidden: this._hidden,
             undersea: this._undersea,
+            needsMap: this._needsMap,
         };
     }
 }
@@ -65,6 +74,9 @@ export const locationIds = {
     SHALLOWS: 'Shallows',
     CORALS: 'Corals',
     STORE: 'Store',
+    ALCOVE: 'Alcove',
+    SHRINE: 'Shrine',
+    WOODS: 'Woods'
 };
 
 const locations: Location[] = [
@@ -73,22 +85,50 @@ const locations: Location[] = [
             'The closest point on land to the Undersea. You can return here by Resurfacing.'
         )
         .surface()
+        .needsMap(false)
         .make(),
     new LocationBuilder(locationIds.SHALLOWS)
         .description(
             'The shallowest part of the Undersea, most will pass through the Shallows on their way to the Undersea.'
         )
+        .needsMap(false)
         .make(),
     new LocationBuilder(locationIds.CORALS, 'Memorial Corals')
         .description(
             'A location of historical importance. There are various exhibits about Undersea civilization in the reef.'
         )
+        .needsMap(false)
         .oxygenStream()
         .make(),
     new LocationBuilder(locationIds.STORE, 'General Store')
         .description(
             'A shop where everyone in the Undersea comes to get their supplies. Payment is made in Oxygen.'
         )
+        .make(),
+    new LocationBuilder(locationIds.STORE, 'General Store')
+        .description(
+            'A shop where everyone in the Undersea comes to get their supplies. Payment is made in Oxygen.'
+        )
+        .needsMap(false)
+        .make(),
+    new LocationBuilder(locationIds.ALCOVE, 'Hidden Alcove')
+        .description(
+            'A mysterious chamber within the Statue of Triton.'
+        )
+        .hidden()
+        .make(),
+    new LocationBuilder(locationIds.SHRINE, 'Shrine of the Innocent')
+        .description(
+            'A quiet shrine tucked away inside the Kelp Plains. Few know about its existence.'
+        )
+        .hidden()
+        .make(),
+    new LocationBuilder(locationIds.WOODS, 'Whispering Woods')
+        .description(
+            'A quiet forest. Unicorns are said to live here.'
+        )
+        .surface()
+        .hidden()
         .make(),
 ];
 

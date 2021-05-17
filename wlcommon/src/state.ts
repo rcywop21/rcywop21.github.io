@@ -35,4 +35,8 @@ export interface PlayerState {
     knowsCrimson: boolean;
     knowsLanguage: boolean;
     foundEngraving: boolean;
+    hasMap: boolean;
+    unlockedAlcove: boolean;
+    unlockedShrine: boolean;
+    unlockedWoods: boolean;
 }
