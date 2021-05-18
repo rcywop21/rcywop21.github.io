@@ -2,7 +2,7 @@ import { ItemRecord } from './items';
 import { Action } from './actions';
 export { Action };
 
-export type TeamId = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type TeamId = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export interface GameState {
     global: GlobalState;
@@ -17,6 +17,7 @@ export interface GlobalState {
     };
     crimsonMasterSwitch: boolean;
     crimsonState: Record<string, CrimsonAlarm>;
+    messages: Message[];
 }
 
 export interface CrimsonAlarm {
@@ -39,4 +40,10 @@ export interface PlayerState {
     unlockedAlcove: boolean;
     unlockedShrine: boolean;
     unlockedWoods: boolean;
+}
+
+export interface Message {
+    time: Date;
+    visibility: 'all' | TeamId;
+    message: string;
 }
