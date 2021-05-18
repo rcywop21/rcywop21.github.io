@@ -1,4 +1,4 @@
-import { Actions, GlobalState, PlayerState, Locations, Util } from "wlcommon";
+import { Actions, GlobalState, PlayerState, Locations, Util, Message } from "wlcommon";
 
 export interface ReducerResult {
     playerState: PlayerState;
@@ -83,7 +83,8 @@ const applyUnderwaterAction: Reducer = (playerState, globalState) => {
 
 const applyShoresAction: Reducer = (playerState, globalState) => {
     switch (playerState.stagedAction) {
-        case Actions.SLEEPY_SHORES.DIVE:
+        case Actions.SLEEPY_SHORES.DIVE: { 
+            
             return {
                 playerState: {
                     ...playerState,
@@ -93,6 +94,7 @@ const applyShoresAction: Reducer = (playerState, globalState) => {
                 globalState,
                 message: 'You have successfully dived. You are now at the Shallows.',
             }
+         }
     }
 
     throw 'Action not implemented.'

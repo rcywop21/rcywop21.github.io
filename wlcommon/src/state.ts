@@ -1,5 +1,7 @@
-import { ItemRecord } from './items';
+import { ItemRecord, ItemId } from './items';
 import { Action } from './actions';
+import { QuestState } from 'wlcommon';
+import { QuestId } from './quests';
 export { Action };
 
 export type TeamId = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -29,7 +31,8 @@ export interface CrimsonAlarm {
 export interface PlayerState {
     locationId: string;
     oxygenUntil: Date | null;
-    inventory: ItemRecord[];
+    quests: Record<QuestId, QuestState>;
+    inventory: Record<ItemId, ItemRecord>;
     streamCooldownExpiry: Record<string, Date | undefined>;
     storedOxygen: number | null;
     stagedAction: Action | null;
