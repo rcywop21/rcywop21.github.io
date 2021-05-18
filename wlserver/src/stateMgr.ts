@@ -10,6 +10,10 @@ export const makeStartingPlayerState = (): PlayerState => ({
     knowsLanguage: false,
     foundEngraving: false,
     streamCooldownExpiry: {},
+    hasMap: false,
+    unlockedAlcove: false,
+    unlockedShrine: false,
+    unlockedWoods: false,
 });
 
 export const gameState: GameState = {

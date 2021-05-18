@@ -1,6 +1,6 @@
 import { Server, Socket as BaseSocket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { Actions, Locations } from "wlcommon";
+import { Actions, Locations, TeamId } from "wlcommon";
 import applyAction from "./actions";
 import { getCredentials, ROOMS } from "./connections";
 import logger from "./logger";
@@ -56,14 +56,22 @@ export const onAcceptHandler: SocketHandler<undefined> = async (socket, _, reply
     if (stagedAction)
         return reply('error', 'No action to reject.');
 
-    const [playerState, globalState, msg] = applyAction(gameState.players[credentials.groupNum], gameState.global);
+    const { playerState, globalState, message } = applyAction(gameState.players[credentials.groupNum], gameState.global);
 
     gameState.global = globalState;
     gameState.players[credentials.groupNum] = playerState;
+
+    if (message) {
+        gameState.global.messages.push({
+            time: new Date(),
+            visibility: credentials.groupNum as TeamId,
+            message
+        });
+    }
+
     logger.log('info', `Group ${credentials.groupNum}'s action of ${stagedAction} was accepted.`);
     reply('ok', 'Action accepted successfully.');
     notifyPlayerState(socketServer, credentials.groupNum);
-    socketServer.in(ROOMS.GROUPS[credentials.groupNum]).emit('message', msg);
     notifyGameState(socketServer);
 }
 
