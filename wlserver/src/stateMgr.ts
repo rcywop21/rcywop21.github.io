@@ -3,13 +3,14 @@ import { GameState, PlayerState } from 'wlcommon';
 export const makeStartingPlayerState = (): PlayerState => ({
     locationId: 'Shores',
     oxygenUntil: null,
-    inventory: [],
+    quests: {},
+    inventory: {},
+    streamCooldownExpiry: {},
     storedOxygen: null,
     stagedAction: null,
     knowsCrimson: false,
     knowsLanguage: false,
     foundEngraving: false,
-    streamCooldownExpiry: {},
     hasMap: false,
     unlockedAlcove: false,
     unlockedShrine: false,
@@ -24,7 +25,8 @@ export const gameState: GameState = {
             lastExtract: new Date(),
         },
         crimsonMasterSwitch: true,
-        crimsonState: {}
+        crimsonState: {},
+        messages: [],
     },
     players: []
 }
