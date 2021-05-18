@@ -17,7 +17,7 @@
     },
     "scripts": {
         "format": "prettier --write . && yarn run eslint --fix .",
-        "build": "tsc --declaration"
+        "build": "rm -rf build && tsc --declaration"
     },
     "dependencies": {
         "wlcommon": "file:../wlcommon"

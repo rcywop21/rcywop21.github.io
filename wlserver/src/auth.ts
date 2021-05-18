@@ -22,13 +22,6 @@ interface AuthEntry {
     pass: string;
 }
 
-export interface AuthToken {
-    id: number;
-    type: ClientType;
-    payload: string;
-    validUntil: number;
-}
-
 async function auth(
     mode: ClientType,
     id: number,

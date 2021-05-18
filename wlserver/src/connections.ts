@@ -1,9 +1,8 @@
-import { Socket as BaseSocket } from "socket.io";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import auth, { asValidClientType, ClientType } from "./auth";
+import { SocketHandler } from './socketHandlers';
 import logger from "./logger";
-
-export type Socket = BaseSocket<DefaultEventsMap, DefaultEventsMap>;
+import { gameState } from "./stateMgr";
+import { GlobalState, PlayerState } from "wlcommon";
 
 export interface Credentials {
     groupNum: number;
@@ -21,13 +20,23 @@ export const ROOMS = {
     ]
 }
 
+export interface PayloadAuth {
+    id: number;
+    mode: ClientType;
+    pass: string;
+}
+
+export interface AuthOkPayload {
+    socketId: string;
+    globalState: GlobalState;
+    playerState: PlayerState;
+}
+
 const userCredentialsMap: Record<string, Credentials> = {};
 
-const authenticateSocket = async (
-    socket: Socket, 
-    payload: Record<string, unknown>, 
-    reply: (x: string, y: string) => void
-): Promise<void> => {
+const authenticateSocket: SocketHandler<PayloadAuth> = async (
+    socket, payload, reply
+) => {
     const { id, mode, pass } = payload;
     try {
         const clientType = typeof mode === 'string' && asValidClientType(mode);
@@ -44,9 +53,12 @@ const authenticateSocket = async (
                 if (mode === 'mentor') {
                     socket.join(ROOMS.MENTORS[id]);
                 }
+                reply('auth_ok', {
+                    socketId: socket.id,
+                    globalState: gameState.global,
+                    playerState: gameState.players[id],
+                });
             }
-
-            reply('auth_ok', socket.id);
 
             socket.on('disconnect', () => {
                 delete userCredentialsMap[socket.id];

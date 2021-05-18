@@ -17,10 +17,10 @@ const Login = (props: LoginProps): React.ReactElement => {
     const socket = React.useContext(SocketContext);
 
     React.useEffect(() => { 
-        if (socket != null && groupName != undefined) {
-            socket.emit('auth', { id: +groupName, type: mode, pass: password })
+        if (socket !== null && !socket.connected) { 
+            socket.connect();
         }
-    })
+    }, [socket, updateLoggedIn]);
 
     const handleLogin = () => {
         if (groupName === undefined && password === "") {
@@ -38,25 +38,23 @@ const Login = (props: LoginProps): React.ReactElement => {
         }
         
         if (socket !== null) {
-            socket.connect();
-            socket.on('connect', () => {
-                socket.emit(
-                    'authenticate', 
-                    { id: groupName, mode: mode, pass: password }, 
-                    (eventType: string, payload: string | Record<string, unknown>) => {
-                        if (eventType === 'auth_ok') {
-                            updateLoggedIn(true);
-                            socket.on('disconnect', () => updateLoggedIn(false));
-                            // TODO: update local copy of game state (wait for game state to be polished first)
-                        } else if (eventType === 'error') {
-                            setHasErrorMessage(true);
-                            if (typeof payload === "string") {
-                                setErrorMessage(payload);
-                            }
+            socket.emit(
+                'authenticate',
+                { id: groupName, mode: mode, pass: password },
+                (eventType: string, payload: string | Record<string, unknown>) => {
+                    if (eventType === 'auth_ok') {
+                        updateLoggedIn(true);
+                        // TODO: update local copy of game state (wait for game state to be polished first)
+                    } else if (eventType === 'error') {
+                        setHasErrorMessage(true);
+                        if (typeof payload === "string") {
+                            setErrorMessage(payload);
                         }
+                    } else {
+                        // TODO: unexpected error happened, to handdle
                     }
-                );
-            });
+                }
+            )
         }
     };
 
