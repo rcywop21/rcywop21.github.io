@@ -23,7 +23,19 @@ const Login = (props: LoginProps): React.ReactElement => {
     }, [socket, updateLoggedIn]);
 
     const handleLogin = () => {
-        if (groupName === undefined) return; // TODO: handle empty group name error
+        if (groupName === undefined && password === "") {
+            setHasErrorMessage(true);
+            setErrorMessage("Group Name and Password cannot be empty");
+            return;
+        } else if (groupName === undefined) {
+            setHasErrorMessage(true);
+            setErrorMessage("Group Name cannot be empty");
+            return;
+        } else if (password == "") {
+            setHasErrorMessage(true);
+            setErrorMessage("Password cannot be empty");
+            return;
+        }
         
         if (socket !== null) {
             socket.emit(
