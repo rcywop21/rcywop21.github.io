@@ -2,9 +2,6 @@ import express from 'express';
 import logger, { expressLogger } from './logger';
 import http from 'http';
 import { Server } from 'socket.io';
-import authenticateSocket from './connections';
-import { onAcceptHandler, onActionHandler, onRejectionHandler, onTravelHandler } from './socketHandlers';
-import { onAdminHandler } from './admin';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -21,6 +18,7 @@ export const io = new Server(server, {
 app.use(expressLogger);
 app.get('/', (_, res) => res.send('This is a backend server.'));
 
-export const listen = () => server.listen(PORT, () => {
-    logger.log('info', `[server]: Server is running on *:${PORT}`);
-});
+export const listen = (): http.Server =>
+    server.listen(PORT, () => {
+        logger.log('info', `[server]: Server is running on *:${PORT}`);
+    });

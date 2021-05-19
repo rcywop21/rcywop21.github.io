@@ -1,4 +1,12 @@
-import { Actions, GlobalState, PlayerState, Locations, Util, Message, QuestId, quests } from "wlcommon";
+import {
+    Actions,
+    GlobalState,
+    PlayerState,
+    Locations,
+    Util,
+    QuestId,
+    quests,
+} from 'wlcommon';
 
 export interface ReducerResult {
     playerState: PlayerState;
@@ -13,7 +21,10 @@ const actionList = {
     oxygen: Object.values(Actions.ALL_OXYGEN),
 };
 
-export const issueQuest = (playerState: PlayerState, questId: QuestId): PlayerState => {
+export const issueQuest = (
+    playerState: PlayerState,
+    questId: QuestId
+): PlayerState => {
     if (playerState.quests[questId]) return;
     return {
         ...playerState,
@@ -23,11 +34,10 @@ export const issueQuest = (playerState: PlayerState, questId: QuestId): PlayerSt
                 id: questId,
                 status: 'incomplete',
                 stages: new Array(quests[questId].stages.length).fill(false),
-            }
-        }
-    }
-}
-
+            },
+        },
+    };
+};
 
 const applyAction: Reducer = (playerState, globalState) => {
     const { stagedAction, locationId } = playerState;
@@ -41,12 +51,12 @@ const applyAction: Reducer = (playerState, globalState) => {
             return applyShoresAction(playerState, globalState);
     }
 
-    throw `Unknown action ${stagedAction}.`
-}
+    throw `Unknown action ${stagedAction}.`;
+};
 
 const applyUnderwaterAction: Reducer = (playerState, globalState) => {
     if (!Locations.locationsMapping[playerState.locationId].undersea)
-        throw 'You cannot perform this action as you are not undersea.'
+        throw 'You cannot perform this action as you are not undersea.';
 
     switch (playerState.stagedAction) {
         case Actions.ALL_UNDERWATER.RESURFACE:
@@ -57,7 +67,7 @@ const applyUnderwaterAction: Reducer = (playerState, globalState) => {
                     locationId: Locations.locationIds.SHORES,
                 },
                 globalState,
-                message: 'You have resurfaced and returned to Sleepy Shores.'
+                message: 'You have resurfaced and returned to Sleepy Shores.',
             };
 
         case Actions.ALL_UNDERWATER.STORE_OXYGEN: {
@@ -65,15 +75,22 @@ const applyUnderwaterAction: Reducer = (playerState, globalState) => {
             if (storedOxygen === null)
                 throw "You cannot perform this action as you don't have an oxygen tank.";
 
-            const oxygenToStore = Math.max(0, oxygenUntil.valueOf() - Date.now() - 2 * 60 * 1000);
+            const oxygenToStore = Math.max(
+                0,
+                oxygenUntil.valueOf() - Date.now() - 2 * 60 * 1000
+            );
             return {
                 playerState: {
-                    ...playerState, 
-                    oxygenUntil: new Date(oxygenUntil.valueOf() - oxygenToStore),
+                    ...playerState,
+                    oxygenUntil: new Date(
+                        oxygenUntil.valueOf() - oxygenToStore
+                    ),
                     storedOxygen: storedOxygen + oxygenToStore,
                 },
                 globalState,
-                message: `You have transferred ${Util.formatDuration(oxygenToStore)} of Oxygen to storage.`
+                message: `You have transferred ${Util.formatDuration(
+                    oxygenToStore
+                )} of Oxygen to storage.`,
             };
         }
 
@@ -84,22 +101,24 @@ const applyUnderwaterAction: Reducer = (playerState, globalState) => {
 
             return {
                 playerState: {
-                    ...playerState, 
+                    ...playerState,
                     oxygenUntil: new Date(oxygenUntil.valueOf() + storedOxygen),
                     storedOxygen: 0,
                 },
                 globalState,
-                message: `You have withdrawn ${Util.formatDuration(storedOxygen)} of Oxygen from storage.`
+                message: `You have withdrawn ${Util.formatDuration(
+                    storedOxygen
+                )} of Oxygen from storage.`,
             };
         }
     }
 
-    throw 'Action not implemented.'
-}
+    throw 'Action not implemented.';
+};
 
 const applyShoresAction: Reducer = (playerState, globalState) => {
     switch (playerState.stagedAction) {
-        case Actions.SLEEPY_SHORES.DIVE: { 
+        case Actions.SLEEPY_SHORES.DIVE: {
             return {
                 playerState: {
                     ...playerState,
@@ -107,15 +126,16 @@ const applyShoresAction: Reducer = (playerState, globalState) => {
                     locationId: Locations.locationIds.SHALLOWS,
                     quests: {
                         ...playerState.quests,
-                    }
+                    },
                 },
                 globalState,
-                message: 'You have successfully dived. You are now at the Shallows.',
-            }
-         }
+                message:
+                    'You have successfully dived. You are now at the Shallows.',
+            };
+        }
     }
 
-    throw 'Action not implemented.'
-}
+    throw 'Action not implemented.';
+};
 
 export default applyAction;
