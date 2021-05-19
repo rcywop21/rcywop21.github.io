@@ -1,4 +1,4 @@
-import { Actions, GlobalState, PlayerState, Locations, Util, Message } from "wlcommon";
+import { Actions, GlobalState, PlayerState, Locations, Util, Message, QuestId, quests } from "wlcommon";
 
 export interface ReducerResult {
     playerState: PlayerState;
@@ -6,12 +6,28 @@ export interface ReducerResult {
     message?: string;
 }
 
-type Reducer = (x: PlayerState, y: GlobalState) => ReducerResult;
+export type Reducer = (x: PlayerState, y: GlobalState) => ReducerResult;
 
 const actionList = {
     underwater: Object.values(Actions.ALL_UNDERWATER),
     oxygen: Object.values(Actions.ALL_OXYGEN),
 };
+
+export const issueQuest = (playerState: PlayerState, questId: QuestId): PlayerState => {
+    if (playerState.quests[questId]) return;
+    return {
+        ...playerState,
+        quests: {
+            ...playerState.quests,
+            [questId]: {
+                id: questId,
+                status: 'incomplete',
+                stages: new Array(quests[questId].stages.length).fill(false),
+            }
+        }
+    }
+}
+
 
 const applyAction: Reducer = (playerState, globalState) => {
     const { stagedAction, locationId } = playerState;
@@ -84,12 +100,14 @@ const applyUnderwaterAction: Reducer = (playerState, globalState) => {
 const applyShoresAction: Reducer = (playerState, globalState) => {
     switch (playerState.stagedAction) {
         case Actions.SLEEPY_SHORES.DIVE: { 
-            
             return {
                 playerState: {
                     ...playerState,
                     oxygenUntil: new Date(Date.now() + 20 * 60 * 1000),
-                    locationId: Locations.locationIds.SHORES,
+                    locationId: Locations.locationIds.SHALLOWS,
+                    quests: {
+                        ...playerState.quests,
+                    }
                 },
                 globalState,
                 message: 'You have successfully dived. You are now at the Shallows.',

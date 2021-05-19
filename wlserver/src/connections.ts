@@ -2,10 +2,11 @@ import auth, { asValidClientType, ClientType } from "./auth";
 import { SocketHandler } from './socketHandlers';
 import logger from "./logger";
 import { gameState } from "./stateMgr";
-import { GlobalState, PlayerState } from "wlcommon";
+import { GlobalState, PlayerState, TeamId } from "wlcommon";
+import { io } from "./socket";
 
 export interface Credentials {
-    groupNum: number;
+    groupNum: TeamId;
     clientType: ClientType;
 }
 
@@ -21,7 +22,7 @@ export const ROOMS = {
 }
 
 export interface PayloadAuth {
-    id: number;
+    id: TeamId;
     mode: ClientType;
     pass: string;
 }
@@ -48,6 +49,9 @@ const authenticateSocket: SocketHandler<PayloadAuth> = async (
 
             if (mode === 'admin') {
                 socket.join(ROOMS.ADMIN);
+                reply('auth_ok', {
+                    socketId: socket.id
+                });
             } else if (id >= 0 && id < ROOMS.GROUPS.length) {
                 socket.join(ROOMS.GROUPS[id]);
                 if (mode === 'mentor') {
@@ -74,3 +78,12 @@ const authenticateSocket: SocketHandler<PayloadAuth> = async (
 export const getCredentials = (socketId: string): Credentials | undefined => userCredentialsMap[socketId];
 
 export default authenticateSocket;
+
+export const notifyPlayerState = (groupNum: TeamId): void => {
+    io.to(ROOMS.GROUPS[groupNum]).emit('player_update', gameState.players[groupNum]);
+}
+
+export const notifyGameState = (): void => {
+    io.to(ROOMS.AUTHENTICATED).emit('global_update', gameState.global);
+}
+

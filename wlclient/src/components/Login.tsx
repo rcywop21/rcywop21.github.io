@@ -44,6 +44,7 @@ const Login = (props: LoginProps): React.ReactElement => {
                 (eventType: string, payload: string | Record<string, unknown>) => {
                     if (eventType === 'auth_ok') {
                         updateLoggedIn(true);
+                        console.log('test');
                         // TODO: update local copy of game state (wait for game state to be polished first)
                     } else if (eventType === 'error') {
                         setHasErrorMessage(true);

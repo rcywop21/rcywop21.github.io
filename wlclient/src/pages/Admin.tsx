@@ -1,5 +1,6 @@
 import React from 'react';
 import Login from '../components/Login';
+import { SocketContext } from '../socket/socket';
 import './Admin.css';
 
 export interface AdminProps {
@@ -7,9 +8,38 @@ export interface AdminProps {
     updateLoggedIn: (x: boolean) => void;
 }
 
+interface OutputEntry {
+    time: Date;
+    type: string;
+    message: string;
+    input: string;
+}
+
+interface ClearAction {
+    type: 'clear';
+}
+
+interface NewEntryAction {
+    type: 'new_entry';
+    payload: OutputEntry;
+}
+
+type AdminCommandAction = ClearAction | NewEntryAction;
+
+const adminCommandReducer = (state: OutputEntry[], action: AdminCommandAction): OutputEntry[] => {
+    switch (action.type) {
+        case 'clear':
+            return [];
+        case 'new_entry':
+            return [...state, action.payload];
+    }
+}
+
 const Admin = (props: AdminProps): React.ReactElement => {
     const { loggedIn, updateLoggedIn } = props;
-    const [output, setOutput] = React.useState('Test Content');
+    const [input, setInput] = React.useState('');
+    const [output, outputDispatch] = React.useReducer(adminCommandReducer, []);
+    const socket = React.useContext(SocketContext);
 
     if (!loggedIn) {
         return (
@@ -19,14 +49,40 @@ const Admin = (props: AdminProps): React.ReactElement => {
         );
     }
 
+    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        setInput(event.target.value);
+    }
+
+    const handleKeydown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
+        if (event.key !== 'Enter') return;
+        if (input === 'clear') {
+            outputDispatch({ type: 'clear' });
+        } else {
+            socket?.emit('admin', input.split(' '), (event: string, payload: unknown) => {
+                const message = typeof payload === 'string' ? payload : JSON.stringify(payload);
+                outputDispatch({ 
+                    type: 'new_entry',
+                    payload: { time: new Date(), message, type: event, input } 
+                });
+            })
+        }
+        setInput('');
+    }
+
     return (
         <div className="admin">
-            <div className="message">If you are not Lin Hong Sir, please exit immediately and inform him!</div>
-            <br></br>
-            <br></br>
-            <div className="output"> { output }</div>
-            <br></br>
-            <input placeholder="For Lin Hong Sir to type"></input>
+            <div className="output">{output.map((entry, i) => (
+                <React.Fragment key={i}>
+                    <p className="input">[{entry.time.toLocaleTimeString('en-UK')}] {entry.input}</p>
+                    <p className={entry.type}>{entry.message}</p>
+                </React.Fragment>
+            ))}</div>
+            <input 
+                placeholder="Command" 
+                value={input} 
+                onChange={handleChange} 
+                onKeyDown={handleKeydown} 
+            />
         </div>
     );
 };

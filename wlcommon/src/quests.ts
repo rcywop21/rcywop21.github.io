@@ -1,5 +1,5 @@
 export type QuestId = number;
-export type QuestStatus = 'completed' | 'incomplete' | 'hidden';
+export type QuestStatus = 'completed' | 'incomplete';
 
 export interface Quest {
     id: QuestId;
@@ -17,9 +17,16 @@ export interface QuestState {
     stages: boolean[];
 }
 
+export const questIds = {
+    CHAPTER_1: 10,
+    CHAPTER_2: 20,
+    CHAPTER_3: 40,
+    FINCHES: 21,
+}
+
 const questList: Quest[] = [
     {
-        id: 10,
+        id: questIds.CHAPTER_1,
         name: 'Chapter 1: The Seas',
         description: 'The King has tasked several adventuring groups with retrieving two lost artefacts from the Undersea. As a newcomer to the Undersea, you will need to learn how to dive, survive in the Undersea and find your way around.',
         unlocks: 20,
@@ -32,7 +39,7 @@ const questList: Quest[] = [
         stageOrder: 'inOrder',
     },
     {
-        id: 20,
+        id: questIds.CHAPTER_2,
         name: 'Chapter 2: The Search',
         description: 'Now that you are familiar with how to dive and survive in the Undersea, it is time for you to properly begin your journey. Explore around to find the two legendary artefacts.',
         stages: [
@@ -42,7 +49,7 @@ const questList: Quest[] = [
         stageOrder: 'anyOrder',
     },
     {
-        id: 40,
+        id: questIds.CHAPTER_3,
         name: 'Chapter 3: The Scent',
         description: 'The waters around you start to turn a faint shade of red... It seems that something is awakening...',
         stages: [
@@ -51,7 +58,7 @@ const questList: Quest[] = [
         stageOrder: 'anyOrder',
     },
     {
-        id: 21,
+        id: questIds.FINCHES,
         name: 'The Finches Code',
         description: 'The Memorial Corals houses many exhibits, detailing the history of the Undersea civilization. One such exhibit describes a language used by the Undersea a few centuries ago. You have a hunch that knowing this language could help you on your quest.',
         stages: [
@@ -63,10 +70,7 @@ const questList: Quest[] = [
     }
 ];
 
-const quests: Record<number, Quest> = {};
+export const quests: Record<number, Quest> = {};
 questList.forEach((quest) => {
     quests[quest.id] = quest;
 })
-
-export default quests;
-
