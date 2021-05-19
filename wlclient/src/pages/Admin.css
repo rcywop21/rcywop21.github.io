@@ -1,0 +1,16 @@
+.message {
+    color: #b66;
+}
+
+.output {
+    background-color: black;
+    color: white;
+    border-color: #b66;
+    border-style: solid;
+    border-width: 2px;
+    height: 150px;
+}
+
+input {
+    width: 100%;
+}

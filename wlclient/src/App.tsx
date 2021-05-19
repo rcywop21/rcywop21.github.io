@@ -34,13 +34,13 @@ function App(): React.ReactElement {
                                 updateLoggedIn={setLoggedIn}
                             />
                         </Route>
-                        <Route path="/">
-                            <Main
+                        <Route path="/admin">
+                            <Admin
                                 loggedIn={loggedIn}
                                 updateLoggedIn={setLoggedIn}/>
                         </Route>
-                        <Route path="/admin">
-                            <Admin
+                        <Route path="/">
+                            <Main
                                 loggedIn={loggedIn}
                                 updateLoggedIn={setLoggedIn}/>
                         </Route>
