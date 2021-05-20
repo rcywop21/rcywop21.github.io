@@ -1,6 +1,6 @@
 import { ItemRecord, ItemId } from './items';
 import { Action } from './actions';
-import { QuestState } from 'wlcommon';
+import { QuestState } from './quests';
 import { QuestId } from './quests';
 export { Action };
 
