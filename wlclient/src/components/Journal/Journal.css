@@ -1,5 +1,8 @@
 .journal {
     background-color: white;
     width: 1024px;
-    height: 1000px;
+    height: 463px;
+    position: absolute;
+    top: 812px;
+    left: 0px;
 }

@@ -20,7 +20,6 @@ const Main = (props: MainProps): React.ReactElement => {
 
     return (
         <div>
-            <p>Logged in! WIP</p>
             <Game groupId="420"/>
         </div>
     );
