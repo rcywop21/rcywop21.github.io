@@ -14,6 +14,8 @@ const TopBar = (props: TopBarProps): React.ReactElement => {
     const { inventory, oxygenLeft, oxygenRate, crimsonTime } = props;
     
     //timer processing
+    const oxygenTime = new Date(Date.now() + oxygenLeft * 1000 / oxygenRate).toISOString();
+    
     
     return (
         <div className="topBar">
@@ -21,8 +23,8 @@ const TopBar = (props: TopBarProps): React.ReactElement => {
                 { inventory.map((item: string) => { return (<InventoryItem key={item} name={item} />)}) }
             </div>
             <div className="timers">
-                <Timer name="oxygen" time="2021-05-20-T19:00:00.000+08:00" />
-                <Timer name="crimson" time="2021-05-20-T19:05:00.000+08:00" />
+                <Timer name="oxygen" time={oxygenTime} />
+                <Timer name="crimson" time={crimsonTime} />
             </div>
         </div>
     )

@@ -9,7 +9,7 @@ const INVENTORY_ITEMS_ASSET_MAP: Map<string, string> = new Map([
     ["map", "world-map.png"]
 ]);
 
-function getImg(item: string): any {
+function getImg(item: string): string {
     const imgFileName = INVENTORY_ITEMS_ASSET_MAP.get(item);
     
     if (!imgFileName) {

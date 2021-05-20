@@ -36,7 +36,7 @@ const Game = (props: GameProps): React.ReactElement => {
     
     return (
         <div className="game">
-            <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenLeft={100} oxygenRate={100} crimsonTime="temp" />
+            <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenLeft={300} oxygenRate={1} crimsonTime="2021-05-21T19:06:00.000+08:00" />
             <Location />
             <BottomBar />
             <Journal />
