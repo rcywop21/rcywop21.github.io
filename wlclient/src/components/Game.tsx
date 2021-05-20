@@ -3,7 +3,7 @@ import TopBar from './TopBar/TopBar';
 import Location from './Location/Location';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-import { GlobalState, PlayerState } from 'wlcommon';
+import { Actions } from 'wlcommon';
 import './Game.css';
 import { socket } from '../socket/socket';
 
@@ -37,12 +37,32 @@ const Game = (props: GameProps): React.ReactElement => {
     
     //gamestate processing and listening
     React.useEffect(() => {
-        socket.on('player_update', (newGameState: React.SetStateAction<undefined>) => setPlayerState(newGameState) );
+        socket.on('player_update', (newGameState: React.SetStateAction<undefined>) => {
+            console.log(newGameState);
+            setPlayerState(newGameState) 
+        });
     })
 
     React.useEffect(() => {
-        socket.on('global_update', (newGameState: React.SetStateAction<undefined>) => setGlobalState(newGameState) )
+        socket.on('global_update', (newGameState: React.SetStateAction<undefined>) => {
+            console.log(newGameState);
+            setGlobalState(newGameState)
+        })
     })
+
+    const handleAction = (action: string) => {
+        console.log(action);
+        socket.emit("action", action, (
+            eventType: string,
+            payload: string | Record<string, unknown>
+        ) => {
+            if (eventType == "error") {
+                console.log("Error: " + payload);
+            } else if (eventType == "info") {
+                console.log("Info: " + payload);
+            }
+        });
+    }
     
     return (
         <div className="game">
