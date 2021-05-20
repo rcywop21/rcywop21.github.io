@@ -12,7 +12,7 @@ const Main = (props: MainProps): React.ReactElement => {
     if (!loggedIn) {
         return (
             <div>
-                <Login updateLoggedIn={updateLoggedIn} mode="player"/>
+                <Login updateLoggedIn={updateLoggedIn} mode="player" />
             </div>
         );
     }

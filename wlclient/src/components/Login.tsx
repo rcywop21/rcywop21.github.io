@@ -9,52 +9,58 @@ export interface LoginProps {
 
 const Login = (props: LoginProps): React.ReactElement => {
     const { updateLoggedIn, mode } = props;
-    const [groupName, setGroupName] = React.useState<number | undefined>(undefined);
+    const [groupName, setGroupName] = React.useState<number | undefined>(
+        undefined
+    );
     const [password, setPassword] = React.useState('');
     const [hasErrorMessage, setHasErrorMessage] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState('');
 
     const socket = React.useContext(SocketContext);
 
-    React.useEffect(() => { 
-        if (socket !== null && !socket.connected) { 
+    React.useEffect(() => {
+        if (socket !== null && !socket.connected) {
             socket.connect();
         }
     }, [socket, updateLoggedIn]);
 
     const handleLogin = () => {
-        if (groupName === undefined && password === "") {
+        if (groupName === undefined && password === '') {
             setHasErrorMessage(true);
-            setErrorMessage("Group Name and Password cannot be empty");
+            setErrorMessage('Group Name and Password cannot be empty');
             return;
         } else if (groupName === undefined) {
             setHasErrorMessage(true);
-            setErrorMessage("Group Name cannot be empty");
+            setErrorMessage('Group Name cannot be empty');
             return;
-        } else if (password == "") {
+        } else if (password == '') {
             setHasErrorMessage(true);
-            setErrorMessage("Password cannot be empty");
+            setErrorMessage('Password cannot be empty');
             return;
         }
-        
+
         if (socket !== null) {
             socket.emit(
                 'authenticate',
                 { id: groupName, mode: mode, pass: password },
-                (eventType: string, payload: string | Record<string, unknown>) => {
+                (
+                    eventType: string,
+                    payload: string | Record<string, unknown>
+                ) => {
                     if (eventType === 'auth_ok') {
                         updateLoggedIn(true);
+                        console.log('test');
                         // TODO: update local copy of game state (wait for game state to be polished first)
                     } else if (eventType === 'error') {
                         setHasErrorMessage(true);
-                        if (typeof payload === "string") {
+                        if (typeof payload === 'string') {
                             setErrorMessage(payload);
                         }
                     } else {
                         // TODO: unexpected error happened, to handdle
                     }
                 }
-            )
+            );
         }
     };
 
@@ -66,7 +72,7 @@ const Login = (props: LoginProps): React.ReactElement => {
         const groupId = parseInt(event.target.value);
         if (Number.isNaN(groupId) || groupId < 0) return;
         setGroupName(groupId);
-    }
+    };
 
     return (
         <div className="login">
@@ -84,10 +90,10 @@ const Login = (props: LoginProps): React.ReactElement => {
                 <button onClick={handleLogin}>Login</button>
             </div>
             <div>
-                { hasErrorMessage && (
-                    <div className="errorMessage">{ errorMessage }</div>
+                {hasErrorMessage && (
+                    <div className="errorMessage">{errorMessage}</div>
                 )}
-                { !hasErrorMessage && (
+                {!hasErrorMessage && (
                     <div>
                         <br></br>
                     </div>

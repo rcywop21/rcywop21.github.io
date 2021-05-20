@@ -76,7 +76,7 @@ export const locationIds = {
     STORE: 'Store',
     ALCOVE: 'Alcove',
     SHRINE: 'Shrine',
-    WOODS: 'Woods'
+    WOODS: 'Woods',
 };
 
 const locations: Location[] = [
@@ -112,9 +112,7 @@ const locations: Location[] = [
         .needsMap(false)
         .make(),
     new LocationBuilder(locationIds.ALCOVE, 'Hidden Alcove')
-        .description(
-            'A mysterious chamber within the Statue of Triton.'
-        )
+        .description('A mysterious chamber within the Statue of Triton.')
         .hidden()
         .make(),
     new LocationBuilder(locationIds.SHRINE, 'Shrine of the Innocent')
@@ -124,9 +122,7 @@ const locations: Location[] = [
         .hidden()
         .make(),
     new LocationBuilder(locationIds.WOODS, 'Whispering Woods')
-        .description(
-            'A quiet forest. Unicorns are said to live here.'
-        )
+        .description('A quiet forest. Unicorns are said to live here.')
         .surface()
         .hidden()
         .make(),

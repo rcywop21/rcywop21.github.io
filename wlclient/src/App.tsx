@@ -17,10 +17,13 @@ function App(): React.ReactElement {
     const [chapter, setChapter] = React.useState<number | undefined>(undefined);
     const [deadline, setDeadline] = React.useState<Date | null>(null);
 
-    React.useEffect(() => () => {
-        socket.disconnect();
-        setLoggedIn(false)
-    }, []);
+    React.useEffect(
+        () => () => {
+            socket.disconnect();
+            setLoggedIn(false);
+        },
+        []
+    );
 
     return (
         <Router>
@@ -34,15 +37,17 @@ function App(): React.ReactElement {
                                 updateLoggedIn={setLoggedIn}
                             />
                         </Route>
-                        <Route path="/">
-                            <Main
-                                loggedIn={loggedIn}
-                                updateLoggedIn={setLoggedIn}/>
-                        </Route>
                         <Route path="/admin">
                             <Admin
                                 loggedIn={loggedIn}
-                                updateLoggedIn={setLoggedIn}/>
+                                updateLoggedIn={setLoggedIn}
+                            />
+                        </Route>
+                        <Route path="/">
+                            <Main
+                                loggedIn={loggedIn}
+                                updateLoggedIn={setLoggedIn}
+                            />
                         </Route>
                     </Switch>
                 </div>

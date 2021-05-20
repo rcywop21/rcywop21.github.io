@@ -22,19 +22,15 @@ interface AuthEntry {
     pass: string;
 }
 
-async function auth(
-    mode: ClientType,
-    id: number,
-    pass: string
-): Promise<true> {
+async function auth(mode: ClientType, id: number, pass: string): Promise<true> {
     /*yes, passcodes are stored in plaintext and there is no hashing or salting
     this use case does not require a rigorous authentication process*/
 
     // development environment
     if (process.env.NODE_ENV !== 'production') {
-        if (id < 0 || id > 9) throw `Group name should be a number between 0 to 9`;
-        if (pass !== '0000')
-            throw `Incorrect Password`;
+        if (id < 0 || id > 9)
+            throw `Group name should be a number between 0 to 9`;
+        if (pass !== '0000') throw `Incorrect Password`;
         return true;
     }
 
@@ -48,9 +44,9 @@ async function auth(
         );
 
         const entry = data[mode].find((e: AuthEntry) => e.id === id);
-        if (entry === undefined) throw `Group name should be a number between 0 to 9`;
-        if (entry.pass !== pass)
-            throw `Incorrect Password`;
+        if (entry === undefined)
+            throw `Group name should be a number between 0 to 9`;
+        if (entry.pass !== pass) throw `Incorrect Password`;
         return true;
     } finally {
         await fileHandle?.close();
