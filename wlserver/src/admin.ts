@@ -1,8 +1,8 @@
-import { TeamId } from 'wlcommon';
-import applyAction from './actions';
+import { QuestId, TeamId } from 'wlcommon';
+import applyAction, { makeAdvanceQuestTransform, makeIssueQuestTransform } from './actions';
 import { getCredentials } from './connections';
 import { Reply, SocketHandler } from './socketHandlers';
-import { applyReducer, gameState, setAction } from './stateMgr';
+import { applyTransform, gameState, setAction } from './stateMgr';
 
 const commands = {
     state: (payload: string[], reply: Reply): void => {
@@ -71,15 +71,32 @@ const commands = {
         const action = payload.pop();
         setAction(
             playerId,
-            action === 'clear' || action === 'null' ? null : action
+            action === 'clear' || action === 'null' || action === undefined ? null : action
         );
         reply('cmdok', `Action set to ${action}.`);
     },
     approve: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
-        applyReducer(applyAction, playerId);
+        applyTransform(applyAction, playerId);
         reply('cmdok', 'Action approved.');
     },
+    issuequest: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        const questId = parseInt(payload.shift()) as QuestId;
+        if (questId === null || questId === undefined || Number.isNaN(questId))
+            throw `Invalid quest ID ${questId}.`;
+        applyTransform(makeIssueQuestTransform(questId), playerId);
+        reply('cmdok', 'Quest issued.');
+    },
+    advance: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        const questId = parseInt(payload.shift()) as QuestId;
+        const stage = parseInt(payload.shift());
+        if (questId === null || questId === undefined || stage === undefined || Number.isNaN(questId) || Number.isNaN(stage))
+            throw `Invalid quest ID ${questId} or stage ${stage}.`
+        applyTransform(makeAdvanceQuestTransform(questId, stage), playerId);
+        reply('cmdok', 'Quest advanced.');
+    }
 };
 
 export const onAdminHandler: SocketHandler<string[]> = async (

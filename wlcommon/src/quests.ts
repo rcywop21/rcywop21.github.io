@@ -74,7 +74,7 @@ const questList: Quest[] = [
     },
 ];
 
-export const quests: Record<number, Quest> = {};
+export const quests: Record<QuestId, Quest> = {};
 questList.forEach((quest) => {
     quests[quest.id] = quest;
 });

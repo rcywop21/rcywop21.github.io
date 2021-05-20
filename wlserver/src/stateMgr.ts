@@ -1,24 +1,14 @@
-import { GameState, PlayerState, TeamId } from 'wlcommon';
-import { Reducer } from './actions';
+import { GameState, GlobalState, PlayerState, TeamId } from 'wlcommon';
 import { notifyPlayerState } from './connections';
 import logger from './logger';
 
-export const makeStartingPlayerState = (): PlayerState => ({
-    locationId: 'Shores',
-    oxygenUntil: null,
-    quests: {},
-    inventory: {},
-    streamCooldownExpiry: {},
-    storedOxygen: null,
-    stagedAction: null,
-    knowsCrimson: false,
-    knowsLanguage: false,
-    foundEngraving: false,
-    hasMap: false,
-    unlockedAlcove: false,
-    unlockedShrine: false,
-    unlockedWoods: false,
-});
+export interface TransformState {
+    playerState: PlayerState;
+    globalState: GlobalState;
+    messages: string[];
+}
+
+export type Transform = (result: TransformState) => TransformState;
 
 export const gameState: GameState = {
     global: {
@@ -34,26 +24,21 @@ export const gameState: GameState = {
     players: [],
 };
 
-for (let i = 0; i < 10; ++i) {
-    gameState.players.push(makeStartingPlayerState());
-}
-
-export const applyReducer = (reducer: Reducer, playerId: TeamId): void => {
-    const { playerState, globalState, message } = reducer(
-        gameState.players[playerId],
-        gameState.global
-    );
+export const applyTransform = (transform: Transform, playerId: TeamId): void => {
+    const { playerState, globalState, messages } = transform({
+        playerState: gameState.players[playerId],
+        globalState: gameState.global,
+        messages: []
+    });
 
     gameState.global = globalState;
     gameState.players[playerId] = playerState;
     gameState.players[playerId].stagedAction = null;
-    if (message) {
-        gameState.global.messages.push({
-            time: new Date(),
-            visibility: playerId,
-            message,
-        });
-    }
+    messages.forEach((message) => gameState.global.messages.push({
+        time: new Date(),
+        visibility: playerId,
+        message,
+    }));
 };
 
 export const setAction = (playerId: TeamId, action: string | null): void => {
@@ -71,3 +56,6 @@ export const setAction = (playerId: TeamId, action: string | null): void => {
         notifyPlayerState(playerId);
     }
 };
+
+export const identityTransform: Transform = (x) => x;
+

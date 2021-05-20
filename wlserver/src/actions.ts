@@ -1,77 +1,110 @@
 import {
     Actions,
-    GlobalState,
-    PlayerState,
     Locations,
     Util,
     QuestId,
     quests,
 } from 'wlcommon';
-
-export interface ReducerResult {
-    playerState: PlayerState;
-    globalState: GlobalState;
-    message?: string;
-}
-
-export type Reducer = (x: PlayerState, y: GlobalState) => ReducerResult;
+import { makePostCompletionTransform } from './questRewards';
+import { Transform } from './stateMgr';
 
 const actionList = {
     underwater: Object.values(Actions.ALL_UNDERWATER),
     oxygen: Object.values(Actions.ALL_OXYGEN),
 };
 
-export const issueQuest = (
-    playerState: PlayerState,
-    questId: QuestId
-): PlayerState => {
-    if (playerState.quests[questId]) return;
-    return {
-        ...playerState,
-        quests: {
-            ...playerState.quests,
-            [questId]: {
-                id: questId,
-                status: 'incomplete',
-                stages: new Array(quests[questId].stages.length).fill(false),
+export const makeIssueQuestTransform = (questId: QuestId): Transform => (state) => {
+    if (state.playerState.quests[questId]) return;
+    const questDetails = quests[questId];
+    if (questDetails === undefined) throw `Unknown quest ID ${questId}`;
+    return { 
+        ...state,
+        playerState: {
+            ...state.playerState,
+            quests: {
+                ...state.playerState.quests,
+                [questId]: {
+                    id: questId,
+                    status: 'incomplete',
+                    stages: new Array(questDetails.stages.length).fill(false),
+                },
             },
         },
+        messages: [
+            ...state.messages, 
+            `You have received a new quest - ${quests[questId].name}. Check your Quest Log for more information.`
+        ]
     };
-};
+}
 
-const applyAction: Reducer = (playerState, globalState) => {
-    const { stagedAction, locationId } = playerState;
-    if (stagedAction === null) throw 'No action staged.';
+export const makeAdvanceQuestTransform = (questId: QuestId, stage?: number): Transform => (state) => {
+    const questState = { ...state.playerState.quests[questId] };
+    questState.stages = [...questState.stages];
 
-    if (actionList.underwater.includes(stagedAction))
-        return applyUnderwaterAction(playerState, globalState);
+    // quest validation
+    if (questState === undefined) throw `Player does not have quest with quest ID ${questId} active.`
 
-    switch (locationId) {
-        case Locations.locationIds.SHORES:
-            return applyShoresAction(playerState, globalState);
+    // stage validation
+    if (quests[questId].stageOrder === 'inOrder' && stage > 0 && !questState.stages[stage - 1])
+        throw `Player has not completed stage ${stage - 1} required for 'inOrder' quest with ID ${questId}.`
+
+    // set stage true
+    questState.stages[stage] = true;
+
+    if (questState.stages.every((x) => x)) 
+        questState.status = 'completed';
+
+    let result = {
+        ...state,
+        playerState: {
+            ...state.playerState,
+            quests: { ...state.playerState.quests, [questId]: questState },
+        },
+    };
+
+    // quest is completed
+    if (questState.status === 'completed') { 
+        result = makePostCompletionTransform(questId)(result);
     }
 
-    throw `Unknown action ${stagedAction}.`;
+    return result;
+}
+
+const applyAction: Transform = (state) => {
+    if (state.playerState.stagedAction === null) throw 'No action staged.';
+
+    if (actionList.underwater.includes(state.playerState.stagedAction))
+        return applyUnderwaterAction(state);
+
+    switch (state.playerState.locationId) {
+        case Locations.locationIds.SHORES:
+            return applyShoresAction(state);
+    }
+
+    throw `Unknown or invalid action ${state.playerState.stagedAction}.`;
 };
 
-const applyUnderwaterAction: Reducer = (playerState, globalState) => {
-    if (!Locations.locationsMapping[playerState.locationId].undersea)
+const applyUnderwaterAction: Transform = (state) => {
+    if (!Locations.locationsMapping[state.playerState.locationId].undersea)
         throw 'You cannot perform this action as you are not undersea.';
 
-    switch (playerState.stagedAction) {
+    switch (state.playerState.stagedAction) {
         case Actions.ALL_UNDERWATER.RESURFACE:
             return {
+                ...state,
                 playerState: {
-                    ...playerState,
+                    ...state.playerState,
                     oxygenUntil: null,
                     locationId: Locations.locationIds.SHORES,
                 },
-                globalState,
-                message: 'You have resurfaced and returned to Sleepy Shores.',
+                messages: [
+                    ...state.messages, 
+                    'You have resurfaced and returned to Sleepy Shores.'
+                ],
             };
 
         case Actions.ALL_UNDERWATER.STORE_OXYGEN: {
-            const { oxygenUntil, storedOxygen } = playerState;
+            const { oxygenUntil, storedOxygen } = state.playerState;
             if (storedOxygen === null)
                 throw "You cannot perform this action as you don't have an oxygen tank.";
 
@@ -80,35 +113,37 @@ const applyUnderwaterAction: Reducer = (playerState, globalState) => {
                 oxygenUntil.valueOf() - Date.now() - 2 * 60 * 1000
             );
             return {
+                ...state,
                 playerState: {
-                    ...playerState,
+                    ...state.playerState,
                     oxygenUntil: new Date(
                         oxygenUntil.valueOf() - oxygenToStore
                     ),
                     storedOxygen: storedOxygen + oxygenToStore,
                 },
-                globalState,
-                message: `You have transferred ${Util.formatDuration(
-                    oxygenToStore
-                )} of Oxygen to storage.`,
+                messages: [
+                    ...state.messages,
+                    `You have transferred ${Util.formatDuration(oxygenToStore)} of Oxygen to storage.`
+                ],
             };
         }
 
         case Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN: {
-            const { oxygenUntil, storedOxygen } = playerState;
+            const { oxygenUntil, storedOxygen } = state.playerState;
             if (storedOxygen === null)
                 throw "You cannot perform this action as you don't have an oxygen tank.";
 
             return {
+                ...state,
                 playerState: {
-                    ...playerState,
+                    ...state.playerState,
                     oxygenUntil: new Date(oxygenUntil.valueOf() + storedOxygen),
                     storedOxygen: 0,
                 },
-                globalState,
-                message: `You have withdrawn ${Util.formatDuration(
-                    storedOxygen
-                )} of Oxygen from storage.`,
+                messages: [
+                    ...state.messages,
+                    `You have withdrawn ${Util.formatDuration(storedOxygen)} of Oxygen from storage.`
+                ],
             };
         }
     }
@@ -116,21 +151,23 @@ const applyUnderwaterAction: Reducer = (playerState, globalState) => {
     throw 'Action not implemented.';
 };
 
-const applyShoresAction: Reducer = (playerState, globalState) => {
-    switch (playerState.stagedAction) {
+const applyShoresAction: Transform = (state) => {
+    switch (state.playerState.stagedAction) {
         case Actions.SLEEPY_SHORES.DIVE: {
             return {
+                ...state,
                 playerState: {
-                    ...playerState,
+                    ...state.playerState,
                     oxygenUntil: new Date(Date.now() + 20 * 60 * 1000),
                     locationId: Locations.locationIds.SHALLOWS,
                     quests: {
-                        ...playerState.quests,
+                        ...state.playerState.quests,
                     },
                 },
-                globalState,
-                message:
-                    'You have successfully dived. You are now at the Shallows.',
+                messages: [
+                    ...state.messages, 
+                    'You have successfully dived. You are now at the Shallows.'
+                ],
             };
         }
     }

@@ -8,7 +8,7 @@ import {
     notifyGameState,
 } from './connections';
 import logger from './logger';
-import { applyReducer, gameState, setAction } from './stateMgr';
+import { applyTransform, gameState, setAction } from './stateMgr';
 
 export type Socket = BaseSocket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -63,7 +63,7 @@ export const onAcceptHandler: SocketHandler<undefined> = async (
     const { stagedAction } = gameState.players[credentials.groupNum];
     if (stagedAction) return reply('error', 'No action to reject.');
 
-    applyReducer(applyAction, credentials.groupNum as TeamId);
+    applyTransform(applyAction, credentials.groupNum as TeamId);
 
     logger.log(
         'info',
