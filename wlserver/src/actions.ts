@@ -4,6 +4,7 @@ import {
     Util,
     QuestId,
     quests,
+    questIds,
 } from 'wlcommon';
 import { makePostCompletionTransform } from './questRewards';
 import { Transform } from './stateMgr';
@@ -37,12 +38,14 @@ export const makeIssueQuestTransform = (questId: QuestId): Transform => (state) 
     };
 }
 
-export const makeAdvanceQuestTransform = (questId: QuestId, stage?: number): Transform => (state) => {
+export const makeAdvanceQuestTransform = (questId: QuestId, stage: number): Transform => (state) => {
     const questState = { ...state.playerState.quests[questId] };
     questState.stages = [...questState.stages];
 
     // quest validation
     if (questState === undefined) throw `Player does not have quest with quest ID ${questId} active.`
+
+    if (questState.stages[stage]) return state;
 
     // stage validation
     if (quests[questId].stageOrder === 'inOrder' && stage > 0 && !questState.stages[stage - 1])
@@ -154,21 +157,18 @@ const applyUnderwaterAction: Transform = (state) => {
 const applyShoresAction: Transform = (state) => {
     switch (state.playerState.stagedAction) {
         case Actions.SLEEPY_SHORES.DIVE: {
-            return {
+            return makeAdvanceQuestTransform(questIds.CHAPTER_1, 0)({
                 ...state,
                 playerState: {
                     ...state.playerState,
                     oxygenUntil: new Date(Date.now() + 20 * 60 * 1000),
                     locationId: Locations.locationIds.SHALLOWS,
-                    quests: {
-                        ...state.playerState.quests,
-                    },
                 },
                 messages: [
                     ...state.messages, 
-                    'You have successfully dived. You are now at the Shallows.'
+                    'You dive into the deep blue sea... and arrive at the Shallows!'
                 ],
-            };
+            });
         }
     }
 
