@@ -41,14 +41,11 @@ const Game = (props: GameProps): React.ReactElement => {
             console.log(newGameState);
             setPlayerState(newGameState) 
         });
-    })
-
-    React.useEffect(() => {
         socket.on('global_update', (newGameState: React.SetStateAction<undefined>) => {
             console.log(newGameState);
             setGlobalState(newGameState)
-        })
-    })
+        });
+    }, []);
 
     const handleAction = (action: string) => {
         console.log(action);
