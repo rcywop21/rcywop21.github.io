@@ -32,8 +32,8 @@ const Timer = (props: TimerProps): React.ReactElement => {
     const secLeft = Math.max(Math.floor(timeLeft/1000) % 60, 0)
     
     React.useEffect(() => {
-        setInterval(() => setTimeLeft(Date.parse(time) - Date.now()), 500);
-        return;
+        const timer = setInterval(() => setTimeLeft(Date.parse(time) - Date.now()), 500);
+        return () => clearInterval(timer);
     });
     
     return (
