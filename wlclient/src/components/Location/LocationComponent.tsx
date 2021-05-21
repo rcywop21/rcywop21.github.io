@@ -1,58 +1,45 @@
 import React from 'react';
 import Action from './Action';
-import { Locations } from 'wlcommon';
+import { Locations, PlayerState } from 'wlcommon';
 import './LocationComponent.css';
+
+import Shallows from './Shallows';
 
 export interface LocationProps {
     locationId: Locations.LocationId;
 }
 
-const LOCATION_BACKGROUND_MAP: Map<Locations.LocationId, string> = new Map([
-    [Locations.locationIds.SHALLOWS, "shallows.png"]
-]);
-
-const LOCATION_ACTIONS_MAP: Map<Locations.LocationId, string[][]> = new Map([
-    [Locations.locationIds.SHALLOWS, [
-        ["Explore", "360px", "239px"],
-        ["Travel", "853px", "156px"]
-    ]]    
-]);
-
-function getImg(item: Locations.LocationId): string {
-    const imgFileName = LOCATION_BACKGROUND_MAP.get(item);
-    
-    if (!imgFileName) {
-        return "";
-    }
-    
-    const imgFileDirectory = "/assets/locations/";
-    
-    return imgFileDirectory + imgFileName;
+export interface SpecificLocationProps {
+    state: any;
 }
 
-function getActionsInfo(item: Locations.LocationId): string[][] {
-    const actionsInfo = LOCATION_ACTIONS_MAP.get(item);
+export function getSpecificLocationComponent(id: Locations.LocationId, 
+        state: any): React.ReactElement {
+            
+    const SPECIFIC_LOCATION_COMPONENT_MAP: Map<Locations.LocationId, React.ReactElement> = new Map([
+        [Locations.locationIds.SHALLOWS, <Shallows key="" state={state} />]
+    ]);
     
-    if (!actionsInfo) {
-        return [[]];
+    const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(id);
+    if (!component) {
+        return (<React.Fragment></React.Fragment>);
     }
-    
-    return actionsInfo;
+    return component;
+}
+
+export function imgDirectoryGenerator(imgFileName: string): string {
+    return "/assets/locations/" + imgFileName;
 }
 
 const LocationComponent = (props: LocationProps): React.ReactElement => {
     const { locationId } = props;
     
     const location: Locations.Location = Locations.locationsMapping[locationId];
-    const actionsInfo = getActionsInfo(locationId);
     
     return (
         <div className="location">
-            <img src={getImg(locationId)} />
             <p className="currLocationTitle">{location.name}</p>
-            { actionsInfo.map((item: string[]) => { return (
-                <Action key= {item[0]} action={item[0]} x={item[1]} y={item[2]} />
-            );}) }
+            { getSpecificLocationComponent(locationId, {}) }
         </div>
     );
 }

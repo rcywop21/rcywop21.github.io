@@ -3,7 +3,7 @@ import TopBar from './TopBar/TopBar';
 import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-import { Locations, Actions } from 'wlcommon';
+import { Locations, Actions, PlayerState, GlobalState } from 'wlcommon';
 import './Game.css';
 import { socket } from '../socket/socket';
 
@@ -30,19 +30,13 @@ export interface GameProps {
             - Various popup windows
 */
 
+
 const Game = (props: GameProps): React.ReactElement => {
     const { groupId } = props;
     const [ playerState, setPlayerState ] = React.useState(undefined);
     const [ globalState, setGlobalState ] = React.useState(undefined);
     
     //gamestate processing and listening
-    const testNotifs: string[] = [];
-    let i = 0;
-    while (i < 10) {
-        testNotifs.push(i.toString() + "test".repeat(i));
-        i++;
-    }
-
     React.useEffect(() => {
         socket.on('player_update', (newGameState: React.SetStateAction<undefined>) => {
             console.log(newGameState);
@@ -53,6 +47,12 @@ const Game = (props: GameProps): React.ReactElement => {
             setGlobalState(newGameState)
         });
     }, []);
+    
+    /*
+    if (playerState === undefined || globalState === undefined) {
+        return <p>How???</p>
+    }
+    */
 
     const handleAction = (action: string) => {
         console.log(action);
@@ -68,9 +68,23 @@ const Game = (props: GameProps): React.ReactElement => {
         });
     }
     
+    function handleSpecificAction(action: string) {
+        return () => handleAction(action);
+    }
+    
+    const testNotifs: string[] = [];
+    let i = 0;
+    while (i < 10) {
+        testNotifs.push(i.toString() + "test".repeat(i));
+        i++;
+    }
+    //testNotifs.push("999" + playerState.oxygenUntil.toString());
+
+    
+    
     return (
         <div className="game">
-            <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenLeft={300} oxygenRate={1} crimsonTime="2021-05-21T19:06:00.000+08:00" />
+            <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenLeft={300} oxygenRate={1} crimsonTime={"2021-05-22T19:06:00.000+08:00"} />
             <LocationComponent locationId={Locations.locationIds.SHALLOWS} />
             <BottomBar notifications={testNotifs} quests={null} />
             <Journal />

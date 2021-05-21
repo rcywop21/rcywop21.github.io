@@ -1,4 +1,4 @@
-import { LocationId } from "wlcommon";
+import { LocationId } from "./locations";
 import { locationIds, locationsMapping } from "./locations";
 
 export type Action = string;
