@@ -1,5 +1,6 @@
 import React from 'react';
 import Login from '../components/Login';
+import Game from '../components/Game';
 
 export interface MainProps {
     loggedIn: boolean;
@@ -17,7 +18,12 @@ const Main = (props: MainProps): React.ReactElement => {
         );
     }
 
-    return <div>Logged in! WIP</div>;
+    return (
+        <div>
+            <p>Logged in! WIP</p>
+            <Game groupId="420"/>
+        </div>
+    );
 };
 
 export default Main;
