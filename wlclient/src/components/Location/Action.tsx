@@ -5,26 +5,22 @@ export interface ActionProps {
     action: string;
     x: string;
     y: string;
+    handleAction: () => void;
 }
 
-const Action = (props: ActionProps): React.ReactElement => {
-    const { action, x, y } = props;
+export const Action = (props: ActionProps): React.ReactElement => {
+    const { action, x, y, handleAction } = props;
     
     const position = {
         top: y,
         left: x
     };
-    
-    function handleClick(): void {
-        const doNothing = 1 + 2;
-        return;
-    }
-    
+
     return (
         <div
             className="action"
             style={position}
-            onClick={handleClick}
+            onClick={handleAction}
         >
             <p>{action}</p>
         </div>
