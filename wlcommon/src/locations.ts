@@ -77,6 +77,16 @@ export const locationIds = {
     ALCOVE: 'Alcove',
     SHRINE: 'Shrine',
     WOODS: 'Woods',
+    STATUE: 'Statue',
+    LIBRARY: 'Library',
+    KELP: 'Kelp',
+    BUBBLE: 'Bubble',
+    ANCHOVY: 'Anchovy',
+    BARNACLE: 'Barnacle',
+    CATFISH: 'Catfish',
+    SALMON: 'Salmon',
+    TUNA: 'Tuna',
+    UMBRAL: 'Umbral',
 };
 
 const locations: Location[] = [
@@ -126,6 +136,40 @@ const locations: Location[] = [
         .surface()
         .hidden()
         .make(),
+    new LocationBuilder(locationIds.STATUE, 'Statue of Triton')
+        .description('A monument to Triton, famed hero of the Undersea.')
+        .oxygenStream()
+        .make(),
+    new LocationBuilder(locationIds.LIBRARY, 'Marine Library')
+        .description("The Undersea's largest collection of books. If you have a Library Pass, you can read the books in the Restricted Section.")
+        .make(),
+    new LocationBuilder(locationIds.KELP, 'Kelp Plains')
+        .description('The plains is full of seaweed, and stretches for miles and miles.')
+        .make(),
+    new LocationBuilder(locationIds.BUBBLE, 'Bubble Factory')
+        .description('One of the largest source of Oxygen in the Undersea. However, you will need a Bubble Pass to be able to get Oxygen here.')
+        .make(),
+    new LocationBuilder(locationIds.ANCHOVY, 'Anchovy Avenue')
+        .description('A residential district. It is located close to the Marine Library and many of the staff live here.')
+        .make(),
+    new LocationBuilder(locationIds.BARNACLE, 'Barnacle Residences')
+        .description('A residential district. Some of the more eccentric personalities in the Undersea live here.')
+        .make(),
+    new LocationBuilder(locationIds.CATFISH, 'Catfish Crescent')
+        .description('A residential district. An Oxygen Stream is located here.')
+        .oxygenStream()
+        .make(),
+    new LocationBuilder(locationIds.SALMON, 'Salmon Street')
+        .description('A residential district. An Oxygen Stream is located here.')
+        .oxygenStream()
+        .make(),
+    new LocationBuilder(locationIds.TUNA, 'Tuna Turn')
+        .description('A residential district. An Oxygen Stream is located here.')
+        .oxygenStream()
+        .make(),
+    new LocationBuilder(locationIds.UMBRAL, 'Umbral Ruins')
+        .description('A rundown area. There used to be a residential district here, until the local Oxygen Stream just vanished one day.')
+        .make()
 ];
 
 export const locationsMapping: Record<string, Location> = {};
