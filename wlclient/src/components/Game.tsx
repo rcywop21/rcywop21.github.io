@@ -3,11 +3,7 @@ import TopBar from './TopBar/TopBar';
 import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-<<<<<<< HEAD
-import { Locations } from 'wlcommon';
-=======
-import { Actions } from 'wlcommon';
->>>>>>> main
+import { Locations, Actions } from 'wlcommon';
 import './Game.css';
 import { socket } from '../socket/socket';
 
@@ -40,7 +36,6 @@ const Game = (props: GameProps): React.ReactElement => {
     const [ globalState, setGlobalState ] = React.useState(undefined);
     
     //gamestate processing and listening
-<<<<<<< HEAD
     const testNotifs: string[] = [];
     let i = 0;
     while (i < 10) {
