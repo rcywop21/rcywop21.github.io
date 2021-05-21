@@ -2,6 +2,7 @@ import { ItemRecord, ItemId } from './items';
 import { Action } from './actions';
 import { QuestState } from './quests';
 import { QuestId } from './quests';
+import { LocationId } from 'wlcommon';
 export { Action };
 
 export type TeamId = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -33,13 +34,15 @@ export interface PlayerState {
     oxygenUntil: Date | null;
     quests: Record<QuestId, QuestState>;
     inventory: Record<ItemId, ItemRecord>;
-    streamCooldownExpiry: Record<string, Date | undefined>;
+    streamCooldownExpiry: Record<LocationId, Date>;
     storedOxygen: number | null;
     stagedAction: Action | null;
     knowsCrimson: boolean;
     knowsLanguage: boolean;
+    knowsOxygen?: boolean;
     foundEngraving: boolean;
-    hasMap: boolean;
+    hasMap?: boolean;
+    hasBubblePass?: boolean;
     unlockedAlcove?: boolean;
     unlockedShrine?: boolean;
     unlockedWoods?: boolean;

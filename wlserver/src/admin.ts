@@ -94,7 +94,7 @@ const commands = {
         const stage = parseInt(payload.shift());
         if (questId === null || questId === undefined || stage === undefined || Number.isNaN(questId) || Number.isNaN(stage))
             throw `Invalid quest ID ${questId} or stage ${stage}.`
-        applyTransform(makeAdvanceQuestTransform(questId, stage), playerId);
+        applyTransform(makeAdvanceQuestTransform(questId, stage, true), playerId);
         reply('cmdok', 'Quest advanced.');
     },
     move: (payload: string[], reply: Reply) => {

@@ -1,20 +1,10 @@
 import { QuestId, questIds, quests } from "wlcommon"
 import { makeIssueQuestTransform } from "./actions";
+import { makeAddOxygenTransform } from "./oxygen";
 import { identityTransform, Transform, TransformState } from "./stateMgr";
 
 const transforms: Record<QuestId, Transform> = {
-    [questIds.CHAPTER_1]: (state) => {
-        const oxygenUntil = state.playerState.oxygenUntil?.valueOf() + 30 * 60 * 1000;
-        const newOxygen = oxygenUntil === null ? null : new Date(oxygenUntil);
-        return {
-            ...state,
-            playerState: {
-                ...state.playerState,
-                oxygenUntil: newOxygen,
-                hasMap: true,
-            },
-        };
-    }
+    [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60),
 }
 
 export const makePostCompletionTransform = (questId: QuestId): Transform => (state) => {

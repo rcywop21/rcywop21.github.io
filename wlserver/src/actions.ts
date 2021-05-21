@@ -5,8 +5,10 @@ import {
     QuestId,
     quests,
     questIds,
+    itemDetails,
 } from 'wlcommon';
-import { locationIds } from 'wlcommon/build/locations';
+import { makeAddItemTransform } from './inventory';
+import { makeAddOxygenTransform, makeRemoveOxygenTransform, updateStreamCooldownTransform } from './oxygen';
 import { makePostCompletionTransform } from './questRewards';
 import { Transform } from './stateMgr';
 
@@ -39,18 +41,25 @@ export const makeIssueQuestTransform = (questId: QuestId): Transform => (state) 
     };
 }
 
-export const makeAdvanceQuestTransform = (questId: QuestId, stage: number): Transform => (state) => {
+export const makeAdvanceQuestTransform = (questId: QuestId, stage: number, admin = false): Transform => (state) => {
     const questState = { ...state.playerState.quests[questId] };
     questState.stages = [...questState.stages];
 
     // quest validation
-    if (questState === undefined) throw `Player does not have quest with quest ID ${questId} active.`
+    if (questState === undefined) { 
+        if (admin) 
+            throw `Player does not have quest with quest ID ${questId} active.` 
+        else return state;
+    }
 
     if (questState.stages[stage]) return state;
 
     // stage validation
-    if (quests[questId].stageOrder === 'inOrder' && stage > 0 && !questState.stages[stage - 1])
-        throw `Player has not completed stage ${stage - 1} required for 'inOrder' quest with ID ${questId}.`
+    if (quests[questId].stageOrder === 'inOrder' && stage > 0 && !questState.stages[stage - 1]) {
+        if (admin)
+            throw `Player has not completed stage ${stage - 1} required for 'inOrder' quest with ID ${questId}.`
+        else return state;
+    }
 
     // set stage true
     questState.stages[stage] = true;
@@ -80,13 +89,103 @@ const applyAction: Transform = (state) => {
     if (actionList.underwater.includes(state.playerState.stagedAction))
         return applyUnderwaterAction(state);
 
-    switch (state.playerState.locationId) {
-        case Locations.locationIds.SHORES:
-            return applyShoresAction(state);
-    }
+    const locationAction = applyLocationActions[state.playerState.locationId];
+    if (Locations.locationIds !== undefined)
+        return locationAction(state);
 
     throw `Unknown or invalid action ${state.playerState.stagedAction}.`;
 };
+
+const applyLocationActions: Record<Locations.LocationId, Transform> = {
+    [Locations.locationIds.SHORES]: (state) => {
+        switch (state.playerState.stagedAction) {
+            case Actions.specificActions.SHORES.DIVE: {
+                return makeAdvanceQuestTransform(questIds.CHAPTER_1, 0)({
+                    ...state,
+                    playerState: {
+                        ...state.playerState,
+                        oxygenUntil: new Date(Date.now() + 20 * 60 * 1000),
+                        locationId: Locations.locationIds.SHALLOWS,
+                    },
+                    messages: [
+                        ...state.messages, 
+                        'You dive into the deep blue sea... and arrive at the Shallows!'
+                    ],
+                });
+            }
+        }
+
+        throw 'Action not implemented.';
+    },
+    [Locations.locationIds.CORALS]: (state) => {
+        switch (state.playerState.stagedAction) {
+            case Actions.specificActions.CORALS.EXPLORE:
+                return makeIssueQuestTransform(questIds.FINCHES)(makeRemoveOxygenTransform(300)(state));
+            case Actions.specificActions.CORALS.LEARN_LANG:
+                return makeAdvanceQuestTransform(questIds.FINCHES, 0)(state);
+            case Actions.ALL_OXYGEN.GET_OXYGEN:
+                return makeAdvanceQuestTransform(questIds.CHAPTER_1, 1)(
+                    makeAddOxygenTransform(1200)(
+                        updateStreamCooldownTransform(state)
+                    )
+                );
+        }
+
+        throw 'Action not implemented.';
+    },
+    [Locations.locationIds.STORE]: (state) => {
+        switch (state.playerState.stagedAction) {
+            case Actions.specificActions.STORE.BUY_MAP:
+                return makeAddItemTransform(itemDetails.MAP.id, 1)(
+                    makeAdvanceQuestTransform(questIds.CHAPTER_1, 2)(
+                        makeRemoveOxygenTransform(300)({
+                            ...state,
+                            playerState: {
+                                ...state.playerState,
+                                hasMap: true,
+                            }
+                        })
+                    )
+                );
+            case Actions.specificActions.STORE.BUY_DOLL:
+                return makeAddItemTransform(itemDetails.MERMAID_DOLL.id, 1)(
+                    makeRemoveOxygenTransform(600)(state)
+                );
+            case Actions.specificActions.STORE.BUY_GUIDE:
+                return makeAddItemTransform(itemDetails.OXYGEN_GUIDE.id, 1)(
+                    makeRemoveOxygenTransform(300)({
+                        ...state,
+                        playerState: {
+                            ...state.playerState,
+                            knowsOxygen: true,
+                        }
+                    })
+                );
+            case Actions.specificActions.STORE.BUY_BUBBLE_PASS:
+                return makeAddItemTransform(itemDetails.BUBBLE.id, 1)(
+                    makeRemoveOxygenTransform(2400)({
+                        ...state,
+                        playerState: {
+                            ...state.playerState,
+                            hasBubblePass: true,
+                        }
+                    })
+                );
+            case Actions.specificActions.STORE.BUY_PUMP:
+                return makeAddItemTransform(itemDetails.PUMP.id, 1)(
+                    makeRemoveOxygenTransform(1800)({
+                        ...state,
+                        playerState: {
+                            ...state.playerState,
+                            storedOxygen: state.playerState.storedOxygen ?? 0,
+                        }
+                    })
+                );
+        }
+
+        throw 'Action not implemented.';
+    }
+}
 
 const applyUnderwaterAction: Transform = (state) => {
     if (!Locations.locationsMapping[state.playerState.locationId].undersea)
@@ -154,33 +253,5 @@ const applyUnderwaterAction: Transform = (state) => {
 
     throw 'Action not implemented.';
 };
-
-const applyShoresAction: Transform = (state) => {
-    switch (state.playerState.stagedAction) {
-        case Actions.specificActions[locationIds.SHORES].DIVE: {
-            return makeAdvanceQuestTransform(questIds.CHAPTER_1, 0)({
-                ...state,
-                playerState: {
-                    ...state.playerState,
-                    oxygenUntil: new Date(Date.now() + 20 * 60 * 1000),
-                    locationId: Locations.locationIds.SHALLOWS,
-                },
-                messages: [
-                    ...state.messages, 
-                    'You dive into the deep blue sea... and arrive at the Shallows!'
-                ],
-            });
-        }
-    }
-
-    throw 'Action not implemented.';
-};
-
-const applyCoralsAction: Transform = (state) => {
-    switch (state.playerState.stagedAction) {
-        case Actions.specificActions[locationIds.CORALS].EXPLORE:
-            break;
-    }
-}
 
 export default applyAction;
