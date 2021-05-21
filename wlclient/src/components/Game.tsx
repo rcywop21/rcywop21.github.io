@@ -33,12 +33,18 @@ const Game = (props: GameProps): React.ReactElement => {
     const { groupId } = props;
     
     //gamestate processing and listening
+    const testNotifs: string[] = [];
+    let i = 0;
+    while (i < 10) {
+        testNotifs.push(i.toString() + "test".repeat(i));
+        i++;
+    }
     
     return (
         <div className="game">
             <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenLeft={300} oxygenRate={1} crimsonTime="2021-05-21T19:06:00.000+08:00" />
             <Location />
-            <BottomBar />
+            <BottomBar notifications={testNotifs} quests={null} />
             <Journal />
         </div>
     );

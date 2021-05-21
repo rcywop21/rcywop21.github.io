@@ -1,0 +1,31 @@
+.notifications {
+    width: 738px;
+    height: 205px;
+    border-right: 2px solid black;
+}
+
+.notifTitle {
+    position: absolute;
+    padding: 0;
+    margin: 7px 0 0 15px;
+    color: #943322;
+}
+
+.notif {
+    padding: 0;
+    margin: 0 0 0 15px;
+    text-align: left;
+}
+
+.innerNotifBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 157px;
+    width: 738px;
+    overflow: auto;
+}
