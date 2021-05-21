@@ -7,31 +7,45 @@ export interface Item {
 }
 
 export interface ItemRecord {
-    item: Item;
+    item: ItemId;
     qty: number;
 }
 
-const itemList: Item[] = [
-    {
+export const itemDetails = {
+    MAP: {
         id: 'Map',
         name: 'Map of the Undersea',
-        description:
-            'It shows you the way to most of the major locations in the Undersea.',
+        description: 'It shows you the way to most of the major locations in the Undersea.',
     },
-    {
+    OXYGEN_GUIDE: {
         id: 'OxygenGuide',
         name: 'Guide to Oxygen Streams',
         description:
             'It describes most of the Oxygen Streams in the Undersea as well as how to get Oxygen from them.',
     },
-    {
+    MERMAID_DOLL: {
         id: 'MermaidDoll',
         name: 'Mermaid Doll',
         description: "It's a doll of The Little Mermaid! How cute.",
     },
-];
+    PUMP: {
+        id: 'Pump',
+        name: 'Oxygen Pump',
+        description: "This pump allows you to store all your Oxygen before you resurface, so it doesn't go to waste.",
+    },
+    BLACK_ROCK: {
+        id: 'BlackRock',
+        name: 'Mysterious Black Rock',
+        description: "It's a strange looking black rock. There are odd markings on it. Nobody knows what its uses, or properties are...",
+    },
+    BUBBLE: {
+        id: 'BubblePass',
+        name: 'Bubble Pass',
+        description: 'This golden pass lets you access the Bubble Factory. It has no expiry date and can be used multiple times.',
+    }
+}
 
-export const items: Record<ItemId, Item> = {};
-itemList.forEach((item) => {
-    items[item.id] = item;
-});
+export const itemsById: Record<ItemId, Item> = {};
+Object.values(itemDetails).forEach((item) => {
+    itemsById[item.id] = item;
+})
