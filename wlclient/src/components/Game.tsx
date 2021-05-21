@@ -66,6 +66,7 @@ const Game = (props: GameProps): React.ReactElement => {
                 console.log("Info: " + payload);
             }
         });
+    }
     
     return (
         <div className="game">
