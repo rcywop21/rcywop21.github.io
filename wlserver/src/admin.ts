@@ -1,4 +1,4 @@
-import { QuestId, TeamId } from 'wlcommon';
+import { Locations, QuestId, TeamId } from 'wlcommon';
 import applyAction, { makeAdvanceQuestTransform, makeIssueQuestTransform } from './actions';
 import { getCredentials } from './connections';
 import { Reply, SocketHandler } from './socketHandlers';
@@ -96,6 +96,14 @@ const commands = {
             throw `Invalid quest ID ${questId} or stage ${stage}.`
         applyTransform(makeAdvanceQuestTransform(questId, stage), playerId);
         reply('cmdok', 'Quest advanced.');
+    },
+    move: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        const destination = payload.shift() as Locations.LocationId;
+        if (!Locations.locationsMapping[destination])
+            throw `Invalid location ${destination}.`
+        gameState.players[playerId].locationId = destination;
+        reply('cmdok', 'Player moved.');
     }
 };
 

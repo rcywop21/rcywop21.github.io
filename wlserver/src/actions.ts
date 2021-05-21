@@ -6,6 +6,7 @@ import {
     quests,
     questIds,
 } from 'wlcommon';
+import { locationIds } from 'wlcommon/build/locations';
 import { makePostCompletionTransform } from './questRewards';
 import { Transform } from './stateMgr';
 
@@ -156,7 +157,7 @@ const applyUnderwaterAction: Transform = (state) => {
 
 const applyShoresAction: Transform = (state) => {
     switch (state.playerState.stagedAction) {
-        case Actions.SLEEPY_SHORES.DIVE: {
+        case Actions.specificActions[locationIds.SHORES].DIVE: {
             return makeAdvanceQuestTransform(questIds.CHAPTER_1, 0)({
                 ...state,
                 playerState: {
@@ -174,5 +175,12 @@ const applyShoresAction: Transform = (state) => {
 
     throw 'Action not implemented.';
 };
+
+const applyCoralsAction: Transform = (state) => {
+    switch (state.playerState.stagedAction) {
+        case Actions.specificActions[locationIds.CORALS].EXPLORE:
+            break;
+    }
+}
 
 export default applyAction;

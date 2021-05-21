@@ -40,9 +40,10 @@ export interface PlayerState {
     knowsLanguage: boolean;
     foundEngraving: boolean;
     hasMap: boolean;
-    unlockedAlcove: boolean;
-    unlockedShrine: boolean;
-    unlockedWoods: boolean;
+    unlockedAlcove?: boolean;
+    unlockedShrine?: boolean;
+    unlockedWoods?: boolean;
+    exploredCorals?: boolean;
 }
 
 export interface Message {
