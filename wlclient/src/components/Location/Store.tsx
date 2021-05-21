@@ -3,19 +3,23 @@ import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, getSpecificLocationComponent, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
 
-const Shallows = (props: SpecificLocationProps): React.ReactElement => {
+const Store = (props: SpecificLocationProps): React.ReactElement => {
     const { state, handleAction } = props;
     
-    const locationId = Locations.locationIds.SHALLOWS;
+    const locationId = Locations.locationIds.STORE;
     const location: Locations.Location = Locations.locationsMapping[locationId];
-    const actionsInfo = Actions.actionsByLocation[Locations.locationIds.SALMON];
+    const actionsInfo = Actions.actionsByLocation[locationId];
     const actionPositions: string[][] = [
-        ["360px", "239px"],
-        ["853px", "156px"],
+        ["577px", "549px"],
+        ["717px", "308px"],
+        ["451px", "221px"],
+        ["278px", "140px"],
+        ["810px", "209px"],
+        ["252px", "495px"],
+        ["433px", "344px"],
         ["870px", "488px"],
         ["870px", "543px"],
-        ["45px", "120px"],
-        ["234px", "470px"]
+        ["99px", "251px"]
     ];
     const actionProps: ActionProps[] = [];
     for (let i = 0; i < actionsInfo.length; i++) {
@@ -30,7 +34,7 @@ const Shallows = (props: SpecificLocationProps): React.ReactElement => {
     
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator("shallows.png")} />
+            <img src={imgDirectoryGenerator("store.png")} />
             { actionProps.map((info: ActionProps) => {
                 return (<Action 
                     key="" 
@@ -40,6 +44,6 @@ const Shallows = (props: SpecificLocationProps): React.ReactElement => {
     );
 }
 
-export default Shallows;
+export default Store;
             
             
