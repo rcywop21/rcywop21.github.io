@@ -8,6 +8,7 @@ import Shores from './Shores';
 import Corals from './Corals';
 import Store from './Store';
 import Woods from './Woods';
+import Statue from './Statue';
 
 export interface LocationProps {
     locationId: Locations.LocationId;
@@ -28,6 +29,7 @@ export function getSpecificLocationComponent(id: Locations.LocationId,
         [Locations.locationIds.CORALS, <Corals key="" state={state} handleAction={handleAction} />],
         [Locations.locationIds.STORE, <Store key="" state={state} handleAction={handleAction} />],
         [Locations.locationIds.WOODS, <Woods key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.STATUE, <Statue key="" state={state} handleAction={handleAction} />],
     ]);
     
     const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(id);
