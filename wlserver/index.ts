@@ -8,6 +8,9 @@ import {
 } from './src/socketHandlers';
 import { onAdminHandler } from './src/admin';
 import logger from './src/logger';
+import setupGameState from './src/startup';
+
+setupGameState();
 
 io.on('connection', (socket) => {
     logger.log('info', 'New client connected');
