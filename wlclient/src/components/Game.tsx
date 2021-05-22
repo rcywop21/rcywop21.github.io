@@ -50,20 +50,12 @@ const Game = (props: GameProps): React.ReactElement => {
         return () => socket?.emit('travel', location);
     }
     
-    const testNotifs: string[] = [];
-    let i = 0;
-    while (i < 10) {
-        testNotifs.push(i.toString() + "test".repeat(i));
-        i++;
-    }
-    
     const playerNotifs: Message[] = globalState.messages
         .filter(message => message.visibility === "all" || message.visibility === teamId)
-    //testNotifs.push("999" + playerState.oxygenUntil.toString());
     
     return (
         <div className="game">
-            <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenUntil={playerState.oxygenUntil} crimsonUntil={new Date()} />
+            <TopBar inventory={playerState.inventory} oxygenUntil={playerState.oxygenUntil} crimsonUntil={new Date()} />
             <LocationComponent 
                 locationId={playerState.locationId} 
                 handleAction={handleSpecificAction} 
