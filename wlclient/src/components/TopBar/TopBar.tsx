@@ -5,16 +5,12 @@ import './TopBar.css';
 
 export interface TopBarProps {
     inventory: string[];
-    oxygenLeft: number;
-    oxygenRate: number;
-    crimsonTime: string;
+    oxygenUntil: Date | null;
+    crimsonUntil: Date;
 }
 
 const TopBar = (props: TopBarProps): React.ReactElement => {
-    const { inventory, oxygenLeft, oxygenRate, crimsonTime } = props;
-    
-    //timer processing
-    const oxygenTime = new Date(Date.now() + oxygenLeft * 1000 / oxygenRate).toISOString();
+    const { inventory, oxygenUntil } = props;
     
     
     return (
@@ -23,8 +19,8 @@ const TopBar = (props: TopBarProps): React.ReactElement => {
                 { inventory.map((item: string) => { return (<InventoryItem key={item} name={item} />)}) }
             </div>
             <div className="timers">
-                <Timer name="oxygen" time={oxygenTime} />
-                <Timer name="crimson" time={crimsonTime} />
+                {oxygenUntil && <Timer name="oxygen" until={oxygenUntil} />}
+                {/*<Timer name="crimson" time={crimsonTime} />*/}
             </div>
         </div>
     )

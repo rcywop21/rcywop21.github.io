@@ -1,15 +1,18 @@
 import React from 'react';
+import { Util } from 'wlcommon';
 import './Timer.css';
 
 export interface TimerProps {
     name: string;
-    time: string;
+    until: Date;
 }
 
 const TIMER_IMG_ASSET_MAP: Map<string, string> = new Map([
     ["oxygen", "oxygen.png"],
     ["crimson", "crimson.png"]
 ]);
+
+const UPDATE_INTERVAL = 1000 / 10;
 
 function getImg(name: string): string {
     const imgFileName = TIMER_IMG_ASSET_MAP.get(name);
@@ -24,22 +27,20 @@ function getImg(name: string): string {
 }
 
 const Timer = (props: TimerProps): React.ReactElement => {
-    const { name, time } = props;
-    const [timeLeft, setTimeLeft] = React.useState<number>(Date.parse(time) - Date.now())
-    
-    //timer processing
-    const minLeft = Math.max(Math.floor(timeLeft/60000), 0)
-    const secLeft = Math.max(Math.floor(timeLeft/1000) % 60, 0)
-    
+    const { name, until } = props;
+    const [timeLeft, setTimeLeft] = React.useState(new Date(until).valueOf() - Date.now());
+
     React.useEffect(() => {
-        const timer = setInterval(() => setTimeLeft(Date.parse(time) - Date.now()), 500);
+        const timer = setInterval(() => {
+            setTimeLeft(new Date(until).valueOf() - Date.now());
+        }, UPDATE_INTERVAL);
         return () => clearInterval(timer);
-    });
+    }, [setTimeLeft, until]);
     
     return (
         <div className="timer">
             <img src={getImg(name)} />
-            <span>{minLeft.toString()}:{secLeft.toString().padStart(2, "0")}</span>
+            <span>{Util.formatDuration(timeLeft)}</span>
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import { Locations, QuestId, TeamId } from 'wlcommon';
 import applyAction, { makeAdvanceQuestTransform, makeIssueQuestTransform } from './actions';
-import { getCredentials } from './connections';
+import { getCredentials, notifyGameState, notifyPlayerState } from './connections';
 import { Reply, SocketHandler } from './socketHandlers';
 import { applyTransform, gameState, setAction } from './stateMgr';
 
@@ -134,6 +134,9 @@ export const onAdminHandler: SocketHandler<string[]> = async (
     } catch (e) {
         reply('error', e);
     }
+
+    notifyPlayerState(credentials.groupNum);
+    notifyGameState();
 };
 
 const getPlayerId = (payload: string[]): TeamId => {

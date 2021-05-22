@@ -12,7 +12,7 @@ const Mentor = (props: MentorProps): React.ReactElement => {
     if (!loggedIn) {
         return (
             <div>
-                <Login updateLoggedIn={updateLoggedIn} mode="mentor" />
+                <Login updateLoggedIn={updateLoggedIn} mode="admin" />
             </div>
         );
     }

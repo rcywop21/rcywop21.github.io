@@ -3,12 +3,13 @@ import TopBar from './TopBar/TopBar';
 import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-import { Locations, Actions, PlayerState, GlobalState } from 'wlcommon';
+import { PlayerState, GlobalState } from 'wlcommon';
 import './Game.css';
-import { socket } from '../socket/socket';
+import { SocketContext } from '../socket/socket';
 
 export interface GameProps {
-    groupId: string;
+    globalState: GlobalState;
+    playerState: PlayerState;
 }
 
 /*
@@ -32,44 +33,16 @@ export interface GameProps {
 
 
 const Game = (props: GameProps): React.ReactElement => {
-    const { groupId } = props;
-    const [ playerState, setPlayerState ] = React.useState(undefined);
-    const [ globalState, setGlobalState ] = React.useState(undefined);
-    
-    //gamestate processing and listening
-    React.useEffect(() => {
-        socket.on('player_update', (newGameState: React.SetStateAction<undefined>) => {
-            console.log(newGameState);
-            setPlayerState(newGameState) 
-        });
-        socket.on('global_update', (newGameState: React.SetStateAction<undefined>) => {
-            console.log(newGameState);
-            setGlobalState(newGameState)
-        });
-    }, []);
-    
-    /*
-    if (playerState === undefined || globalState === undefined) {
-        return <p>How???</p>
-    }
-    */
+    const { globalState, playerState} = props;
 
-    const handleAction = (action: string) => {
-        console.log(action);
-        socket.emit("action", action, (
-            eventType: string,
-            payload: string | Record<string, unknown>
-        ) => {
-            if (eventType == "error") {
-                console.log("Error: " + payload);
-            } else if (eventType == "info") {
-                console.log("Info: " + payload);
-            }
-        });
-    }
+    const socket = React.useContext(SocketContext);
     
     function handleSpecificAction(action: string) {
         return () => handleAction(action);
+    }
+
+    function handleAction(action: string) {
+        socket?.emit('action', action);
     }
     
     const testNotifs: string[] = [];
@@ -79,13 +52,11 @@ const Game = (props: GameProps): React.ReactElement => {
         i++;
     }
     //testNotifs.push("999" + playerState.oxygenUntil.toString());
-
-    
     
     return (
         <div className="game">
-            <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenLeft={300} oxygenRate={1} crimsonTime={"2021-05-22T19:06:00.000+08:00"} />
-            <LocationComponent locationId={Locations.locationIds.UMBRAL} handleAction={handleSpecificAction} />
+            <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenUntil={playerState.oxygenUntil} crimsonUntil={new Date()} />
+            <LocationComponent locationId={playerState.locationId} handleAction={handleSpecificAction} />
             <BottomBar notifications={testNotifs} quests={null} />
             <Journal />
         </div>
