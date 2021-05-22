@@ -209,9 +209,9 @@ const questList: Quest[] = [
         name: 'The Man in the Cloak, Part 1',
         when: "You received this quest by performing the action 'Explore' at the Umbral Ruins.",
         description: [
-            "'Greetings. My name is Alyusi Islassis. Is it your first time here in the Undersea?'",
-            "'I am a dealer in exotic goods. I heard you are looking for a Pearl of Asclepius, yes? I do have one, but if you want me to let go of it, it had better be worth my while...'",
-            "'What do I want? Well, I am interested in procuring thousand year old blinkseed sap. I will also need a container for the sap. A good one would be a pan made of pyrite. An old lady who lives at Barnacle Residences has one.'"
+            "‘Greetings. My name is Alyusi Islassis. Is it your first time here in the Undersea?’",
+            "‘I am a dealer in exotic goods. I heard you are looking for a Pearl of Asclepius, yes? I do have one, but if you want me to let go of it, it had better be worth my while...’",
+            "‘What do I want? Well, I am interested in procuring thousand year old blinkseed sap. I will also need a container for the sap. A good one would be a pan made of pyrite. An old lady who lives at Barnacle Residences has one.’"
         ].join('\n\n'),
         stages: [
             'Get a Pyrite Pan at Barnacle Residences.',
@@ -226,9 +226,9 @@ const questList: Quest[] = [
         name: 'Pyrite Lady',
         when: "You received this quest by performing the action 'Explore' at the Barnacle Residences.",
         description: [
-            "'Oh hello there, dearie. Talk to an old lady, would you?'",
-            "'They call me the Pyrite Lady. Why’s that? Well, all my potionware are made of pyrite. The ignorant call pyrite ‘fool’s gold’, but it has vary special magical properties, which I need for the potions I make.'",
-            "'I am getting old, and I accidentally mixed some of my potion ingredients together. Help an old lady, and you will get one of her extra pans.'",
+            "‘Oh hello there, dearie. Talk to an old lady, would you?’",
+            "‘They call me the Pyrite Lady. Why’s that? Well, all my potionware are made of pyrite. The ignorant call pyrite ‘fool’s gold’, but it has vary special magical properties, which I need for the potions I make.’",
+            "‘I am getting old, and I accidentally mixed some of my potion ingredients together. Help an old lady, and you will get one of her extra pans.’",
         ].join('\n\n'),
         stages: [
             "Perform the 'Help Pyrite Lady' action at Barnacle Residences.",
@@ -240,9 +240,9 @@ const questList: Quest[] = [
         name: 'The Man in the Cloak, Part 2',
         when: 'You received this quest by completing The Man in the Cloak, Part 1.',
         description: [
-            "'Ah, very good, the pyrite pan is exactly what you need.'",
-            "'Now, I will need your assistance with one more thing. The bark of a blinkseed is very thick, and you will need a knife fashioned with a rare kind of mineral, chmyrrkyth. It looks like a black rock, but it has special properties that would allow you to cut the blinkseed bark. You can buy it at the General Store.'",
-            "'Reimbursement? Get me the chmyrrkyth first, then we’ll talk.'",
+            "‘Ah, very good, the pyrite pan is exactly what you need.’",
+            "‘Now, I will need your assistance with one more thing. The bark of a blinkseed is very thick, and you will need a knife fashioned with a rare kind of mineral, chmyrrkyth. It looks like a black rock, but it has special properties that would allow you to cut the blinkseed bark. You can buy it at the General Store.’",
+            "‘Reimbursement? Get me the chmyrrkyth first, then we’ll talk.’",
         ].join('\n\n'),
         stages: [
             'Find something that fits the description of the Chmyrrkyth.',
@@ -255,9 +255,9 @@ const questList: Quest[] = [
         name: 'The Man in the Cloak, Part 3',
         when: 'You received this quest by completing The Man in the Cloak, Part 2.',
         description: [
-            "'Very good. Now, while I make the knife, you can go harvest some blinkseed.'",
-            "'Where to find blinkseed? It grows on Kelp Plains. The seaweed? Yes, I suppose you landdwellers might think that it looks like seaweed. Don’t be fooled. While it may look exactly like seaweed, it isn’t. Give me a few blades of blinkseed.'",
-            "'Money for the chmyrrkyth? My dear, once I have the blinkseed sap, I will give it to you with the pearl.'",
+            "‘Very good. Now, while I make the knife, you can go harvest some blinkseed.’",
+            "‘Where to find blinkseed? It grows on Kelp Plains. The seaweed? Yes, I suppose you landdwellers might think that it looks like seaweed. Don’t be fooled. While it may look exactly like seaweed, it isn’t. Give me a few blades of blinkseed.’",
+            "‘Money for the chmyrrkyth? My dear, once I have the blinkseed sap, I will give it to you with the pearl.’",
         ].join('\n\n'),
         stages: [
             "Perform the 'Harvest' action at Kelp Plains.",
@@ -272,8 +272,8 @@ const questList: Quest[] = [
         name: 'The Man in the Cloak, The End',
         when: 'You received this by completing The Man in the Cloak, Part 3.',
         description: [
-            'You return to Alyusi, but it seems that he has disappeared. You search around the ruins and call his name, but nobody responds.',
-            'You glance at the blinkseed, and you can’t help but think that it looks, smells, and feels exactly like common seaweed...'
+            "‘You return to Alyusi, but it seems that he has disappeared. You search around the ruins and call his name, but nobody responds.’",
+            "‘You glance at the blinkseed, and you can’t help but think that it looks, smells, and feels exactly like common seaweed...’"
         ].join('\n\n'),
         stages: [
             'There is nothing you can do.'
