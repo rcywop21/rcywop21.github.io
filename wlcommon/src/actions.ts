@@ -67,6 +67,7 @@ export const specificActions = {
     },
     SHRINE: {
         GIVE_HAIR: 'give_hair',
+        COLLECT_HAIR: 'collect_hair',
     },
     UMBRAL: {
         EXPLORE: 'explore',

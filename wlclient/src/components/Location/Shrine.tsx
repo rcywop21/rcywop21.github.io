@@ -11,8 +11,8 @@ const actions: Record<string, PlayerAction> = {
                                                 task: "No task required."},
     [Actions.specificActions.SHRINE.GIVE_HAIR]: { description: "The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn's Tear.", 
                                                   task: "Give 1 x Unicorn's Hair."},
-    // [Actions.specificActions.SHRINE.COLLECT_HAIR]: { description: "Collect the Unicorn Tear from the Shrine.", 
-    //                                                 task: "Receive 1 x Unicorn Tear."},
+    [Actions.specificActions.SHRINE.COLLECT_HAIR]: { description: "Collect the Unicorn Tear from the Shrine.", 
+                                                     task: "Receive 1 x Unicorn Tear."},
 }
 
 const Shrine = (props: SpecificLocationProps): React.ReactElement => {
