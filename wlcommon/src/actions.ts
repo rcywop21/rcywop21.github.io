@@ -17,6 +17,7 @@ export const specificActions = {
     SHORES: {
         DIVE: 'dive',
     },
+    SHALLOWS: {},
     CORALS: {
         EXPLORE: 'explore',
         LEARN_LANG: 'learn_lang',
@@ -56,6 +57,9 @@ export const specificActions = {
         EXPLORE: 'explore',
         CONFRONT: 'confront',
     },
+    TUNA: {},
+    CATFISH: {},
+    BUBBLE: {},
     KELP: {
         EXPLORE: 'explore',
         CLIMB_DOWN: 'climb_down',
@@ -71,6 +75,9 @@ export const specificActions = {
     },
     WOODS: {
         GET_HAIR: 'get_hair',
+    },
+    ALCOVE: {
+        RETRIEVE_PEARL: 'retrieve_pearl'
     }
 }
 
@@ -85,4 +92,4 @@ Object.entries(specificActions).forEach(([k, v]) => {
         actionsByLocation[locationId].push(...allUnderseaActions);
     if (locationsMapping[locationId].oxygenStream)
         actionsByLocation[locationId].push(...allOxygenActions);
-})
+});

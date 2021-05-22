@@ -5,6 +5,7 @@ import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
 import { PlayerState, GlobalState } from 'wlcommon';
 import './Game.css';
+import { SocketContext } from '../socket/socket';
 
 export interface GameProps {
     globalState: GlobalState;
@@ -33,13 +34,15 @@ export interface GameProps {
 
 const Game = (props: GameProps): React.ReactElement => {
     const { globalState, playerState} = props;
+
+    const socket = React.useContext(SocketContext);
     
     function handleSpecificAction(action: string) {
         return () => handleAction(action);
     }
 
     function handleAction(action: string) {
-        console.log(action);
+        socket?.emit('action', action);
     }
     
     const testNotifs: string[] = [];
