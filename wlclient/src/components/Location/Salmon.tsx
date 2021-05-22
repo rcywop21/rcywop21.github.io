@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
-import { SpecificLocationProps, getSpecificLocationComponent, imgDirectoryGenerator } from './LocationComponent';
+import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
 
 const Salmon = (props: SpecificLocationProps): React.ReactElement => {

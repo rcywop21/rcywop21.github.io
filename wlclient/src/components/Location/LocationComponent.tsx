@@ -15,6 +15,9 @@ import Barnacle from './Barnacle';
 import Salmon from './Salmon';
 import Kelp from './Kelp';
 import Umbral from './Umbral';
+import Tuna from './Tuna';
+import Catfish from './Catfish';
+import Bubble from './Bubble';
 
 export interface LocationProps {
     locationId: Locations.LocationId;
@@ -42,6 +45,9 @@ export function getSpecificLocationComponent(id: Locations.LocationId,
         [Locations.locationIds.SALMON, <Salmon key="" state={state} handleAction={handleAction} />],
         [Locations.locationIds.KELP, <Kelp key="" state={state} handleAction={handleAction} />],
         [Locations.locationIds.UMBRAL, <Umbral key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.TUNA, <Tuna key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.CATFISH, <Catfish key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.BUBBLE, <Bubble key="" state={state} handleAction={handleAction} />],
     ]);
     
     const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(id);
