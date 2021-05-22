@@ -1,0 +1,29 @@
+.travelPopup {
+    position: absolute;
+    z-index: 199;
+    left: 157px;
+    top: 120px;
+    width: 710px;
+    height: 366px;
+    background-color: #4D96C3;
+    color: black;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.backgroundShroud {
+    position: absolute;
+    z-index: 189;
+    left: 0;
+    top: 0;
+    width: 1024px;
+    height: 607px;
+    background-color: #44444460;
+    cursor: pointer;
+}

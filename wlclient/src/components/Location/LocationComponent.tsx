@@ -1,5 +1,6 @@
 import React from 'react';
-import Action from './Action';
+import { Action, ActionProps } from './Action';
+import TravelPopup from './TravelPopup';
 import { Locations, PlayerState } from 'wlcommon';
 import './LocationComponent.css';
 
@@ -24,6 +25,7 @@ import Alcove from './Alcove';
 export interface LocationProps {
     locationId: Locations.LocationId;
     handleAction: (a: string) => () => void;
+    handleTravel: (a: Locations.LocationId) => () => void;
 }
 
 export interface SpecificLocationProps {
@@ -66,14 +68,28 @@ export function imgDirectoryGenerator(imgFileName: string): string {
 }
 
 const LocationComponent = (props: LocationProps): React.ReactElement => {
-    const { locationId, handleAction } = props;
+    const { locationId, handleAction, handleTravel } = props;
     
     const location: Locations.Location = Locations.locationsMapping[locationId];
+    
+    const [isTravelPopupVisible, setIsTravelPopupVisible] = React.useState(false);  
+    const travelActionProps: ActionProps = {
+        action: "Travel",
+        x: "870px",
+        y: "433px",
+        handleAction: (): void => { setIsTravelPopupVisible(true); }
+    }
     
     return (
         <div className="location">
             <p className="currLocationTitle">{location.name}</p>
             { getSpecificLocationComponent(locationId, {}, handleAction) }
+            <Action {...travelActionProps} />
+            <TravelPopup 
+                state={{}} 
+                isVisible={isTravelPopupVisible} 
+                setVisible={setIsTravelPopupVisible} 
+                handleTravel={handleTravel} />
         </div>
     );
 }
