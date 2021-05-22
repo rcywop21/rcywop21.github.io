@@ -11,19 +11,20 @@ export interface TopBarProps {
 
 const TopBar = (props: TopBarProps): React.ReactElement => {
     const { inventory, oxygenUntil } = props;
-    
-    
+
     return (
         <div className="topBar">
             <div className="inventory">
-                { inventory.map((item: string) => { return (<InventoryItem key={item} name={item} />)}) }
+                {inventory.map((item: string) => {
+                    return <InventoryItem key={item} name={item} />;
+                })}
             </div>
             <div className="timers">
                 {oxygenUntil && <Timer name="oxygen" until={oxygenUntil} />}
                 {/*<Timer name="crimson" time={crimsonTime} />*/}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default TopBar;

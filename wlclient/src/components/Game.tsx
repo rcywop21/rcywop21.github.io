@@ -31,12 +31,11 @@ export interface GameProps {
             - Various popup windows
 */
 
-
 const Game = (props: GameProps): React.ReactElement => {
-    const { globalState, playerState} = props;
+    const { globalState, playerState } = props;
 
     const socket = React.useContext(SocketContext);
-    
+
     function handleSpecificAction(action: string) {
         return () => handleAction(action);
     }
@@ -44,26 +43,31 @@ const Game = (props: GameProps): React.ReactElement => {
     function handleAction(action: string) {
         socket?.emit('action', action);
     }
-    
+
     function handleTravel(location: Locations.LocationId) {
         return () => socket?.emit('travel', location);
     }
-    
+
     const testNotifs: string[] = [];
     let i = 0;
     while (i < 10) {
-        testNotifs.push(i.toString() + "test".repeat(i));
+        testNotifs.push(i.toString() + 'test'.repeat(i));
         i++;
     }
     //testNotifs.push("999" + playerState.oxygenUntil.toString());
-    
+
     return (
         <div className="game">
-            <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenUntil={playerState.oxygenUntil} crimsonUntil={new Date()} />
-            <LocationComponent 
-                locationId={playerState.locationId} 
-                handleAction={handleSpecificAction} 
-                handleTravel={handleTravel} />
+            <TopBar
+                inventory={['map', 'map', 'map', 'hueheuheuheuhe']}
+                oxygenUntil={playerState.oxygenUntil}
+                crimsonUntil={new Date()}
+            />
+            <LocationComponent
+                locationId={playerState.locationId}
+                handleAction={handleSpecificAction}
+                handleTravel={handleTravel}
+            />
             <BottomBar notifications={testNotifs} quests={null} />
             <Journal />
         </div>
@@ -71,4 +75,3 @@ const Game = (props: GameProps): React.ReactElement => {
 };
 
 export default Game;
-            

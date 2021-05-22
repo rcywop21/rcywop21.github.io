@@ -10,21 +10,17 @@ export interface ActionProps {
 
 export const Action = (props: ActionProps): React.ReactElement => {
     const { action, x, y, handleAction } = props;
-    
+
     const position = {
         top: y,
-        left: x
+        left: x,
     };
 
     return (
-        <div
-            className="action"
-            style={position}
-            onClick={handleAction}
-        >
+        <div className="action" style={position} onClick={handleAction}>
             <p>{action}</p>
         </div>
     );
-}
+};
 
 export default Action;

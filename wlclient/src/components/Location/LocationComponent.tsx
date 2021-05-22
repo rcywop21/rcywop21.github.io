@@ -33,65 +33,126 @@ export interface SpecificLocationProps {
     handleAction: (a: string) => () => void;
 }
 
-export function getSpecificLocationComponent(id: Locations.LocationId, 
-        state: any, handleAction: (a: string) => () => void): React.ReactElement {
-            
-    const SPECIFIC_LOCATION_COMPONENT_MAP: Map<Locations.LocationId, React.ReactElement> = new Map([
-        [Locations.locationIds.SHALLOWS, <Shallows key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.SHORES, <Shores key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.CORALS, <Corals key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.STORE, <Store key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.WOODS, <Woods key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.STATUE, <Statue key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.LIBRARY, <Library key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.ANCHOVY, <Anchovy key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.BARNACLE, <Barnacle key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.SALMON, <Salmon key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.KELP, <Kelp key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.UMBRAL, <Umbral key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.TUNA, <Tuna key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.CATFISH, <Catfish key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.BUBBLE, <Bubble key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.SHRINE, <Shrine key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.ALCOVE, <Alcove key="" state={state} handleAction={handleAction} />],
+export function getSpecificLocationComponent(
+    id: Locations.LocationId,
+    state: any,
+    handleAction: (a: string) => () => void
+): React.ReactElement {
+    const SPECIFIC_LOCATION_COMPONENT_MAP: Map<
+        Locations.LocationId,
+        React.ReactElement
+    > = new Map([
+        [
+            Locations.locationIds.SHALLOWS,
+            <Shallows key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.SHORES,
+            <Shores key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.CORALS,
+            <Corals key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.STORE,
+            <Store key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.WOODS,
+            <Woods key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.STATUE,
+            <Statue key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.LIBRARY,
+            <Library key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.ANCHOVY,
+            <Anchovy key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.BARNACLE,
+            <Barnacle key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.SALMON,
+            <Salmon key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.KELP,
+            <Kelp key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.UMBRAL,
+            <Umbral key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.TUNA,
+            <Tuna key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.CATFISH,
+            <Catfish key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.BUBBLE,
+            <Bubble key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.SHRINE,
+            <Shrine key="" state={state} handleAction={handleAction} />,
+        ],
+        [
+            Locations.locationIds.ALCOVE,
+            <Alcove key="" state={state} handleAction={handleAction} />,
+        ],
     ]);
-    
+
     const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(id);
     if (!component) {
-        return (<React.Fragment></React.Fragment>);
+        return <React.Fragment></React.Fragment>;
     }
     return component;
 }
 
 export function imgDirectoryGenerator(imgFileName: string): string {
-    return "/assets/locations/" + imgFileName;
+    return '/assets/locations/' + imgFileName;
 }
 
 const LocationComponent = (props: LocationProps): React.ReactElement => {
     const { locationId, handleAction, handleTravel } = props;
-    
+
     const location: Locations.Location = Locations.locationsMapping[locationId];
-    
-    const [isTravelPopupVisible, setIsTravelPopupVisible] = React.useState(false);  
+
+    const [isTravelPopupVisible, setIsTravelPopupVisible] = React.useState(
+        false
+    );
     const travelActionProps: ActionProps = {
-        action: "Travel",
-        x: "870px",
-        y: "433px",
-        handleAction: (): void => { setIsTravelPopupVisible(true); }
-    }
-    
+        action: 'Travel',
+        x: '870px',
+        y: '433px',
+        handleAction: (): void => {
+            setIsTravelPopupVisible(true);
+        },
+    };
+
     return (
         <div className="location">
             <p className="currLocationTitle">{location.name}</p>
-            { getSpecificLocationComponent(locationId, {}, handleAction) }
+            {getSpecificLocationComponent(locationId, {}, handleAction)}
             <Action {...travelActionProps} />
-            <TravelPopup 
-                state={{}} 
-                isVisible={isTravelPopupVisible} 
-                setVisible={setIsTravelPopupVisible} 
-                handleTravel={handleTravel} />
+            <TravelPopup
+                state={{}}
+                isVisible={isTravelPopupVisible}
+                setVisible={setIsTravelPopupVisible}
+                handleTravel={handleTravel}
+            />
         </div>
     );
-}
+};
 
 export default LocationComponent;
