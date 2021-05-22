@@ -3,17 +3,17 @@ import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
 
-const Bubble = (props: SpecificLocationProps): React.ReactElement => {
+const Alcove = (props: SpecificLocationProps): React.ReactElement => {
     const { state, handleAction } = props;
     
-    const locationId = Locations.locationIds.BUBBLE;
+    const locationId = Locations.locationIds.ALCOVE;
     const location: Locations.Location = Locations.locationsMapping[locationId];
     const actionsInfo = Actions.actionsByLocation[locationId];
     const actionPositions: string[][] = [
+        ["409px", "399px"],
         ["870px", "488px"],
         ["870px", "543px"],
-        ["434px", "524px"],
-        ["55px", "239px"]
+        ["729px", "101px"]        
     ];
     const actionProps: ActionProps[] = [];
     for (let i = 0; i < actionsInfo.length; i++) {
@@ -28,7 +28,7 @@ const Bubble = (props: SpecificLocationProps): React.ReactElement => {
     
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator("bubble.png")} />
+            <img src={imgDirectoryGenerator("alcove.png")} />
             { actionProps.map((info: ActionProps) => {
                 return (<Action 
                     key="" 
@@ -38,6 +38,6 @@ const Bubble = (props: SpecificLocationProps): React.ReactElement => {
     );
 }
 
-export default Bubble;
+export default Alcove;
             
             

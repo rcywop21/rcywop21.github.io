@@ -18,6 +18,8 @@ import Umbral from './Umbral';
 import Tuna from './Tuna';
 import Catfish from './Catfish';
 import Bubble from './Bubble';
+import Shrine from './Shrine';
+import Alcove from './Alcove';
 
 export interface LocationProps {
     locationId: Locations.LocationId;
@@ -48,6 +50,8 @@ export function getSpecificLocationComponent(id: Locations.LocationId,
         [Locations.locationIds.TUNA, <Tuna key="" state={state} handleAction={handleAction} />],
         [Locations.locationIds.CATFISH, <Catfish key="" state={state} handleAction={handleAction} />],
         [Locations.locationIds.BUBBLE, <Bubble key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.SHRINE, <Shrine key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.ALCOVE, <Alcove key="" state={state} handleAction={handleAction} />],
     ]);
     
     const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(id);
