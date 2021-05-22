@@ -142,6 +142,7 @@ const locations: Location[] = [
         .make(),
     new LocationBuilder(locationIds.BUBBLE, 'Bubble Factory')
         .description('One of the largest source of Oxygen in the Undersea. However, you will need a Bubble Pass to be able to get Oxygen here.')
+        .oxygenStream()
         .make(),
     new LocationBuilder(locationIds.ANCHOVY, 'Anchovy Avenue')
         .description('A residential district. It is located close to the Marine Library and many of the staff live here.')

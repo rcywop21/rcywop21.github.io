@@ -3,7 +3,7 @@ import TopBar from './TopBar/TopBar';
 import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-import { PlayerState, GlobalState } from 'wlcommon';
+import { PlayerState, GlobalState, Locations } from 'wlcommon';
 import './Game.css';
 import { SocketContext } from '../socket/socket';
 
@@ -45,6 +45,10 @@ const Game = (props: GameProps): React.ReactElement => {
         socket?.emit('action', action);
     }
     
+    function handleTravel(location: Locations.LocationId) {
+        return () => socket?.emit('travel', location);
+    }
+    
     const testNotifs: string[] = [];
     let i = 0;
     while (i < 10) {
@@ -56,7 +60,10 @@ const Game = (props: GameProps): React.ReactElement => {
     return (
         <div className="game">
             <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenUntil={playerState.oxygenUntil} crimsonUntil={new Date()} />
-            <LocationComponent locationId={playerState.locationId} handleAction={handleSpecificAction} />
+            <LocationComponent 
+                locationId={playerState.locationId} 
+                handleAction={handleSpecificAction} 
+                handleTravel={handleTravel} />
             <BottomBar notifications={testNotifs} quests={null} />
             <Journal />
         </div>
