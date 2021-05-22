@@ -1,7 +1,11 @@
 module.exports = {
     root: true,
     parser: '@typescript-eslint/parser',
-    ignorePatterns: ['build/**/*.js', 'node_modules/**/*.js'],
+    ignorePatterns: [
+        'build/**/*.js',
+        'node_modules/**/*.js',
+        'build/**/*.d.ts',
+    ],
     plugins: ['@typescript-eslint'],
     extends: [
         'eslint:recommended',
