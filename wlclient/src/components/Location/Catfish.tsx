@@ -2,6 +2,16 @@ import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
+import { PlayerAction } from '../../PlayerAction';
+
+const actions: Record<string, PlayerAction> = {
+    [Actions.ALL_UNDERWATER.STORE_OXYGEN]: { description: "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
+                                             task: "No task required."},
+    [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
+                                                task: "No task required."},
+    [Actions.ALL_OXYGEN.GET_OXYGEN]: { description: "The Oxygen Stream at Catfish Crescent is curiously linked with the one located at Salmon Street. Both need to be activated at roughly the same time, before you can receive 40 minutes of Oxygen.", 
+                                       task: "Recite Red Cross Promise."},
+}
 
 const Catfish = (props: SpecificLocationProps): React.ReactElement => {
     const { state, handleAction } = props;

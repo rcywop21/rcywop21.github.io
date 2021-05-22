@@ -2,6 +2,16 @@ import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
+import { PlayerAction } from '../../PlayerAction';
+
+const actions: Record<string, PlayerAction> = {
+    [Actions.ALL_UNDERWATER.STORE_OXYGEN]: { description: "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
+                                             task: "No task required."},
+    [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
+                                                task: "No task required."},
+    [Actions.ALL_OXYGEN.GET_OXYGEN]: { description: "There is a large Oxygen Stream here, however, it has fallen into disrepair. Getting Oxygen from here will be slightly more challenging, but you can still expect to get 40 minutes of Oxygen here.", 
+                                       task: "2 Cadets to be blindfolded, while the rest of the group are to instruct them to draw a wrench and toolbox respectively."},
+}
 
 const Tuna = (props: SpecificLocationProps): React.ReactElement => {
     const { state, handleAction } = props;

@@ -2,6 +2,18 @@ import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
+import { PlayerAction } from '../../PlayerAction';
+
+const actions: Record<string, PlayerAction> = {
+    [Actions.ALL_UNDERWATER.STORE_OXYGEN]: { description: "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
+                                             task: "No task required."},
+    [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
+                                                task: "No task required."},
+    [Actions.specificActions.BARNACLE.EXPLORE]: { description: "Barnacle Residences is a residential district. The Pyrite Lady is said to live here.", 
+                                                  task: "Use 5 minutes of Oxygen."},
+    [Actions.specificActions.BARNACLE.HELP]: { description: "The Pyrite Lady has mixed up some of her potion ingredients. Help her!", 
+                                               task: "Create a list of youngest to oldest of your whole group."},
+}
 
 const Barnacle = (props: SpecificLocationProps): React.ReactElement => {
     const { state, handleAction } = props;
