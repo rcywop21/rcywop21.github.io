@@ -1,0 +1,28 @@
+.questLog {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: relative;
+    width: 284px;
+    height: 205px;
+}
+
+.questTitle {
+    padding: 0;
+    margin: 7px 0 0 15px;
+    color: #943322;
+}
+
+.innerQuestBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    height: 157px;
+    width: 284px;
+    overflow: auto;
+}

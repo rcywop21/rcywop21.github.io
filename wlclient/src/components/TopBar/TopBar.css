@@ -1,18 +1,25 @@
 .topBar {
     display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 89;
+    background-color: #44444480;
 }
 
 .inventory {
     display: flex;
-    width: 740px;
+    justify-content: flex-start;
+    align-items: baseline;
+    width: 738px;
     height: 90px;
-    background-color: blue;
+    border-right: 2px solid black;
 }
 
 .timers {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 288px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 284px;
     height: 90px;
-    background-color: green;
 }

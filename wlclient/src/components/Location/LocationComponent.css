@@ -1,0 +1,20 @@
+.location {
+    width: 1024px;
+    height: 607px;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+.currLocationTitle {
+    position: absolute;
+    top: 90px;
+    left: 360px;
+    width: 304px;
+    height: 34px;
+    background-color: #44444480;
+    border: 1px solid black;
+    color: antiquewhite;
+    font-weight: bold;
+    margin: 0;
+}

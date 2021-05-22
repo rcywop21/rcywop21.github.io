@@ -1,14 +1,14 @@
 import React from 'react';
 import TopBar from './TopBar/TopBar';
-import Location from './Location/Location';
+import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-import { Actions } from 'wlcommon';
+import { PlayerState, GlobalState } from 'wlcommon';
 import './Game.css';
-import { socket } from '../socket/socket';
 
 export interface GameProps {
-    groupId: string;
+    globalState: GlobalState;
+    playerState: PlayerState;
 }
 
 /*
@@ -30,42 +30,31 @@ export interface GameProps {
             - Various popup windows
 */
 
-const Game = (props: GameProps): React.ReactElement => {
-    const { groupId } = props;
-    const [ playerState, setPlayerState ] = React.useState(undefined);
-    const [ globalState, setGlobalState ] = React.useState(undefined);
-    
-    //gamestate processing and listening
-    React.useEffect(() => {
-        socket.on('player_update', (newGameState: React.SetStateAction<undefined>) => {
-            console.log(newGameState);
-            setPlayerState(newGameState) 
-        });
-        socket.on('global_update', (newGameState: React.SetStateAction<undefined>) => {
-            console.log(newGameState);
-            setGlobalState(newGameState)
-        });
-    }, []);
 
-    const handleAction = (action: string) => {
-        console.log(action);
-        socket.emit("action", action, (
-            eventType: string,
-            payload: string | Record<string, unknown>
-        ) => {
-            if (eventType == "error") {
-                console.log("Error: " + payload);
-            } else if (eventType == "info") {
-                console.log("Info: " + payload);
-            }
-        });
+const Game = (props: GameProps): React.ReactElement => {
+    const { globalState, playerState} = props;
+    
+    function handleSpecificAction(action: string) {
+        return () => handleAction(action);
     }
+
+    function handleAction(action: string) {
+        console.log(action);
+    }
+    
+    const testNotifs: string[] = [];
+    let i = 0;
+    while (i < 10) {
+        testNotifs.push(i.toString() + "test".repeat(i));
+        i++;
+    }
+    //testNotifs.push("999" + playerState.oxygenUntil.toString());
     
     return (
         <div className="game">
-            <TopBar inventory={["potato"]} oxygenLeft={100} oxygenRate={100} crimsonTime="temp" />
-            <Location />
-            <BottomBar />
+            <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenUntil={playerState.oxygenUntil} crimsonUntil={new Date()} />
+            <LocationComponent locationId={playerState.locationId} handleAction={handleSpecificAction} />
+            <BottomBar notifications={testNotifs} quests={null} />
             <Journal />
         </div>
     );

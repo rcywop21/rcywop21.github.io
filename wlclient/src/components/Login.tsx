@@ -1,10 +1,26 @@
 import React from 'react';
+import { GlobalState, PlayerState } from 'wlcommon';
 import { SocketContext } from '../socket/socket';
 import './Login.css';
 
-export interface LoginProps {
+export interface NormalLoginProps {
     updateLoggedIn: (x: boolean) => void;
-    mode: string;
+    updatePlayerState: (state: PlayerState) => void;
+    updateGlobalState: (state: GlobalState) => void;
+    mode: 'player' | 'mentor';
+}
+
+export interface AdminLoginProps {
+    updateLoggedIn: (x: boolean) => void;
+    mode: 'admin';
+}
+
+export type LoginProps = NormalLoginProps | AdminLoginProps;
+
+interface AuthOkReplyPayload {
+    socketId: string;
+    globalState: GlobalState;
+    playerState: PlayerState;
 }
 
 const Login = (props: LoginProps): React.ReactElement => {
@@ -19,10 +35,27 @@ const Login = (props: LoginProps): React.ReactElement => {
     const socket = React.useContext(SocketContext);
 
     React.useEffect(() => {
-        if (socket !== null && !socket.connected) {
+        if (socket && !socket.connected) {
             socket.connect();
         }
-    }, [socket, updateLoggedIn]);
+    }, [socket]);
+
+    function authenticateReply(eventType: 'error', payload: string): void;
+    function authenticateReply(eventType: 'auth_ok', payload: AuthOkReplyPayload): void;
+    function authenticateReply(eventType: 'error' | 'auth_ok', payload: string | AuthOkReplyPayload): void {
+        if (eventType === 'error') {
+            setHasErrorMessage(true);
+            setErrorMessage(payload as string);
+        } else {
+            updateLoggedIn(true);
+            if (mode !== 'admin') {
+                const { updatePlayerState, updateGlobalState } = props as NormalLoginProps;
+                const { playerState, globalState } = payload as AuthOkReplyPayload;
+                updatePlayerState(playerState);
+                updateGlobalState(globalState);
+            }
+        }
+    }
 
     const handleLogin = () => {
         if (groupName === undefined && password === '') {
@@ -43,22 +76,7 @@ const Login = (props: LoginProps): React.ReactElement => {
             socket.emit(
                 'authenticate',
                 { id: groupName, mode: mode, pass: password },
-                (
-                    eventType: string,
-                    payload: string | Record<string, unknown>
-                ) => {
-                    if (eventType === 'auth_ok') {
-                        updateLoggedIn(true);
-                        // TODO: update local copy of game state (wait for game state to be polished first)
-                    } else if (eventType === 'error') {
-                        setHasErrorMessage(true);
-                        if (typeof payload === 'string') {
-                            setErrorMessage(payload);
-                        }
-                    } else {
-                        // TODO: unexpected error happened, to handdle
-                    }
-                }
+                authenticateReply
             );
         }
     };

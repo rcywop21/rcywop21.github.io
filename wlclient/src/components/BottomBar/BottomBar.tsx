@@ -1,9 +1,22 @@
 import React from 'react';
+import Notifications from './Notifications';
+import QuestLog from './QuestLog';
 import './BottomBar.css';
 
-const BottomBar = (): React.ReactElement => {
+export interface BottomBarProps {
+    notifications: string[];
+    quests: any;
+}
+
+const BottomBar = (props: BottomBarProps): React.ReactElement => {
+    const { notifications, quests } = props;
     
-    return (<div className="bottomBar"></div>);
+    return (
+        <div className="bottomBar">
+            <Notifications notifications={notifications} />
+            <QuestLog quests={quests} />
+        </div>
+    );
 }
 
 export default BottomBar;

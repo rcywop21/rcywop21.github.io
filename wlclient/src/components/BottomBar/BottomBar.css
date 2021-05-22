@@ -1,5 +1,10 @@
 .bottomBar {
-    background-color: pink;
+    display: flex;
+    background-color: #DDDDDD;
+    color: black;
     width: 1024px;
     height: 205px;
+    position: absolute;
+    top: 607px;
+    left: 0px;
 }
