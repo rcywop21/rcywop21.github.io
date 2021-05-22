@@ -9,18 +9,30 @@ const actions: Record<string, PlayerAction> = {
                                              task: "No task required."},
     [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
                                                 task: "No task required."},
-    [Actions.specificActions.SHORES.DIVE]: { description: "Dive into the deep, blue sea. After diving, you will enter the Shallows location inside the Undersea. You will start your dive with 20 minutes of Oxygen.", 
-                                             task: "Create a shape resembling a diving board with all of your arms."},                                            
+    [Actions.specificActions.LIBRARY.EXPLORE]: { description: "Talk to the librarians about the Marine Library.", 
+                                                 task: "Use 5 minutes of Oxygen."},
+    [Actions.specificActions.LIBRARY.STUDY_CRIMSON]: { description: "Learn more about the Crimson, a crisis that took place 10,000 years ago.", 
+                                                       task: "Have any member share an incident when things did not go as planned for a training/ project and how did the plan get adapted."},
+    [Actions.specificActions.LIBRARY.STUDY_ARTEFACT]: { description: "Learn more about the artefacts.", 
+                                                        task: "Create a new group cheer and do it to energise yourselves."},
+    [Actions.specificActions.LIBRARY.DECODE_ARTEFACT]: { description: "The artefact legend is written in an ancient language. You will need to decode it before you can understand it.", 
+                                                         task: "Decode 'Hwljaxawv Ljalgf'."},                                       
 }
 
-const Shores = (props: SpecificLocationProps): React.ReactElement => {
+const Library = (props: SpecificLocationProps): React.ReactElement => {
     const { state, handleAction } = props;
     
-    const locationId = Locations.locationIds.SHORES;
+    const locationId = Locations.locationIds.LIBRARY;
     const location: Locations.Location = Locations.locationsMapping[locationId];
     const actionsInfo = Actions.actionsByLocation[locationId];
     const actionPositions: string[][] = [
-        ["445px", "309px"],
+        ["432px", "385px"],
+        ["99px", "503px"],
+        ["630px", "202px"],
+        ["703px", "265px"],
+        ["870px", "488px"],
+        ["870px", "543px"],
+        ["33px", "171px"]
     ];
     const actionProps: ActionProps[] = [];
     for (let i = 0; i < actionsInfo.length; i++) {
@@ -35,7 +47,7 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
     
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator("shores.png")} />
+            <img src={imgDirectoryGenerator("library.png")} />
             { actionProps.map((info: ActionProps) => {
                 return (<Action 
                     key="" 
@@ -45,6 +57,6 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
     );
 }
 
-export default Shores;
+export default Library;
             
             

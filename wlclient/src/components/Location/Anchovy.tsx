@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
-import { SpecificLocationProps, getSpecificLocationComponent, imgDirectoryGenerator } from './LocationComponent';
+import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
@@ -9,18 +9,24 @@ const actions: Record<string, PlayerAction> = {
                                              task: "No task required."},
     [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
                                                 task: "No task required."},
-    [Actions.specificActions.SHORES.DIVE]: { description: "Dive into the deep, blue sea. After diving, you will enter the Shallows location inside the Undersea. You will start your dive with 20 minutes of Oxygen.", 
-                                             task: "Create a shape resembling a diving board with all of your arms."},                                            
+    [Actions.specificActions.ANCHOVY.EXPLORE]: { description: "Talk to the librarians about the Marine Library.", 
+                                                 task: "Use 5 minutes of Oxygen."},
+    [Actions.specificActions.ANCHOVY.INSPIRE]: { description: "Inspire the Chief Librarian with your leadership!", 
+                                                 task: "Have any member of your team perform Project Inspire."},
 }
 
-const Shores = (props: SpecificLocationProps): React.ReactElement => {
+const Anchovy = (props: SpecificLocationProps): React.ReactElement => {
     const { state, handleAction } = props;
     
-    const locationId = Locations.locationIds.SHORES;
+    const locationId = Locations.locationIds.ANCHOVY;
     const location: Locations.Location = Locations.locationsMapping[locationId];
     const actionsInfo = Actions.actionsByLocation[locationId];
     const actionPositions: string[][] = [
-        ["445px", "309px"],
+        ["466px", "354px"],
+        ["294px", "533px"],
+        ["870px", "488px"],
+        ["870px", "543px"],
+        ["209px", "120px"]
     ];
     const actionProps: ActionProps[] = [];
     for (let i = 0; i < actionsInfo.length; i++) {
@@ -35,7 +41,7 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
     
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator("shores.png")} />
+            <img src={imgDirectoryGenerator("anchovy4.png")} />
             { actionProps.map((info: ActionProps) => {
                 return (<Action 
                     key="" 
@@ -45,6 +51,6 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
     );
 }
 
-export default Shores;
+export default Anchovy;
             
             

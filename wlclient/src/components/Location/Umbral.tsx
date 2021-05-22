@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
-import { SpecificLocationProps, getSpecificLocationComponent, imgDirectoryGenerator } from './LocationComponent';
+import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
@@ -9,18 +9,27 @@ const actions: Record<string, PlayerAction> = {
                                              task: "No task required."},
     [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
                                                 task: "No task required."},
-    [Actions.specificActions.SHORES.DIVE]: { description: "Dive into the deep, blue sea. After diving, you will enter the Shallows location inside the Undersea. You will start your dive with 20 minutes of Oxygen.", 
-                                             task: "Create a shape resembling a diving board with all of your arms."},                                            
+    [Actions.specificActions.UMBRAL.EXPLORE]: { description: "This is a shady, run-down area. Apparently it used to be a residential district, but the Oxygen Stream here vanished one day, suddenly. You shudder as you walk around the area.", 
+                                                task: "Use 5 minutes of Oxygen."},
+    [Actions.specificActions.UMBRAL.GIVE_PAN]: { description: "Give Alyusi the Pyrite Pan.", 
+                                                 task: "Give 1 x Pyrite Pan."},
+    [Actions.specificActions.UMBRAL.GIVE_ROCK]: { description: "Give Alyusi the Chmyrrkyth.", 
+                                                  task: "Give 1 x Mysterious Black Rock."},
 }
 
-const Shores = (props: SpecificLocationProps): React.ReactElement => {
+const Umbral = (props: SpecificLocationProps): React.ReactElement => {
     const { state, handleAction } = props;
     
-    const locationId = Locations.locationIds.SHORES;
+    const locationId = Locations.locationIds.UMBRAL;
     const location: Locations.Location = Locations.locationsMapping[locationId];
     const actionsInfo = Actions.actionsByLocation[locationId];
     const actionPositions: string[][] = [
-        ["445px", "309px"],
+        ["656px", "402px"],
+        ["579px", "197px"],
+        ["749px", "177px"],
+        ["870px", "488px"],
+        ["870px", "543px"],
+        ["60px", "304px"]
     ];
     const actionProps: ActionProps[] = [];
     for (let i = 0; i < actionsInfo.length; i++) {
@@ -35,7 +44,7 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
     
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator("shores.png")} />
+            <img src={imgDirectoryGenerator("umbral.png")} />
             { actionProps.map((info: ActionProps) => {
                 return (<Action 
                     key="" 
@@ -45,6 +54,6 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
     );
 }
 
-export default Shores;
+export default Umbral;
             
             

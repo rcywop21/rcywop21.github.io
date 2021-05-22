@@ -1,6 +1,6 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
-import { SpecificLocationProps, getSpecificLocationComponent, imgDirectoryGenerator } from './LocationComponent';
+import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
@@ -9,18 +9,21 @@ const actions: Record<string, PlayerAction> = {
                                              task: "No task required."},
     [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
                                                 task: "No task required."},
-    [Actions.specificActions.SHORES.DIVE]: { description: "Dive into the deep, blue sea. After diving, you will enter the Shallows location inside the Undersea. You will start your dive with 20 minutes of Oxygen.", 
-                                             task: "Create a shape resembling a diving board with all of your arms."},                                            
+    [Actions.ALL_OXYGEN.GET_OXYGEN]: { description: "The Bubble Factory is one of the largest source of Oxygen in the Undersea. However, you will need a Bubble Pass to be able to get Oxygen here. You can get 60 minutes of Oxygen here.", 
+                                       task: "Each of you has to show a different item from the following: Pencil case, phone application and items you bring on a holiday"},
 }
 
-const Shores = (props: SpecificLocationProps): React.ReactElement => {
+const Bubble = (props: SpecificLocationProps): React.ReactElement => {
     const { state, handleAction } = props;
     
-    const locationId = Locations.locationIds.SHORES;
+    const locationId = Locations.locationIds.BUBBLE;
     const location: Locations.Location = Locations.locationsMapping[locationId];
     const actionsInfo = Actions.actionsByLocation[locationId];
     const actionPositions: string[][] = [
-        ["445px", "309px"],
+        ["870px", "488px"],
+        ["870px", "543px"],
+        ["434px", "524px"],
+        ["55px", "239px"]
     ];
     const actionProps: ActionProps[] = [];
     for (let i = 0; i < actionsInfo.length; i++) {
@@ -35,7 +38,7 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
     
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator("shores.png")} />
+            <img src={imgDirectoryGenerator("bubble.png")} />
             { actionProps.map((info: ActionProps) => {
                 return (<Action 
                     key="" 
@@ -45,6 +48,6 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
     );
 }
 
-export default Shores;
+export default Bubble;
             
             
