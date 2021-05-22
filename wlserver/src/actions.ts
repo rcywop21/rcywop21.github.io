@@ -181,6 +181,12 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
                         }
                     })
                 );
+            case Actions.specificActions.STORE.BUY_BLACK_ROCK:
+                return makeAddItemTransform(itemDetails.BLACK_ROCK.id, 1)(
+                    makeAdvanceQuestTransform(questIds.CLOAK_2, 0)(
+                        makeRemoveOxygenTransform(1800)(state)
+                    )
+                );
         }
 
         throw 'Action not implemented.';
