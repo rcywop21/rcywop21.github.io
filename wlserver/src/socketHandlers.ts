@@ -48,8 +48,9 @@ export const onRejectionHandler: SocketHandler<undefined> = async (
     if (credentials === undefined) return reply('error', 'Not authenticated');
 
     const { stagedAction } = gameState.players[credentials.groupNum];
-    if (stagedAction) return reply('error', 'No action to reject.');
+    if (!stagedAction) return reply('error', 'No action to reject.');
     setAction(credentials.groupNum as TeamId, null);
+    notifyPlayerState(credentials.groupNum);
 };
 
 export const onAcceptHandler: SocketHandler<undefined> = async (
@@ -61,7 +62,7 @@ export const onAcceptHandler: SocketHandler<undefined> = async (
     if (credentials === undefined) return reply('error', 'Not authenticated');
 
     const { stagedAction } = gameState.players[credentials.groupNum];
-    if (stagedAction) return reply('error', 'No action to reject.');
+    if (!stagedAction) return reply('error', 'No action to reject.');
 
     applyTransform(applyAction, credentials.groupNum as TeamId);
 

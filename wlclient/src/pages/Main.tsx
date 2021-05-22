@@ -1,6 +1,8 @@
 import React from 'react';
 import Login from '../components/Login';
 import Game from '../components/Game';
+import { GlobalState, PlayerState } from 'wlcommon';
+import { SocketContext } from '../socket/socket';
 
 export interface MainProps {
     loggedIn: boolean;
@@ -10,17 +12,33 @@ export interface MainProps {
 const Main = (props: MainProps): React.ReactElement => {
     const { loggedIn, updateLoggedIn } = props;
 
-    if (!loggedIn) {
+    const [playerState, setPlayerState] = React.useState<PlayerState | undefined>(undefined);
+    const [globalState, setGlobalState] = React.useState<GlobalState | undefined>(undefined);
+
+    const socket = React.useContext(SocketContext);
+
+    React.useEffect(() => {
+        console.log(socket);
+        socket?.on('player_update', (newGameState: PlayerState) => {
+            setPlayerState(newGameState) 
+        });
+        socket?.on('global_update', (newGameState: GlobalState) => {
+            setGlobalState(newGameState)
+        });
+    }, [socket]);
+
+
+    if (playerState && globalState) {
         return (
             <div>
-                <Login updateLoggedIn={updateLoggedIn} mode="player" />
+                <Game globalState={globalState} playerState={playerState} />
             </div>
         );
     }
 
     return (
         <div>
-            <Game groupId="420"/>
+            <Login mode="player" updateLoggedIn={updateLoggedIn} updateGlobalState={setGlobalState} updatePlayerState={setPlayerState} />
         </div>
     );
 };
