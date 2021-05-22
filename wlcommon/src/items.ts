@@ -53,6 +53,18 @@ export const itemDetails = {
         description:
             "It's a tourist pass to the Statue of Triton! With this ticket, you get close-up access to more parts of the Statue.",
     },
+    BLINKSEED: {
+        id: 'Blinkseed',
+        name: 'Blinkseed Blades',
+        description:
+            "You harvested this from Kelp Plains. It looks like seaweed leaves, but Alyusi insists that it's blinkseed.",
+    },
+    PYRITE_PAN: {
+        id: 'PyritePan',
+        name: 'Pyrite Pan',
+        description:
+            "It's a pan made of pyrite, a mineral also known as fool's gold.",
+    },
 };
 
 export const itemsById: Record<ItemId, Item> = {};
