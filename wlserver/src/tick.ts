@@ -1,5 +1,6 @@
 import { TeamId } from "wlcommon";
 import { notifyPlayerState } from "./connections";
+import logger from "./logger";
 import { applyTransform, gameState, killTransform } from "./stateMgr";
 
 const onTick = (): void => {
@@ -11,6 +12,7 @@ const onTick = (): void => {
 
         if (playerState.oxygenUntil && playerState.oxygenUntil.valueOf() < currentTime) {
             applyTransform(killTransform, playerId);
+            logger.log('info', `Player ${playerId} ran out of Oxygen.`)
             notifyPlayerState(playerId);
         }
     }
