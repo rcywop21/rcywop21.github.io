@@ -1,4 +1,4 @@
-import { GameState, GlobalState, PlayerState, TeamId } from 'wlcommon';
+import { GameState, GlobalState, Locations, PlayerState, QuestId, QuestState, TeamId } from 'wlcommon';
 import { notifyPlayerState } from './connections';
 import logger from './logger';
 
@@ -55,6 +55,34 @@ export const setAction = (playerId: TeamId, action: string | null): void => {
         logger.log('info', `Group ${playerId}'s action set to ${action}.`);
         notifyPlayerState(playerId);
     }
+};
+
+export const killTransform: Transform = (state) => {
+    const playerQuests: Record<QuestId, QuestState> = {};
+    Object.entries(state.playerState.quests).forEach(([questId, questState]) => {
+        if (questState.status === 'completed') {
+            playerQuests[questId] = questState;
+        } else {
+            playerQuests[questId] = {
+                ...questState,
+                stages: Array(questState.stages.length).fill(false),
+            }
+        }
+    });
+
+    return {
+        globalState: state.globalState,
+        playerState: {
+            ...state.playerState,
+            locationId: Locations.locationIds.SHORES,
+            oxygenUntil: null,
+            quests: playerQuests,
+        },
+        messages: [
+            ...state.messages,
+            'You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'
+        ]
+    };
 };
 
 export const identityTransform: Transform = (x) => x;

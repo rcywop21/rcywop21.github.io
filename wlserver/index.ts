@@ -9,6 +9,7 @@ import {
 import { onAdminHandler } from './src/admin';
 import logger from './src/logger';
 import setupGameState from './src/startup';
+import onTick from './src/tick';
 
 setupGameState();
 
@@ -34,5 +35,7 @@ io.on('connection', (socket) => {
         onAdminHandler(socket, payload, reply, io)
     );
 });
+
+setInterval(onTick, 500);
 
 listen();
