@@ -1,5 +1,5 @@
 import React from 'react';
-import { GlobalState, PlayerState } from 'wlcommon';
+import { GlobalState, PlayerState, TeamId } from 'wlcommon';
 import { SocketContext } from '../socket/socket';
 import './Login.css';
 
@@ -7,6 +7,7 @@ export interface NormalLoginProps {
     updateLoggedIn: (x: boolean) => void;
     updatePlayerState: (state: PlayerState) => void;
     updateGlobalState: (state: GlobalState) => void;
+    updateTeamId: (x: number) => void;
     mode: 'player' | 'mentor';
 }
 
@@ -49,10 +50,11 @@ const Login = (props: LoginProps): React.ReactElement => {
         } else {
             updateLoggedIn(true);
             if (mode !== 'admin') {
-                const { updatePlayerState, updateGlobalState } = props as NormalLoginProps;
+                const { updatePlayerState, updateGlobalState, updateTeamId } = props as NormalLoginProps;
                 const { playerState, globalState } = payload as AuthOkReplyPayload;
                 updatePlayerState(playerState);
                 updateGlobalState(globalState);
+                updateTeamId(groupName!);
             }
         }
     }

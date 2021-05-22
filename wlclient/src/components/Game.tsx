@@ -3,13 +3,14 @@ import TopBar from './TopBar/TopBar';
 import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-import { PlayerState, GlobalState, Locations } from 'wlcommon';
+import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
 import './Game.css';
 import { SocketContext } from '../socket/socket';
 
 export interface GameProps {
     globalState: GlobalState;
     playerState: PlayerState;
+    teamId: number;
 }
 
 /*
@@ -33,7 +34,7 @@ export interface GameProps {
 
 
 const Game = (props: GameProps): React.ReactElement => {
-    const { globalState, playerState} = props;
+    const { globalState, playerState, teamId } = props;
 
     const socket = React.useContext(SocketContext);
     
@@ -55,6 +56,9 @@ const Game = (props: GameProps): React.ReactElement => {
         testNotifs.push(i.toString() + "test".repeat(i));
         i++;
     }
+    
+    const playerNotifs: Message[] = globalState.messages
+        .filter(message => message.visibility === "all" || message.visibility === teamId)
     //testNotifs.push("999" + playerState.oxygenUntil.toString());
     
     return (
@@ -64,7 +68,7 @@ const Game = (props: GameProps): React.ReactElement => {
                 locationId={playerState.locationId} 
                 handleAction={handleSpecificAction} 
                 handleTravel={handleTravel} />
-            <BottomBar notifications={testNotifs} quests={null} />
+            <BottomBar notifications={playerNotifs} quests={null} />
             <Journal />
         </div>
     );

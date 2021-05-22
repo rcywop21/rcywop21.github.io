@@ -1,10 +1,11 @@
 import React from 'react';
 import Notifications from './Notifications';
 import QuestLog from './QuestLog';
+import { Message } from 'wlcommon';
 import './BottomBar.css';
 
 export interface BottomBarProps {
-    notifications: string[];
+    notifications: Message[];
     quests: any;
 }
 

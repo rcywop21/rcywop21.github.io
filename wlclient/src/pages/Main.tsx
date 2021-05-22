@@ -14,6 +14,7 @@ const Main = (props: MainProps): React.ReactElement => {
 
     const [playerState, setPlayerState] = React.useState<PlayerState | undefined>(undefined);
     const [globalState, setGlobalState] = React.useState<GlobalState | undefined>(undefined);
+    const [teamId, setTeamId] = React.useState<number | undefined>(undefined);
 
     const socket = React.useContext(SocketContext);
 
@@ -28,17 +29,17 @@ const Main = (props: MainProps): React.ReactElement => {
     }, [socket]);
 
 
-    if (playerState && globalState) {
+    if (playerState && globalState && teamId) {
         return (
             <div>
-                <Game globalState={globalState} playerState={playerState} />
+                <Game globalState={globalState} playerState={playerState} teamId={teamId}/>
             </div>
         );
     }
 
     return (
         <div>
-            <Login mode="player" updateLoggedIn={updateLoggedIn} updateGlobalState={setGlobalState} updatePlayerState={setPlayerState} />
+            <Login mode="player" updateLoggedIn={updateLoggedIn} updateGlobalState={setGlobalState} updatePlayerState={setPlayerState} updateTeamId={setTeamId}/>
         </div>
     );
 };

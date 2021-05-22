@@ -1,19 +1,24 @@
 import React from 'react';
+import { Message } from 'wlcommon';
 import './Notifications.css';
 
 export interface NotificationsProps {
-    notifications: string[];
+    notifications: Message[];
 }
 
 const Notifications = (props: NotificationsProps): React.ReactElement => {
     const { notifications } = props;
-    notifications.sort().reverse();
+    notifications.sort((n1, n2) => n1.time > n2.time ? 1 : -1)
+    
+    function notifToDisplayString(message: Message): string {
+        return `[${(new Date(message.time)).toTimeString().slice(0, 5)}]  ${message.message}`;
+    }
     
     return (
         <div className="notifications">
             <h2 className="notifTitle">NOTIFICATIONS</h2>
             <div className="innerNotifBox">
-                {notifications.map((item: string) => (<p className="notif" key={notifications.indexOf(item)}>{item}</p>))}
+                {notifications.map((message: Message) => (<p className="notif" key="">{notifToDisplayString(message)}</p>))}
             </div>
         </div>
     );
