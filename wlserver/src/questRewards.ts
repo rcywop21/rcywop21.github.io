@@ -1,16 +1,18 @@
-import { QuestId, questIds, quests } from "wlcommon"
-import { makeIssueQuestTransform } from "./actions";
-import { makeAddOxygenTransform } from "./oxygen";
-import { identityTransform, Transform, TransformState } from "./stateMgr";
+import { QuestId, questIds, quests } from 'wlcommon';
+import { makeIssueQuestTransform } from './actions';
+import { makeAddOxygenTransform } from './oxygen';
+import { identityTransform, Transform, TransformState } from './stateMgr';
 
 const transforms: Record<QuestId, Transform> = {
     [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60),
-}
+};
 
-export const makePostCompletionTransform = (questId: QuestId): Transform => (state) => {
+export const makePostCompletionTransform = (questId: QuestId): Transform => (
+    state
+) => {
     let completionMsg = `You have completed a quest - ${quests[questId].name}!`;
     if (quests[questId].reward) {
-        completionMsg += ` You receive: ${quests[questId].reward.join(', ')}`
+        completionMsg += ` You receive: ${quests[questId].reward.join(', ')}`;
     }
 
     let result: TransformState = {
@@ -22,10 +24,10 @@ export const makePostCompletionTransform = (questId: QuestId): Transform => (sta
                 [questId]: {
                     ...state.playerState.quests[questId],
                     status: 'completed',
-                }
+                },
             },
         },
-        messages: [ ...state.messages, completionMsg ]
+        messages: [...state.messages, completionMsg],
     };
 
     result = (transforms[questId] ?? identityTransform)(result);
@@ -36,5 +38,3 @@ export const makePostCompletionTransform = (questId: QuestId): Transform => (sta
 
     return result;
 };
-
-

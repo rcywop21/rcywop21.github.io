@@ -1,6 +1,13 @@
 import { Locations, QuestId, TeamId } from 'wlcommon';
-import applyAction, { makeAdvanceQuestTransform, makeIssueQuestTransform } from './actions';
-import { getCredentials, notifyGameState, notifyPlayerState } from './connections';
+import applyAction, {
+    makeAdvanceQuestTransform,
+    makeIssueQuestTransform,
+} from './actions';
+import {
+    getCredentials,
+    notifyGameState,
+    notifyPlayerState,
+} from './connections';
 import { makeAddOxygenTransform } from './oxygen';
 import { Reply, SocketHandler } from './socketHandlers';
 import { applyTransform, gameState, setAction } from './stateMgr';
@@ -43,7 +50,7 @@ const commands = {
     setglobal: (payload: string[], reply: Reply): void => {
         switch (payload[0]) {
             case undefined:
-                throw 'Command incomplete.'
+                throw 'Command incomplete.';
 
             case 'crimsonMasterSwitch':
                 switch (payload[1]) {
@@ -74,7 +81,9 @@ const commands = {
         const action = payload.pop();
         setAction(
             playerId,
-            action === 'clear' || action === 'null' || action === undefined ? null : action
+            action === 'clear' || action === 'null' || action === undefined
+                ? null
+                : action
         );
         reply('cmdok', `Action set to ${action}.`);
         notifyPlayerState(playerId);
@@ -98,9 +107,18 @@ const commands = {
         const playerId = getPlayerId(payload);
         const questId = parseInt(payload.shift()) as QuestId;
         const stage = parseInt(payload.shift());
-        if (questId === null || questId === undefined || stage === undefined || Number.isNaN(questId) || Number.isNaN(stage))
-            throw `Invalid quest ID ${questId} or stage ${stage}.`
-        applyTransform(makeAdvanceQuestTransform(questId, stage, true), playerId);
+        if (
+            questId === null ||
+            questId === undefined ||
+            stage === undefined ||
+            Number.isNaN(questId) ||
+            Number.isNaN(stage)
+        )
+            throw `Invalid quest ID ${questId} or stage ${stage}.`;
+        applyTransform(
+            makeAdvanceQuestTransform(questId, stage, true),
+            playerId
+        );
         reply('cmdok', 'Quest advanced.');
         notifyPlayerState(playerId);
     },
@@ -108,7 +126,7 @@ const commands = {
         const playerId = getPlayerId(payload);
         const destination = payload.shift() as Locations.LocationId;
         if (!Locations.locationsMapping[destination])
-            throw `Invalid location ${destination}.`
+            throw `Invalid location ${destination}.`;
         gameState.players[playerId].locationId = destination;
         reply('cmdok', 'Player moved.');
         notifyPlayerState(playerId);
@@ -117,7 +135,7 @@ const commands = {
         const playerId = getPlayerId(payload);
         const delta = parseInt(payload.shift());
         if (Number.isNaN(delta)) {
-            throw `Invalid delta ${delta}.`
+            throw `Invalid delta ${delta}.`;
         }
         applyTransform(makeAddOxygenTransform(delta), playerId);
         reply('cmdok', 'Oxygen added.');
@@ -129,11 +147,13 @@ const commands = {
         if (oxygenStream === 'all') {
             gameState.players[playerId].streamCooldownExpiry = {};
         } else {
-            delete gameState.players[playerId].streamCooldownExpiry[oxygenStream];
+            delete gameState.players[playerId].streamCooldownExpiry[
+                oxygenStream
+            ];
         }
         reply('cmdok', `Cooldown reset for stream ${oxygenStream}.`);
         notifyPlayerState(playerId);
-    }
+    },
 };
 
 export const onAdminHandler: SocketHandler<string[]> = async (

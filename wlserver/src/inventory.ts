@@ -1,7 +1,10 @@
-import { ItemId } from "wlcommon";
-import { Transform } from "./stateMgr";
+import { ItemId } from 'wlcommon';
+import { Transform } from './stateMgr';
 
-export const makeAddItemTransform = (itemId: ItemId, qty: number): Transform => (state) => ({
+export const makeAddItemTransform = (
+    itemId: ItemId,
+    qty: number
+): Transform => (state) => ({
     ...state,
     playerState: {
         ...state.playerState,
@@ -10,7 +13,7 @@ export const makeAddItemTransform = (itemId: ItemId, qty: number): Transform => 
             [itemId]: {
                 item: itemId,
                 qty: (state.playerState.inventory[itemId]?.qty ?? 0) + qty,
-            }
-        }
-    }
+            },
+        },
+    },
 });
