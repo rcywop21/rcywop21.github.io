@@ -43,7 +43,7 @@ const commands = {
     setglobal: (payload: string[], reply: Reply): void => {
         switch (payload[0]) {
             case undefined:
-                return reply('error', 'Command incomplete.');
+                throw 'Command incomplete.'
 
             case 'crimsonMasterSwitch':
                 switch (payload[1]) {
@@ -61,11 +61,13 @@ const commands = {
                     default:
                         throw `Unknown option ${payload[1]}.`;
                 }
-                return reply('cmdok', 'Option set.');
+                reply('cmdok', 'Option set.');
+                break;
 
             default:
                 throw `Unknown option ${payload[0]}.`;
         }
+        notifyGameState();
     },
     setaction: (payload: string[], reply: Reply): void => {
         const playerId = getPlayerId(payload);
@@ -75,11 +77,13 @@ const commands = {
             action === 'clear' || action === 'null' || action === undefined ? null : action
         );
         reply('cmdok', `Action set to ${action}.`);
+        notifyPlayerState(playerId);
     },
     approve: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
         applyTransform(applyAction, playerId);
         reply('cmdok', 'Action approved.');
+        notifyPlayerState(playerId);
     },
     issuequest: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -88,6 +92,7 @@ const commands = {
             throw `Invalid quest ID ${questId}.`;
         applyTransform(makeIssueQuestTransform(questId), playerId);
         reply('cmdok', 'Quest issued.');
+        notifyPlayerState(playerId);
     },
     advance: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -97,6 +102,7 @@ const commands = {
             throw `Invalid quest ID ${questId} or stage ${stage}.`
         applyTransform(makeAdvanceQuestTransform(questId, stage, true), playerId);
         reply('cmdok', 'Quest advanced.');
+        notifyPlayerState(playerId);
     },
     move: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -105,6 +111,7 @@ const commands = {
             throw `Invalid location ${destination}.`
         gameState.players[playerId].locationId = destination;
         reply('cmdok', 'Player moved.');
+        notifyPlayerState(playerId);
     },
     oxygen: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -114,6 +121,7 @@ const commands = {
         }
         applyTransform(makeAddOxygenTransform(delta), playerId);
         reply('cmdok', 'Oxygen added.');
+        notifyPlayerState(playerId);
     },
     resetcd: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -124,6 +132,7 @@ const commands = {
             delete gameState.players[playerId].streamCooldownExpiry[oxygenStream];
         }
         reply('cmdok', `Cooldown reset for stream ${oxygenStream}.`);
+        notifyPlayerState(playerId);
     }
 };
 
@@ -154,9 +163,6 @@ export const onAdminHandler: SocketHandler<string[]> = async (
     } catch (e) {
         reply('error', e);
     }
-
-    notifyPlayerState(credentials.groupNum);
-    notifyGameState();
 };
 
 const getPlayerId = (payload: string[]): TeamId => {
