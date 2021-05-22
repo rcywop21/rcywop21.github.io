@@ -114,6 +114,7 @@ const locations: Location[] = [
         .description(
             'A shop where everyone in the Undersea comes to get their supplies. Payment is made in Oxygen.'
         )
+        .needsMap(false)
         .make(),
     new LocationBuilder(locationIds.ALCOVE, 'Hidden Alcove')
         .description('A mysterious chamber within the Statue of Triton.')
