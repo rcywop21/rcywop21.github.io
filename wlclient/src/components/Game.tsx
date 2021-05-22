@@ -85,7 +85,7 @@ const Game = (props: GameProps): React.ReactElement => {
     return (
         <div className="game">
             <TopBar inventory={["map", "map", "map","hueheuheuheuhe"]} oxygenLeft={300} oxygenRate={1} crimsonTime={"2021-05-22T19:06:00.000+08:00"} />
-            <LocationComponent locationId={Locations.locationIds.STATUE} handleAction={handleSpecificAction} />
+            <LocationComponent locationId={Locations.locationIds.UMBRAL} handleAction={handleSpecificAction} />
             <BottomBar notifications={testNotifs} quests={null} />
             <Journal />
         </div>

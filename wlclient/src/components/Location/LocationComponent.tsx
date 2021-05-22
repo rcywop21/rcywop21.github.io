@@ -9,6 +9,12 @@ import Corals from './Corals';
 import Store from './Store';
 import Woods from './Woods';
 import Statue from './Statue';
+import Library from './Library';
+import Anchovy from './Anchovy';
+import Barnacle from './Barnacle';
+import Salmon from './Salmon';
+import Kelp from './Kelp';
+import Umbral from './Umbral';
 
 export interface LocationProps {
     locationId: Locations.LocationId;
@@ -30,6 +36,12 @@ export function getSpecificLocationComponent(id: Locations.LocationId,
         [Locations.locationIds.STORE, <Store key="" state={state} handleAction={handleAction} />],
         [Locations.locationIds.WOODS, <Woods key="" state={state} handleAction={handleAction} />],
         [Locations.locationIds.STATUE, <Statue key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.LIBRARY, <Library key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.ANCHOVY, <Anchovy key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.BARNACLE, <Barnacle key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.SALMON, <Salmon key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.KELP, <Kelp key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.UMBRAL, <Umbral key="" state={state} handleAction={handleAction} />],
     ]);
     
     const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(id);
