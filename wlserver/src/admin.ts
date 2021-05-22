@@ -1,6 +1,7 @@
 import { Locations, QuestId, TeamId } from 'wlcommon';
 import applyAction, { makeAdvanceQuestTransform, makeIssueQuestTransform } from './actions';
 import { getCredentials, notifyGameState, notifyPlayerState } from './connections';
+import { makeAddOxygenTransform } from './oxygen';
 import { Reply, SocketHandler } from './socketHandlers';
 import { applyTransform, gameState, setAction } from './stateMgr';
 
@@ -104,6 +105,25 @@ const commands = {
             throw `Invalid location ${destination}.`
         gameState.players[playerId].locationId = destination;
         reply('cmdok', 'Player moved.');
+    },
+    oxygen: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        const delta = parseInt(payload.shift());
+        if (Number.isNaN(delta)) {
+            throw `Invalid delta ${delta}.`
+        }
+        applyTransform(makeAddOxygenTransform(delta), playerId);
+        reply('cmdok', 'Oxygen added.');
+    },
+    resetcd: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        const oxygenStream = payload.shift() ?? 'all';
+        if (oxygenStream === 'all') {
+            gameState.players[playerId].streamCooldownExpiry = {};
+        } else {
+            delete gameState.players[playerId].streamCooldownExpiry[oxygenStream];
+        }
+        reply('cmdok', `Cooldown reset for stream ${oxygenStream}.`);
     }
 };
 
