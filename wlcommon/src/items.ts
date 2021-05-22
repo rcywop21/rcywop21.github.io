@@ -42,6 +42,11 @@ export const itemDetails = {
         id: 'BubblePass',
         name: 'Bubble Pass',
         description: 'This golden pass lets you access the Bubble Factory. It has no expiry date and can be used multiple times.',
+    },
+    DISCOVERS: {
+        id: 'Discovers',
+        name: 'UnderseaDiscovers Ticket',
+        description: "It's a tourist pass to the Statue of Triton! With this ticket, you get close-up access to more parts of the Statue.",
     }
 }
 
