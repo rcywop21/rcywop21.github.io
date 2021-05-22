@@ -8,14 +8,11 @@ const Shallows = (props: SpecificLocationProps): React.ReactElement => {
     
     const locationId = Locations.locationIds.SHALLOWS;
     const location: Locations.Location = Locations.locationsMapping[locationId];
-    const actionsInfo = Actions.actionsByLocation[Locations.locationIds.SALMON];
+    const actionsInfo = Actions.actionsByLocation[Locations.locationIds.SHALLOWS];
     const actionPositions: string[][] = [
-        ["360px", "239px"],
-        ["853px", "156px"],
         ["870px", "488px"],
         ["870px", "543px"],
         ["45px", "120px"],
-        ["234px", "470px"]
     ];
     const actionProps: ActionProps[] = [];
     for (let i = 0; i < actionsInfo.length; i++) {
