@@ -5,30 +5,26 @@ import { Locations, Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
-    [Actions.ALL_UNDERWATER.STORE_OXYGEN]: { description: "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
-                                             task: "No task required."},
-    [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
-                                                task: "No task required."},
-    [Actions.specificActions.WOODS.GET_HAIR]: { description: "It is said that a herd of unicorns live in the Whispering Woods, and they only appear to the pure of heart. Fortunately, we only need to find the hair that they shed.", 
-                                                task: "Share a point in time when you received help and support from others to receive 1 X Unicorn Hair."},                                            
+    [Actions.specificActions.WOODS.GET_HAIR]: new PlayerAction("It is said that a herd of unicorns live in the Whispering Woods, and they only appear to the pure of heart. Fortunately, we only need to find the hair that they shed.", 
+        "Share a point in time when you received help and support from others to receive 1 X Unicorn Hair.", "703px", "382px")
 }
 
 const Woods = (props: SpecificLocationProps): React.ReactElement => {
-    const { state, handleAction } = props;
+    const { playerState, handleAction } = props;
     
     const locationId = Locations.locationIds.WOODS;
     const location: Locations.Location = Locations.locationsMapping[locationId];
-    const actionsInfo = Actions.actionsByLocation[locationId];
-    const actionPositions: string[][] = [
-        ["703px", "382px"]
-    ];
+
     const actionProps: ActionProps[] = [];
-    for (let i = 0; i < actionsInfo.length; i++) {
+    for (const key in actions) {
+        const playerAction = actions[key];
         const currActionProps: ActionProps = {
-            action: actionsInfo[i],
-            x: actionPositions[i][0],
-            y: actionPositions[i][1],
-            handleAction: handleAction(actionsInfo[i])
+            action: key,
+            x: playerAction.x,
+            y: playerAction.y,
+            isVisible: playerAction.isVisible,
+            isEnabled: playerAction.isEnabled,
+            handleAction: handleAction(key)
         }
         actionProps.push(currActionProps);
     }

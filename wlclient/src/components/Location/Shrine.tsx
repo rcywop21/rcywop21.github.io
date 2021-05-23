@@ -3,7 +3,7 @@ import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Locations, Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
-
+/*
 const actions: Record<string, PlayerAction> = {
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: { description: "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
                                              task: "No task required."},
@@ -14,9 +14,9 @@ const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.SHRINE.COLLECT_HAIR]: { description: "Collect the Unicorn Tear from the Shrine.", 
                                                      task: "Receive 1 x Unicorn Tear."},
 }
-
+*/
 const Shrine = (props: SpecificLocationProps): React.ReactElement => {
-    const { state, handleAction } = props;
+    const { playerState, handleAction } = props;
     
     const locationId = Locations.locationIds.SHRINE;
     const location: Locations.Location = Locations.locationsMapping[locationId];
@@ -33,6 +33,8 @@ const Shrine = (props: SpecificLocationProps): React.ReactElement => {
             action: actionsInfo[i],
             x: actionPositions[i][0],
             y: actionPositions[i][1],
+            isVisible: true,
+            isEnabled: true,
             handleAction: handleAction(actionsInfo[i])
         }
         actionProps.push(currActionProps);

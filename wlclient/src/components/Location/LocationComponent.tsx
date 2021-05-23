@@ -23,40 +23,40 @@ import Shrine from './Shrine';
 import Alcove from './Alcove';
 
 export interface LocationProps {
-    locationId: Locations.LocationId;
+    playerState: PlayerState;
     handleAction: (a: string) => () => void;
     handleTravel: (a: Locations.LocationId) => () => void;
 }
 
 export interface SpecificLocationProps {
-    state: any;
+    playerState: PlayerState;
     handleAction: (a: string) => () => void;
 }
 
-export function getSpecificLocationComponent(id: Locations.LocationId, 
-        state: any, handleAction: (a: string) => () => void): React.ReactElement {
+export function getSpecificLocationComponent(playerState: PlayerState,
+    handleAction: (a: string) => () => void): React.ReactElement {
             
     const SPECIFIC_LOCATION_COMPONENT_MAP: Map<Locations.LocationId, React.ReactElement> = new Map([
-        [Locations.locationIds.SHALLOWS, <Shallows key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.SHORES, <Shores key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.CORALS, <Corals key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.STORE, <Store key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.WOODS, <Woods key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.STATUE, <Statue key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.LIBRARY, <Library key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.ANCHOVY, <Anchovy key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.BARNACLE, <Barnacle key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.SALMON, <Salmon key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.KELP, <Kelp key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.UMBRAL, <Umbral key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.TUNA, <Tuna key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.CATFISH, <Catfish key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.BUBBLE, <Bubble key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.SHRINE, <Shrine key="" state={state} handleAction={handleAction} />],
-        [Locations.locationIds.ALCOVE, <Alcove key="" state={state} handleAction={handleAction} />],
+        [Locations.locationIds.SHALLOWS, <Shallows key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.SHORES, <Shores key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.CORALS, <Corals key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.STORE, <Store key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.WOODS, <Woods key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.STATUE, <Statue key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.LIBRARY, <Library key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.ANCHOVY, <Anchovy key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.BARNACLE, <Barnacle key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.SALMON, <Salmon key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.KELP, <Kelp key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.UMBRAL, <Umbral key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.TUNA, <Tuna key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.CATFISH, <Catfish key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.BUBBLE, <Bubble key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.SHRINE, <Shrine key="" playerState={playerState} handleAction={handleAction} />],
+        [Locations.locationIds.ALCOVE, <Alcove key="" playerState={playerState} handleAction={handleAction} />],
     ]);
     
-    const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(id);
+    const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(playerState.locationId);
     if (!component) {
         return (<React.Fragment></React.Fragment>);
     }
@@ -68,22 +68,26 @@ export function imgDirectoryGenerator(imgFileName: string): string {
 }
 
 const LocationComponent = (props: LocationProps): React.ReactElement => {
-    const { locationId, handleAction, handleTravel } = props;
+    const { playerState, handleAction, handleTravel } = props;
     
-    const location: Locations.Location = Locations.locationsMapping[locationId];
+    const location: Locations.Location = Locations.locationsMapping[playerState.locationId];
+    
+    const isTravelVisible = playerState.locationId != Locations.locationIds.SHORES || playerState.unlockedWoods == true;
     
     const [isTravelPopupVisible, setIsTravelPopupVisible] = React.useState(false);  
     const travelActionProps: ActionProps = {
         action: "Travel",
         x: "870px",
         y: "433px",
+        isVisible: isTravelVisible,
+        isEnabled: true,
         handleAction: (): void => { setIsTravelPopupVisible(true); }
     }
     
     return (
         <div className="location">
             <p className="currLocationTitle">{location.name}</p>
-            { getSpecificLocationComponent(locationId, {}, handleAction) }
+            { getSpecificLocationComponent(playerState, handleAction) }
             <Action {...travelActionProps} />
             <TravelPopup 
                 state={{}} 

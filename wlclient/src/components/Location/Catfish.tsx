@@ -5,33 +5,37 @@ import { Locations, Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
-    [Actions.ALL_UNDERWATER.STORE_OXYGEN]: { description: "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
-                                             task: "No task required."},
-    [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
-                                                task: "No task required."},
-    [Actions.ALL_OXYGEN.GET_OXYGEN]: { description: "The Oxygen Stream at Catfish Crescent is curiously linked with the one located at Salmon Street. Both need to be activated at roughly the same time, before you can receive 40 minutes of Oxygen.", 
-                                       task: "Recite Red Cross Promise."},
+    [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
+        "No task required.", "870px", "488px"),
+    [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction("Withdraw all Oxygen from your Oxygen Pump.", 
+        "No task required.", "870px", "543px"),
+    [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
+        "No task required.", "169px", "348px"),
+    [Actions.ALL_OXYGEN.GET_OXYGEN]: new PlayerAction("The Oxygen Stream at Catfish Crescent is curiously linked with the one located at Salmon Street. Both need to be activated at roughly the same time, before you can receive 40 minutes of Oxygen.", 
+        "Recite Red Cross Promise.", "558px", "152px")
 }
 
 const Catfish = (props: SpecificLocationProps): React.ReactElement => {
-    const { state, handleAction } = props;
+    const { playerState, handleAction } = props;
     
     const locationId = Locations.locationIds.CATFISH;
     const location: Locations.Location = Locations.locationsMapping[locationId];
-    const actionsInfo = Actions.actionsByLocation[locationId];
-    const actionPositions: string[][] = [
-        ["870px", "488px"],
-        ["870px", "543px"],
-        ["169px", "348px"],
-        ["558px", "152px"]
-    ];
+
+    if (playerState.storedOxygen == null) {
+        actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
+        actions[Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN].isVisible = false;
+    }
+    
     const actionProps: ActionProps[] = [];
-    for (let i = 0; i < actionsInfo.length; i++) {
+    for (const key in actions) {
+        const playerAction = actions[key];
         const currActionProps: ActionProps = {
-            action: actionsInfo[i],
-            x: actionPositions[i][0],
-            y: actionPositions[i][1],
-            handleAction: handleAction(actionsInfo[i])
+            action: key,
+            x: playerAction.x,
+            y: playerAction.y,
+            isVisible: playerAction.isVisible,
+            isEnabled: playerAction.isEnabled,
+            handleAction: handleAction(key)
         }
         actionProps.push(currActionProps);
     }

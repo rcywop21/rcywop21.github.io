@@ -5,36 +5,39 @@ import { Locations, Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
-    [Actions.ALL_UNDERWATER.STORE_OXYGEN]: { description: "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
-                                             task: "No task required."},
-    [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: { description: "Withdraw all Oxygen from your Oxygen Pump.", 
-                                                task: "No task required."},
-    [Actions.specificActions.ANCHOVY.EXPLORE]: { description: "Talk to the librarians about the Marine Library.", 
-                                                 task: "Use 5 minutes of Oxygen."},
-    [Actions.specificActions.ANCHOVY.INSPIRE]: { description: "Inspire the Chief Librarian with your leadership!", 
-                                                 task: "Have any member of your team perform Project Inspire."},
+    [Actions.specificActions.ANCHOVY.EXPLORE]: new PlayerAction("Anchovy Avenue is a residential district. The Chief Librarian of the Marine Library is said to live here.", 
+        "Use 5 minutes of Oxygen.", "466px", "354px"),
+    [Actions.specificActions.ANCHOVY.INSPIRE]: new PlayerAction("Inspire the Chief Librarian with your leadership!", 
+        "Have any member of your team perform Project Inspire.", "294px", "533px"),
+    [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
+        "No task required.", "870px", "488px"),
+    [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction("Withdraw all Oxygen from your Oxygen Pump.", 
+        "No task required.", "870px", "543px"),
+    [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
+        "No task required.", "209px", "120px")
 }
 
 const Anchovy = (props: SpecificLocationProps): React.ReactElement => {
-    const { state, handleAction } = props;
+    const { playerState, handleAction } = props;
     
     const locationId = Locations.locationIds.ANCHOVY;
     const location: Locations.Location = Locations.locationsMapping[locationId];
-    const actionsInfo = Actions.actionsByLocation[locationId];
-    const actionPositions: string[][] = [
-        ["466px", "354px"],
-        ["294px", "533px"],
-        ["870px", "488px"],
-        ["870px", "543px"],
-        ["209px", "120px"]
-    ];
+
+    if (playerState.storedOxygen == null) {
+        actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
+        actions[Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN].isVisible = false;
+    }
+    
     const actionProps: ActionProps[] = [];
-    for (let i = 0; i < actionsInfo.length; i++) {
+    for (const key in actions) {
+        const playerAction = actions[key];
         const currActionProps: ActionProps = {
-            action: actionsInfo[i],
-            x: actionPositions[i][0],
-            y: actionPositions[i][1],
-            handleAction: handleAction(actionsInfo[i])
+            action: key,
+            x: playerAction.x,
+            y: playerAction.y,
+            isVisible: playerAction.isVisible,
+            isEnabled: playerAction.isEnabled,
+            handleAction: handleAction(key)
         }
         actionProps.push(currActionProps);
     }
