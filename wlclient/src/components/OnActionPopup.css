@@ -9,7 +9,7 @@
     color: black;
 }
 
-.backgroundShroud {
+.onActionBackgroundShroud {
     position: absolute;
     z-index: 189;
     left: 0;

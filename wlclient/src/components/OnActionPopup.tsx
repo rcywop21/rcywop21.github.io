@@ -20,7 +20,7 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
                 <p>You are currently performing an action: {action}</p>
                 <p>Please wait for mentor approval</p>
             </div>
-            <div className="backgroundShroud"></div>
+            <div className="onActionBackgroundShroud"></div>
         </React.Fragment>
     );
 }

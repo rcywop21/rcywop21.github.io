@@ -22,8 +22,7 @@ const Alcove = (props: SpecificLocationProps): React.ReactElement => {
         actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
         actions[Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN].isVisible = false;
     }
-    
-import {
+
     const actionProps: ActionProps[] = [];
     for (const key in actions) {
         const playerAction = actions[key];
