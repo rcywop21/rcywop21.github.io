@@ -2,7 +2,6 @@
     position: absolute;
     width: 133px;
     height: 39px;
-    border: 1px solid #FF836E;
     color: #4AE0A0;
     font-size: 16px;
     padding: 0;
@@ -10,17 +9,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
 }
 
 .enabled {
     background-color: #94332280;
     border: 1px solid #FF836E;
     color: #4AE0A0;
+    cursor: pointer;
 }
 
 .disabled {
-    background-color: #ccc;
-    border: none;
-    color: #999;
+    background-color: #88888880;
+    border: 1px solid #444444;
+    color: #999999;
 }
