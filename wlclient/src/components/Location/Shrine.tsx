@@ -22,7 +22,7 @@ const actions: Record<string, PlayerAction> = {
             "The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn's Tear.",
         task: "Give 1 x Unicorn's Hair.",
     },
-    [Actions.specificActions.SHRINE.COLLECT_HAIR]: {
+    [Actions.specificActions.SHRINE.GIVE_HAIR]: {
         description: 'Collect the Unicorn Tear from the Shrine.',
         task: 'Receive 1 x Unicorn Tear.',
     },

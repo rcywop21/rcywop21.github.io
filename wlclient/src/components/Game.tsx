@@ -50,7 +50,7 @@ const Game = (props: GameProps): React.ReactElement => {
     }
     
     const playerNotifs: Message[] = globalState.messages
-        .filter(message => message.visibility === "all" || message.visibility === teamId)
+        .filter(message => message.visibility === "all" || message.visibility === teamId);
     
     return (
         <div className="game">

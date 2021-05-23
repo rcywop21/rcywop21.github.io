@@ -19,12 +19,12 @@ const Notifications = (props: NotificationsProps): React.ReactElement => {
             <h2 className="notifTitle">NOTIFICATIONS</h2>
             <div className="innerNotifBox">
                 {notifications.map((message: Message) => {
-                    (<p 
+                    return (<p 
                         className="notif" 
                         key="">
                         {notifToDisplayString(message)}
-                    </p>)
-                )}
+                    </p>);
+                })}
             </div>
         </div>
     );

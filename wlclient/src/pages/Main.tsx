@@ -18,6 +18,9 @@ const Main = (props: MainProps): React.ReactElement => {
     const [globalState, setGlobalState] = React.useState<
         GlobalState | undefined
     >(undefined);
+    const [teamId, setTeamId] = React.useState<
+        number | undefined
+    >(undefined);
 
     const socket = React.useContext(SocketContext);
 
