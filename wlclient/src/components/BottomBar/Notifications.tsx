@@ -8,7 +8,7 @@ export interface NotificationsProps {
 
 const Notifications = (props: NotificationsProps): React.ReactElement => {
     const { notifications } = props;
-    notifications.sort((n1, n2) => n1.time > n2.time ? 1 : -1)
+    notifications.sort((n1, n2) => n1.time < n2.time ? 1 : -1)
     
     function notifToDisplayString(message: Message): string {
         return `[${(new Date(message.time)).toTimeString().slice(0, 5)}]  ${message.message}`;
@@ -16,12 +16,12 @@ const Notifications = (props: NotificationsProps): React.ReactElement => {
     
     return (
         <div className="notifications">
-            <h2 className="notifTitle">NOTIFICATIONS</h2>
+            <h2 className="notifTitle">NOTIFICATIONS {notifications.length}</h2>
             <div className="innerNotifBox">
                 {notifications.map((message: Message) => {
                     return (<p 
                         className="notif" 
-                        key="">
+                        key={message.time.toString()}>
                         {notifToDisplayString(message)}
                     </p>);
                 })}

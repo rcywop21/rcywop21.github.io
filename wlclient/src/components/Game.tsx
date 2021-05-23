@@ -3,6 +3,7 @@ import TopBar from './TopBar/TopBar';
 import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
+import OnActionPopup from './OnActionPopup';
 import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
 import './Game.css';
 import { SocketContext } from '../socket/socket';
@@ -64,6 +65,7 @@ const Game = (props: GameProps): React.ReactElement => {
                 handleAction={handleSpecificAction} 
                 handleTravel={handleTravel} 
             />
+            <OnActionPopup action={playerState.stagedAction} />
             <BottomBar
                 key={playerNotifs.length}
                 notifications={playerNotifs} 
