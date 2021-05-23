@@ -61,7 +61,7 @@ const Game = (props: GameProps): React.ReactElement => {
                 crimsonUntil={new Date()} 
             />
             <LocationComponent 
-                locationId={playerState.locationId} 
+                playerState={playerState} 
                 handleAction={handleSpecificAction} 
                 handleTravel={handleTravel} 
             />

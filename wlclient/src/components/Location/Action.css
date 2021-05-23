@@ -2,9 +2,8 @@
     position: absolute;
     width: 133px;
     height: 39px;
-    background-color: #94332280;
-    border: 1px solid #ff836e;
-    color: #4ae0a0;
+    border: 1px solid #FF836E;
+    color: #4AE0A0;
     font-size: 16px;
     padding: 0;
     margin: 0;
@@ -12,4 +11,16 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+.enabled {
+    background-color: #94332280;
+    border: 1px solid #FF836E;
+    color: #4AE0A0;
+}
+
+.disabled {
+    background-color: #ccc;
+    border: none;
+    color: #999;
 }
