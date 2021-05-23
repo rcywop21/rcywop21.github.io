@@ -17,20 +17,19 @@ const INVENTORY_ITEMS_ASSET_MAP: Map<ItemId, string> = new Map([
 
 function getImg(item: ItemId): string {
     const imgFileName = INVENTORY_ITEMS_ASSET_MAP.get(item);
-    
+
     if (!imgFileName) {
-        return "";
+        return '';
     }
-    
-    const imgFileDirectory = "/assets/inventory/";
+
+    const imgFileDirectory = '/assets/inventory/';
 
     return imgFileDirectory + imgFileName;
 }
-    
 
 const InventoryItem = (props: InventoryItemProps): React.ReactElement => {
     const { name } = props;
-    
+
     return (
         <div className="inventoryItem">
             <img src={getImg(name)} />
@@ -38,6 +37,6 @@ const InventoryItem = (props: InventoryItemProps): React.ReactElement => {
             <span>{itemsById[name].name}</span>
         </div>
     );
-}
+};
 
 export default InventoryItem;

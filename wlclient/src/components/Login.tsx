@@ -42,16 +42,29 @@ const Login = (props: LoginProps): React.ReactElement => {
     }, [socket]);
 
     function authenticateReply(eventType: 'error', payload: string): void;
-    function authenticateReply(eventType: 'auth_ok', payload: AuthOkReplyPayload): void;
-    function authenticateReply(eventType: 'error' | 'auth_ok', payload: string | AuthOkReplyPayload): void {
+    function authenticateReply(
+        eventType: 'auth_ok',
+        payload: AuthOkReplyPayload
+    ): void;
+    function authenticateReply(
+        eventType: 'error' | 'auth_ok',
+        payload: string | AuthOkReplyPayload
+    ): void {
         if (eventType === 'error') {
             setHasErrorMessage(true);
             setErrorMessage(payload as string);
         } else {
             updateLoggedIn(true);
             if (mode !== 'admin') {
-                const { updatePlayerState, updateGlobalState, updateTeamId } = props as NormalLoginProps;
-                const { playerState, globalState } = payload as AuthOkReplyPayload;
+                const {
+                    updatePlayerState,
+                    updateGlobalState,
+                    updateTeamId
+                } = props as NormalLoginProps;
+                const {
+                    playerState,
+                    globalState,
+                } = payload as AuthOkReplyPayload;
                 updatePlayerState(playerState);
                 updateGlobalState(globalState);
                 updateTeamId(groupName!);

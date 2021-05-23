@@ -1,5 +1,5 @@
-import { LocationId } from "./locations";
-import { locationIds, locationsMapping } from "./locations";
+import { LocationId } from './locations';
+import { locationIds, locationsMapping } from './locations';
 
 export type Action = string;
 
@@ -67,6 +67,7 @@ export const specificActions = {
     },
     SHRINE: {
         GIVE_HAIR: 'give_hair',
+        COLLECT_HAIR: 'collect_hair',
     },
     UMBRAL: {
         EXPLORE: 'explore',
@@ -77,9 +78,9 @@ export const specificActions = {
         GET_HAIR: 'get_hair',
     },
     ALCOVE: {
-        RETRIEVE_PEARL: 'retrieve_pearl'
-    }
-}
+        RETRIEVE_PEARL: 'retrieve_pearl',
+    },
+};
 
 const allOxygenActions = Object.values(ALL_OXYGEN);
 const allUnderseaActions = Object.values(ALL_UNDERWATER);

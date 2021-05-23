@@ -32,12 +32,11 @@ export interface GameProps {
             - Various popup windows
 */
 
-
 const Game = (props: GameProps): React.ReactElement => {
     const { globalState, playerState, teamId } = props;
 
     const socket = React.useContext(SocketContext);
-    
+
     function handleSpecificAction(action: string) {
         return () => handleAction(action);
     }
@@ -45,7 +44,7 @@ const Game = (props: GameProps): React.ReactElement => {
     function handleAction(action: string) {
         socket?.emit('action', action);
     }
-    
+
     function handleTravel(location: Locations.LocationId) {
         return () => socket?.emit('travel', location);
     }
@@ -55,11 +54,16 @@ const Game = (props: GameProps): React.ReactElement => {
     
     return (
         <div className="game">
-            <TopBar inventory={playerState.inventory} oxygenUntil={playerState.oxygenUntil} crimsonUntil={new Date()} />
+            <TopBar 
+                inventory={playerState.inventory} 
+                oxygenUntil={playerState.oxygenUntil} 
+                crimsonUntil={new Date()} 
+            />
             <LocationComponent 
                 locationId={playerState.locationId} 
                 handleAction={handleSpecificAction} 
-                handleTravel={handleTravel} />
+                handleTravel={handleTravel} 
+            />
             <BottomBar notifications={playerNotifs} quests={null} />
             <Journal />
         </div>
@@ -67,4 +71,3 @@ const Game = (props: GameProps): React.ReactElement => {
 };
 
 export default Game;
-            

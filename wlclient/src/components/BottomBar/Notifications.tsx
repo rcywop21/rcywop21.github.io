@@ -18,10 +18,16 @@ const Notifications = (props: NotificationsProps): React.ReactElement => {
         <div className="notifications">
             <h2 className="notifTitle">NOTIFICATIONS</h2>
             <div className="innerNotifBox">
-                {notifications.map((message: Message) => (<p className="notif" key="">{notifToDisplayString(message)}</p>))}
+                {notifications.map((message: Message) => {
+                    (<p 
+                        className="notif" 
+                        key="">
+                        {notifToDisplayString(message)}
+                    </p>)
+                )}
             </div>
         </div>
     );
-}
+};
 
 export default Notifications;

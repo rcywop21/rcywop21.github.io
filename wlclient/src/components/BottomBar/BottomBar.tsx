@@ -11,13 +11,13 @@ export interface BottomBarProps {
 
 const BottomBar = (props: BottomBarProps): React.ReactElement => {
     const { notifications, quests } = props;
-    
+
     return (
         <div className="bottomBar">
             <Notifications notifications={notifications} />
             <QuestLog quests={quests} />
         </div>
     );
-}
+};
 
 export default BottomBar;

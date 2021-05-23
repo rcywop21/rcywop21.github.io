@@ -29,7 +29,7 @@ const TopBar = (props: TopBarProps): React.ReactElement => {
                 {/*<Timer name="crimson" time={crimsonTime} />*/}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default TopBar;
