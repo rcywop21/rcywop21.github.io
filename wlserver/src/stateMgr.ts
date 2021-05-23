@@ -28,6 +28,7 @@ export const gameState: GameState = {
         crimsonMasterSwitch: true,
         crimsonState: {},
         messages: [],
+        linkedStreams: {},
     },
     players: [],
 };
@@ -106,3 +107,15 @@ export const killTransform: Transform = (state) => {
 };
 
 export const identityTransform: Transform = (x) => x;
+
+export function makePlayerStatTransform<T extends keyof PlayerState>(key: T, value: PlayerState[T]): Transform {
+    return (state) => ({
+        ...state,
+        playerState: {
+            ...state.playerState,
+            [key]: value,
+        }
+    });
+}
+
+export const composite = (...transforms: Transform[]): Transform => transforms.reduceRight((curr, next) => (state) => next(curr(state)));
