@@ -30,6 +30,7 @@ export interface CrimsonAlarm {
 }
 
 export interface PlayerState {
+    id: TeamId;
     locationId: string;
     oxygenUntil: Date | null;
     quests: Record<QuestId, QuestState>;
