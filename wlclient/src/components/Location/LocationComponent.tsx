@@ -37,23 +37,74 @@ export function getSpecificLocationComponent(playerState: PlayerState,
     handleAction: (a: string) => () => void): React.ReactElement {
             
     const SPECIFIC_LOCATION_COMPONENT_MAP: Map<Locations.LocationId, React.ReactElement> = new Map([
-        [Locations.locationIds.SHALLOWS, <Shallows key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.SHORES, <Shores key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.CORALS, <Corals key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.STORE, <Store key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.WOODS, <Woods key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.STATUE, <Statue key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.LIBRARY, <Library key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.ANCHOVY, <Anchovy key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.BARNACLE, <Barnacle key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.SALMON, <Salmon key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.KELP, <Kelp key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.UMBRAL, <Umbral key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.TUNA, <Tuna key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.CATFISH, <Catfish key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.BUBBLE, <Bubble key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.SHRINE, <Shrine key="" playerState={playerState} handleAction={handleAction} />],
-        [Locations.locationIds.ALCOVE, <Alcove key="" playerState={playerState} handleAction={handleAction} />],
+        [
+            Locations.locationIds.SHALLOWS, 
+            <Shallows key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.SHORES, 
+            <Shores key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.CORALS, 
+            <Corals key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.STORE, 
+            <Store key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.WOODS, 
+            <Woods key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.STATUE, 
+            <Statue key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.LIBRARY, 
+            <Library key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.ANCHOVY, 
+            <Anchovy key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.BARNACLE, 
+            <Barnacle key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.SALMON, 
+            <Salmon key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.KELP, 
+            <Kelp key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.UMBRAL, 
+            <Umbral key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.TUNA, 
+            <Tuna key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.CATFISH, 
+            <Catfish key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.BUBBLE, 
+            <Bubble key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.SHRINE, 
+            <Shrine key="" playerState={playerState} handleAction={handleAction} />
+        ],
+        [
+            Locations.locationIds.ALCOVE, 
+            <Alcove key="" playerState={playerState} handleAction={handleAction} />
+        ],
     ]);
     
     const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(playerState.locationId);

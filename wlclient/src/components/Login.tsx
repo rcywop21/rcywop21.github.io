@@ -1,5 +1,5 @@
 import React from 'react';
-import { GlobalState, PlayerState, TeamId } from 'wlcommon';
+import { GlobalState, PlayerState } from 'wlcommon';
 import { SocketContext } from '../socket/socket';
 import './Login.css';
 
@@ -67,7 +67,9 @@ const Login = (props: LoginProps): React.ReactElement => {
                 } = payload as AuthOkReplyPayload;
                 updatePlayerState(playerState);
                 updateGlobalState(globalState);
-                updateTeamId(groupName!);
+                if (groupName) {
+                    updateTeamId(groupName);
+                }
             }
         }
     }
