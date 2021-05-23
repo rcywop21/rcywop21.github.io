@@ -59,8 +59,10 @@ const Game = (props: GameProps): React.ReactElement => {
     function triggerTooltip(type: TooltipType = null, data = "") {
         return () => {
             setIsTooltipVisible(!isTooltipVisible);
-            setTooltipType(type);
-            setTooltipData(data);
+            if (type) {
+                setTooltipType(type);
+                setTooltipData(data);
+            }
         };
     }
     
