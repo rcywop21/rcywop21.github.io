@@ -12,33 +12,45 @@ export interface MainProps {
 const Main = (props: MainProps): React.ReactElement => {
     const { loggedIn, updateLoggedIn } = props;
 
-    const [playerState, setPlayerState] = React.useState<PlayerState | undefined>(undefined);
-    const [globalState, setGlobalState] = React.useState<GlobalState | undefined>(undefined);
+    const [playerState, setPlayerState] = React.useState<
+        PlayerState | undefined
+    >(undefined);
+    const [globalState, setGlobalState] = React.useState<
+        GlobalState | undefined
+    >(undefined);
+    const [teamId, setTeamId] = React.useState<
+        number | undefined
+    >(undefined);
 
     const socket = React.useContext(SocketContext);
 
     React.useEffect(() => {
         console.log(socket);
         socket?.on('player_update', (newGameState: PlayerState) => {
-            setPlayerState(newGameState) 
+            setPlayerState(newGameState);
         });
         socket?.on('global_update', (newGameState: GlobalState) => {
-            setGlobalState(newGameState)
+            setGlobalState(newGameState);
         });
     }, [socket]);
 
-
-    if (playerState && globalState) {
+    if (playerState && globalState && teamId) {
         return (
             <div>
-                <Game globalState={globalState} playerState={playerState} />
+                <Game globalState={globalState} playerState={playerState} teamId={teamId}/>
             </div>
         );
     }
 
     return (
         <div>
-            <Login mode="player" updateLoggedIn={updateLoggedIn} updateGlobalState={setGlobalState} updatePlayerState={setPlayerState} />
+            <Login
+                mode="player"
+                updateLoggedIn={updateLoggedIn}
+                updateGlobalState={setGlobalState}
+                updatePlayerState={setPlayerState}
+                updateTeamId={setTeamId}
+            />
         </div>
     );
 };

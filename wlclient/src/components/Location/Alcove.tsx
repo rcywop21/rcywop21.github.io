@@ -23,6 +23,7 @@ const Alcove = (props: SpecificLocationProps): React.ReactElement => {
         actions[Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN].isVisible = false;
     }
     
+import {
     const actionProps: ActionProps[] = [];
     for (const key in actions) {
         const playerAction = actions[key];
@@ -36,19 +37,15 @@ const Alcove = (props: SpecificLocationProps): React.ReactElement => {
         }
         actionProps.push(currActionProps);
     }
-    
+
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator("alcove.png")} />
-            { actionProps.map((info: ActionProps) => {
-                return (<Action 
-                    key="" 
-                    {...info} 
-                />)}) }
+            <img src={imgDirectoryGenerator('alcove.png')} />
+            {actionProps.map((info: ActionProps) => {
+                return <Action key="" {...info} />;
+            })}
         </React.Fragment>
     );
-}
+};
 
 export default Alcove;
-            
-            

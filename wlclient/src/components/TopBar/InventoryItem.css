@@ -1,4 +1,9 @@
 .inventoryItem {
-    padding-left: 20px;
-    padding-top: 0.5rem;
+    padding: 0;
+    margin: 5px;
+    font-size: 13px;
+    width: 95px;
+    flex-shrink: 0;
+    height: 80px;
+    text-align: center;
 }

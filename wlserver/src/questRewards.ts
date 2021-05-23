@@ -1,20 +1,48 @@
-import { QuestId, questIds, quests } from "wlcommon"
-import { makeIssueQuestTransform } from "./actions";
-import { makeAddOxygenTransform } from "./oxygen";
-import { identityTransform, Transform, TransformState } from "./stateMgr";
+import { itemDetails, QuestId, questIds, quests } from 'wlcommon';
+import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './actions';
+import { makeAddItemTransform } from './inventory';
+import { makeAddOxygenTransform } from './oxygen';
+import {
+    composite,
+    identityTransform,
+    makeAddMessageTransform,
+    makePlayerStatTransform,
+    Transform,
+    TransformState,
+} from './stateMgr';
 
 const transforms: Record<QuestId, Transform> = {
-    [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60),
-}
+    [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60, false),
+    [questIds.FINCHES_2]: composite(
+        makeAddMessageTransform(
+            'Refer to your Journal for details on the four spells used to keep the Crimson asleep.'
+        ),
+        makePlayerStatTransform('knowsCrimson', true)
+    ),
+    [questIds.LIBRARIAN_PASS]: makeAddItemTransform(
+        itemDetails.LIBRARY_PASS.id,
+        1
+    ),
+    [questIds.PYRITE]: makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1),
+};
 
-export const makePostCompletionTransform = (questId: QuestId): Transform => (state) => {
+const postUnlock: Record<QuestId, Transform> = {
+    [questIds.ARTEFACTS_1]: (state) =>
+        (state.playerState.knowsLanguage
+            ? makeAdvanceQuestTransform(questIds.ARTEFACTS_2, 0)
+            : identityTransform)(state),
+};
+
+export const makePostCompletionTransform = (questId: QuestId): Transform => (
+    state
+) => {
     let completionMsg = `You have completed a quest - ${quests[questId].name}!`;
     if (quests[questId].reward) {
-        completionMsg += ` You receive: ${quests[questId].reward.join(', ')}`
+        completionMsg += ` You receive: ${quests[questId].reward.join(', ')}`;
     }
 
-    let result: TransformState = {
-        globalState: state.globalState,
+    let result: TransformState = makeAddMessageTransform(completionMsg)({
+        ...state,
         playerState: {
             ...state.playerState,
             quests: {
@@ -22,19 +50,19 @@ export const makePostCompletionTransform = (questId: QuestId): Transform => (sta
                 [questId]: {
                     ...state.playerState.quests[questId],
                     status: 'completed',
-                }
+                },
             },
         },
-        messages: [ ...state.messages, completionMsg ]
-    };
+    });
 
     result = (transforms[questId] ?? identityTransform)(result);
 
     if (quests[questId].unlocks) {
         result = makeIssueQuestTransform(quests[questId].unlocks)(result);
+        if (postUnlock[questId]) {
+            result = postUnlock[questId](result);
+        }
     }
 
     return result;
 };
-
-

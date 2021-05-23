@@ -34,19 +34,15 @@ const Shallows = (props: SpecificLocationProps): React.ReactElement => {
         }
         actionProps.push(currActionProps);
     }
-    
+
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator("shallows.png")} />
-            { actionProps.map((info: ActionProps) => {
-                return (<Action 
-                    key="" 
-                    {...info} 
-                />)}) }
+            <img src={imgDirectoryGenerator('shallows.png')} />
+            {actionProps.map((info: ActionProps) => {
+                return <Action key="" {...info} />;
+            })}
         </React.Fragment>
     );
-}
+};
 
 export default Shallows;
-            
-            

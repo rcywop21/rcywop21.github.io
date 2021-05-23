@@ -58,13 +58,13 @@ export function getSpecificLocationComponent(playerState: PlayerState,
     
     const component = SPECIFIC_LOCATION_COMPONENT_MAP.get(playerState.locationId);
     if (!component) {
-        return (<React.Fragment></React.Fragment>);
+        return <React.Fragment></React.Fragment>;
     }
     return component;
 }
 
 export function imgDirectoryGenerator(imgFileName: string): string {
-    return "/assets/locations/" + imgFileName;
+    return '/assets/locations/' + imgFileName;
 }
 
 const LocationComponent = (props: LocationProps): React.ReactElement => {
@@ -95,6 +95,6 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
                 handleTravel={handleTravel} />
         </div>
     );
-}
+};
 
 export default LocationComponent;

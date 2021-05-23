@@ -1,4 +1,12 @@
-import { GameState, GlobalState, PlayerState, TeamId } from 'wlcommon';
+import {
+    GameState,
+    GlobalState,
+    Locations,
+    PlayerState,
+    QuestId,
+    QuestState,
+    TeamId,
+} from 'wlcommon';
 import { notifyPlayerState } from './connections';
 import logger from './logger';
 
@@ -20,25 +28,31 @@ export const gameState: GameState = {
         crimsonMasterSwitch: true,
         crimsonState: {},
         messages: [],
+        linkedStreams: {},
     },
     players: [],
 };
 
-export const applyTransform = (transform: Transform, playerId: TeamId): void => {
+export const applyTransform = (
+    transform: Transform,
+    playerId: TeamId
+): void => {
     const { playerState, globalState, messages } = transform({
         playerState: gameState.players[playerId],
         globalState: gameState.global,
-        messages: []
+        messages: [],
     });
 
     gameState.global = globalState;
     gameState.players[playerId] = playerState;
     gameState.players[playerId].stagedAction = null;
-    messages.forEach((message) => gameState.global.messages.push({
-        time: new Date(),
-        visibility: playerId,
-        message,
-    }));
+    messages.forEach((message) =>
+        gameState.global.messages.push({
+            time: new Date(),
+            visibility: playerId,
+            message,
+        })
+    );
 };
 
 export const setAction = (playerId: TeamId, action: string | null): void => {
@@ -57,5 +71,55 @@ export const setAction = (playerId: TeamId, action: string | null): void => {
     }
 };
 
+export const makeAddMessageTransform = (...newMsg: string[]): Transform => (
+    state
+) => ({
+    ...state,
+    messages: state.messages.concat(newMsg),
+});
+
+export const killTransform: Transform = (state) => {
+    const playerQuests: Record<QuestId, QuestState> = {};
+    Object.entries(state.playerState.quests).forEach(
+        ([questId, questState]) => {
+            if (questState.status === 'completed') {
+                playerQuests[questId] = questState;
+            } else {
+                playerQuests[questId] = {
+                    ...questState,
+                    stages: Array(questState.stages.length).fill(false),
+                };
+            }
+        }
+    );
+
+    return makeAddMessageTransform(
+        'You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'
+    )({
+        ...state,
+        playerState: {
+            ...state.playerState,
+            locationId: Locations.locationIds.SHORES,
+            oxygenUntil: null,
+            quests: playerQuests,
+        },
+    });
+};
+
 export const identityTransform: Transform = (x) => x;
 
+export function makePlayerStatTransform<T extends keyof PlayerState>(
+    key: T,
+    value: PlayerState[T]
+): Transform {
+    return (state) => ({
+        ...state,
+        playerState: {
+            ...state.playerState,
+            [key]: value,
+        },
+    });
+}
+
+export const composite = (...transforms: Transform[]): Transform =>
+    transforms.reduceRight((curr, next) => (state) => next(curr(state)));

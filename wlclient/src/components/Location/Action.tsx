@@ -28,6 +28,6 @@ export const Action = (props: ActionProps): React.ReactElement => {
             <p>{action}</p>
         </div>
     );
-}
+};
 
 export default Action;

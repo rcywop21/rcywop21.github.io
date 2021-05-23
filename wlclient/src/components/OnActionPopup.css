@@ -1,20 +1,12 @@
-.travelPopup {
+.onActionPopup {
     position: absolute;
-    z-index: 199;
+    z-index: 299;
     left: 157px;
     top: 120px;
     width: 710px;
     height: 366px;
     background-color: #4d96c3;
     color: black;
-}
-
-.buttonContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
 }
 
 .backgroundShroud {
@@ -25,5 +17,4 @@
     width: 1024px;
     height: 607px;
     background-color: #44444460;
-    cursor: pointer;
 }
