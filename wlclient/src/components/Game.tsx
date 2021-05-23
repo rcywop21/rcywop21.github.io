@@ -3,7 +3,9 @@ import TopBar from './TopBar/TopBar';
 import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-import OnActionPopup from './OnActionPopup';
+import OnActionPopup from './Popups/OnActionPopup';
+import { TooltipType } from './Popups/Tooltip';
+import Tooltip from './Popups/Tooltip';
 import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
 import './Game.css';
 import { SocketContext } from '../socket/socket';
@@ -36,6 +38,10 @@ export interface GameProps {
 const Game = (props: GameProps): React.ReactElement => {
     const { globalState, playerState, teamId } = props;
 
+    const [isTooltipVisible, setIsTooltipVisible] = React.useState<boolean>(false);
+    const [tooltipType, setTooltipType] = React.useState<TooltipType>(null);
+    const [tooltipData, setTooltipData] = React.useState<string>("");
+    
     const socket = React.useContext(SocketContext);
 
     function handleSpecificAction(action: string) {
@@ -50,6 +56,14 @@ const Game = (props: GameProps): React.ReactElement => {
         return () => socket?.emit('travel', location);
     }
     
+    function triggerTooltip(type: TooltipType = null, data = "") {
+        return () => {
+            setIsTooltipVisible(!isTooltipVisible);
+            setTooltipType(type);
+            setTooltipData(data);
+        };
+    }
+    
     const playerNotifs: Message[] = globalState.messages
         .filter(message => message.visibility === "all" || message.visibility === teamId);
     
@@ -58,7 +72,8 @@ const Game = (props: GameProps): React.ReactElement => {
             <TopBar 
                 inventory={playerState.inventory} 
                 oxygenUntil={playerState.oxygenUntil} 
-                crimsonUntil={new Date()} 
+                crimsonUntil={new Date()}
+                triggerTooltip={triggerTooltip}
             />
             <LocationComponent 
                 playerState={playerState} 
@@ -66,6 +81,11 @@ const Game = (props: GameProps): React.ReactElement => {
                 handleTravel={handleTravel} 
             />
             <OnActionPopup action={playerState.stagedAction} />
+            <Tooltip 
+                isVisible={isTooltipVisible}
+                tooltipType={tooltipType}
+                data={tooltipData}
+            />
             <BottomBar
                 key={playerNotifs.length}
                 notifications={playerNotifs} 

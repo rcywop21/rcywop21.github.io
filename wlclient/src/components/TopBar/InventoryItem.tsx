@@ -1,9 +1,11 @@
 import React from 'react';
+import { tooltipTypes, TooltipType } from '../Popups/Tooltip';
 import { ItemId, itemDetails, itemsById } from 'wlcommon';
 import './InventoryItem.css';
 
 export interface InventoryItemProps {
     name: ItemId;
+    triggerTooltip: (t?: TooltipType, d?: string) => () => void;
 }
 
 const INVENTORY_ITEMS_ASSET_MAP: Map<ItemId, string> = new Map([
@@ -28,10 +30,16 @@ function getImg(item: ItemId): string {
 }
 
 const InventoryItem = (props: InventoryItemProps): React.ReactElement => {
-    const { name } = props;
+    const { name, triggerTooltip } = props;
+    
+    const triggerTooltipWithData = triggerTooltip(tooltipTypes.INVENTORY, name);
 
     return (
-        <div className="inventoryItem">
+        <div 
+            className="inventoryItem" 
+            onMouseEnter={triggerTooltipWithData} 
+            onMouseLeave={triggerTooltip()}
+        >
             <img src={getImg(name)} />
             <br />
             <span>{itemsById[name].name}</span>
