@@ -36,6 +36,7 @@ const Shrine = (props: SpecificLocationProps): React.ReactElement => {
     const actionsInfo = Actions.actionsByLocation[locationId];
     const actionPositions: string[][] = [
         ['434px', '449px'],
+        ['434px', '449px'],
         ['870px', '488px'],
         ['870px', '543px'],
         ['52px', '123px'],

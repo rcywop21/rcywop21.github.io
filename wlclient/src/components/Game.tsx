@@ -3,13 +3,15 @@ import TopBar from './TopBar/TopBar';
 import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-import { PlayerState, GlobalState, Locations } from 'wlcommon';
+import OnActionPopup from './OnActionPopup';
+import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
 import './Game.css';
 import { SocketContext } from '../socket/socket';
 
 export interface GameProps {
     globalState: GlobalState;
     playerState: PlayerState;
+    teamId: number;
 }
 
 /*
@@ -32,7 +34,7 @@ export interface GameProps {
 */
 
 const Game = (props: GameProps): React.ReactElement => {
-    const { globalState, playerState } = props;
+    const { globalState, playerState, teamId } = props;
 
     const socket = React.useContext(SocketContext);
 
@@ -47,28 +49,28 @@ const Game = (props: GameProps): React.ReactElement => {
     function handleTravel(location: Locations.LocationId) {
         return () => socket?.emit('travel', location);
     }
-
-    const testNotifs: string[] = [];
-    let i = 0;
-    while (i < 10) {
-        testNotifs.push(i.toString() + 'test'.repeat(i));
-        i++;
-    }
-    //testNotifs.push("999" + playerState.oxygenUntil.toString());
-
+    
+    const playerNotifs: Message[] = globalState.messages
+        .filter(message => message.visibility === "all" || message.visibility === teamId);
+    
     return (
         <div className="game">
-            <TopBar
-                inventory={['map', 'map', 'map', 'hueheuheuheuhe']}
-                oxygenUntil={playerState.oxygenUntil}
-                crimsonUntil={new Date()}
+            <TopBar 
+                inventory={playerState.inventory} 
+                oxygenUntil={playerState.oxygenUntil} 
+                crimsonUntil={new Date()} 
             />
-            <LocationComponent
-                locationId={playerState.locationId}
-                handleAction={handleSpecificAction}
-                handleTravel={handleTravel}
+            <LocationComponent 
+                locationId={playerState.locationId} 
+                handleAction={handleSpecificAction} 
+                handleTravel={handleTravel} 
             />
-            <BottomBar notifications={testNotifs} quests={null} />
+            <OnActionPopup action={playerState.stagedAction} />
+            <BottomBar
+                key={playerNotifs.length}
+                notifications={playerNotifs} 
+                quests={playerState.quests} 
+            />
             <Journal />
         </div>
     );

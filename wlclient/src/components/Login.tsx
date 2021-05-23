@@ -1,5 +1,5 @@
 import React from 'react';
-import { GlobalState, PlayerState } from 'wlcommon';
+import { GlobalState, PlayerState, TeamId } from 'wlcommon';
 import { SocketContext } from '../socket/socket';
 import './Login.css';
 
@@ -7,6 +7,7 @@ export interface NormalLoginProps {
     updateLoggedIn: (x: boolean) => void;
     updatePlayerState: (state: PlayerState) => void;
     updateGlobalState: (state: GlobalState) => void;
+    updateTeamId: (x: number) => void;
     mode: 'player' | 'mentor';
 }
 
@@ -58,6 +59,7 @@ const Login = (props: LoginProps): React.ReactElement => {
                 const {
                     updatePlayerState,
                     updateGlobalState,
+                    updateTeamId
                 } = props as NormalLoginProps;
                 const {
                     playerState,
@@ -65,6 +67,7 @@ const Login = (props: LoginProps): React.ReactElement => {
                 } = payload as AuthOkReplyPayload;
                 updatePlayerState(playerState);
                 updateGlobalState(globalState);
+                updateTeamId(groupName!);
             }
         }
     }

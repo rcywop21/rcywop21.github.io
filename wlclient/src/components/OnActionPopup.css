@@ -1,0 +1,20 @@
+.onActionPopup {
+    position: absolute;
+    z-index: 299;
+    left: 157px;
+    top: 120px;
+    width: 710px;
+    height: 366px;
+    background-color: #4d96c3;
+    color: black;
+}
+
+.backgroundShroud {
+    position: absolute;
+    z-index: 189;
+    left: 0;
+    top: 0;
+    width: 1024px;
+    height: 607px;
+    background-color: #44444460;
+}
