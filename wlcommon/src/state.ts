@@ -21,6 +21,10 @@ export interface GlobalState {
     crimsonMasterSwitch: boolean;
     crimsonState: Record<string, CrimsonAlarm>;
     messages: Message[];
+    linkedStreams: {
+        lastSalmon?: Date;
+        lastCatfish?: Date;
+    }
 }
 
 export interface CrimsonAlarm {
@@ -47,7 +51,6 @@ export interface PlayerState {
     unlockedAlcove?: boolean;
     unlockedShrine?: boolean;
     unlockedWoods?: boolean;
-    exploredCorals?: boolean;
 }
 
 export interface Message {

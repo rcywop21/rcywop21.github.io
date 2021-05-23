@@ -1,15 +1,36 @@
-import { QuestId, questIds, quests } from 'wlcommon';
-import { makeIssueQuestTransform } from './actions';
+import { itemDetails, QuestId, questIds, quests } from 'wlcommon';
+import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './actions';
+import { makeAddItemTransform } from './inventory';
 import { makeAddOxygenTransform } from './oxygen';
 import {
+    composite,
     identityTransform,
     makeAddMessageTransform,
+    makePlayerStatTransform,
     Transform,
     TransformState,
 } from './stateMgr';
 
 const transforms: Record<QuestId, Transform> = {
     [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60, false),
+    [questIds.FINCHES_2]: composite(
+        makeAddMessageTransform(
+            'Refer to your Journal for details on the four spells used to keep the Crimson asleep.'
+        ),
+        makePlayerStatTransform('knowsCrimson', true)
+    ),
+    [questIds.LIBRARIAN_PASS]: makeAddItemTransform(
+        itemDetails.LIBRARY_PASS.id,
+        1
+    ),
+    [questIds.PYRITE]: makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1),
+};
+
+const postUnlock: Record<QuestId, Transform> = {
+    [questIds.ARTEFACTS_1]: (state) =>
+        (state.playerState.knowsLanguage
+            ? makeAdvanceQuestTransform(questIds.ARTEFACTS_2, 0)
+            : identityTransform)(state),
 };
 
 export const makePostCompletionTransform = (questId: QuestId): Transform => (
@@ -38,6 +59,9 @@ export const makePostCompletionTransform = (questId: QuestId): Transform => (
 
     if (quests[questId].unlocks) {
         result = makeIssueQuestTransform(quests[questId].unlocks)(result);
+        if (postUnlock[questId]) {
+            result = postUnlock[questId](result);
+        }
     }
 
     return result;
