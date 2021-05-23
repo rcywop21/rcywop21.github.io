@@ -1,7 +1,7 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { Locations, Actions } from 'wlcommon';
+import { Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
@@ -21,9 +21,6 @@ const actions: Record<string, PlayerAction> = {
 
 const Salmon = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction } = props;
-    
-    const locationId = Locations.locationIds.SALMON;
-    const location: Locations.Location = Locations.locationsMapping[locationId];
     
     if (playerState.storedOxygen == null) {
         actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;

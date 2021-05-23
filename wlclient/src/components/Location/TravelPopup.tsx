@@ -1,16 +1,15 @@
 import React from 'react';
-import { Locations, Actions } from 'wlcommon';
+import { Locations } from 'wlcommon';
 import './TravelPopup.css';
 
 export interface TravelPopupProps {
-    state: any;
     isVisible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     handleTravel: (a: Locations.LocationId) => () => void;
 }
 
 const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
-    const { state, isVisible, setVisible, handleTravel } = props;
+    const { isVisible, setVisible, handleTravel } = props;
     const visibility = isVisible ? "inline" : "none";
     const locationIds = Object.values(Locations.locationIds);
     

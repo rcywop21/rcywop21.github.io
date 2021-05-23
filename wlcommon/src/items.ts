@@ -15,7 +15,8 @@ export const itemDetails = {
     MAP: {
         id: 'Map',
         name: 'Map of the Undersea',
-        description: 'It shows you the way to most of the major locations in the Undersea.',
+        description:
+            'It shows you the way to most of the major locations in the Undersea.',
     },
     OXYGEN_GUIDE: {
         id: 'OxygenGuide',
@@ -31,21 +32,47 @@ export const itemDetails = {
     PUMP: {
         id: 'Pump',
         name: 'Oxygen Pump',
-        description: "This pump allows you to store all your Oxygen before you resurface, so it doesn't go to waste.",
+        description:
+            "This pump allows you to store all your Oxygen before you resurface, so it doesn't go to waste.",
     },
     BLACK_ROCK: {
         id: 'BlackRock',
         name: 'Mysterious Black Rock',
-        description: "It's a strange looking black rock. There are odd markings on it. Nobody knows what its uses, or properties are...",
+        description:
+            "It's a strange looking black rock. There are odd markings on it. Nobody knows what its uses, or properties are...",
     },
     BUBBLE: {
         id: 'BubblePass',
         name: 'Bubble Pass',
-        description: 'This golden pass lets you access the Bubble Factory. It has no expiry date and can be used multiple times.',
+        description:
+            'This golden pass lets you access the Bubble Factory. It has no expiry date and can be used multiple times.',
+    },
+    DISCOVERS: {
+        id: 'Discovers',
+        name: 'UnderseaDiscovers Ticket',
+        description:
+            "It's a tourist pass to the Statue of Triton! With this ticket, you get close-up access to more parts of the Statue.",
+    },
+    BLINKSEED: {
+        id: 'Blinkseed',
+        name: 'Blinkseed Blades',
+        description:
+            "You harvested this from Kelp Plains. It looks like seaweed leaves, but Alyusi insists that it's blinkseed.",
+    },
+    PYRITE_PAN: {
+        id: 'PyritePan',
+        name: 'Pyrite Pan',
+        description:
+            "It's a pan made of pyrite, a mineral also known as fool's gold.",
+    },
+    LIBRARY_PASS: {
+        id: 'LibraryPass',
+        name: 'Library Pass',
+        description: "It lets you read books from the Restricted Section of the Marine Library. The Chief Librarian has the authority to bestow it on individuals she deems worthy."
     }
-}
+};
 
 export const itemsById: Record<ItemId, Item> = {};
 Object.values(itemDetails).forEach((item) => {
     itemsById[item.id] = item;
-})
+});

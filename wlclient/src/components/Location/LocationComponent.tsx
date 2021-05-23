@@ -89,8 +89,7 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
             <p className="currLocationTitle">{location.name}</p>
             { getSpecificLocationComponent(playerState, handleAction) }
             <Action {...travelActionProps} />
-            <TravelPopup 
-                state={{}} 
+            <TravelPopup
                 isVisible={isTravelPopupVisible} 
                 setVisible={setIsTravelPopupVisible} 
                 handleTravel={handleTravel} />
