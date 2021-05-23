@@ -8,6 +8,7 @@ import {
     itemDetails,
 } from 'wlcommon';
 import { makeAddItemTransform } from './inventory';
+import logger from './logger';
 import {
     makeAddOxygenTransform,
     makeRemoveOxygenTransform,
@@ -132,9 +133,9 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
                     })
                 );
             }
+            default:
+                throw 'Action not implemented.';
         }
-
-        throw 'Action not implemented.';
     },
     [Locations.locationIds.CORALS]: (state) => {
         switch (state.playerState.stagedAction) {
@@ -171,11 +172,12 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
                         updateStreamCooldownTransform(state)
                     )
                 );
+            default:
+                throw 'Action not implemented.';
         }
-
-        throw 'Action not implemented.';
     },
     [Locations.locationIds.STORE]: (state) => {
+        logger.log('info', `Player ${state.playerState.id} wants to ${state.playerState.stagedAction}.`);
         switch (state.playerState.stagedAction) {
             case Actions.specificActions.STORE.BUY_MAP:
                 return makeAddItemTransform(
@@ -259,9 +261,10 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
                         0
                     )(makeRemoveOxygenTransform(1800)(state))
                 );
+            default:
+                throw 'Action not implemented.';
         }
 
-        throw 'Action not implemented.';
     },
     [Locations.locationIds.STATUE]: (state) => {
         switch (state.playerState.stagedAction) {
@@ -299,6 +302,25 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
                 }
                 throw 'Requirements not met.';
             }
+
+            case Actions.ALL_OXYGEN.GET_OXYGEN: {
+                const now = Date.now();
+                const oxygenToAdd = now - state.globalState.tritonOxygen.lastExtract.valueOf();
+                logger.log('info', `Player ${state.playerState.id} has accessed the Oxygen Stream at ${Locations.locationIds.STATUE}.`)
+                return makeAddOxygenTransform(oxygenToAdd)(updateStreamCooldownTransform({
+                    ...state,
+                    globalState: {
+                        ...state.globalState,
+                        tritonOxygen: {
+                            lastTeam: state.playerState.id,
+                            lastExtract: new Date(now),
+                        }
+                    }
+                }));
+            }
+
+            default:
+                throw 'Action not implemented.';
         }
     },
 };
