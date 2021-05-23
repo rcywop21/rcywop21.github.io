@@ -24,7 +24,7 @@ const actions: Record<string, PlayerAction> = {
     [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
         "No task required.", "689px", "100px"),
     [Actions.ALL_OXYGEN.GET_OXYGEN]: new PlayerAction("The Statue of Triton has a publicly-accessible storage of Oxygen, which slowly builds up 4 minutes of Oxygen every minute. You can get all the Oxygen inside this store. Note that this storage is shared between everyone.", 
-        "Each person has to present a fully filled water bottle to the mentors to receive 20 minutes of Oxygen.",
+        "Conduct a Water Parade (skip if fasting) to receive all Oxygen stored at the statue.",
         "826px", "238px") 
 }
 
