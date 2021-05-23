@@ -1,21 +1,23 @@
 import { Locations, Util } from 'wlcommon';
-import { Transform } from './stateMgr';
+import { makeAddMessageTransform, Transform } from './stateMgr';
 
-export const makeAddOxygenTransform = (seconds: number): Transform => (
+export const makeAddOxygenTransform = (seconds: number, verbose = true): Transform => (
     state
 ) => {
     const { oxygenUntil } = state.playerState;
     if (oxygenUntil === null) return state;
-    return {
+    const ms = seconds * 1000;
+    const messages = verbose ? [`You have received ${Util.formatDuration(ms)} of Oxygen.`] : [];
+    return makeAddMessageTransform(...messages)({
         ...state,
         playerState: {
             ...state.playerState,
-            oxygenUntil: new Date(oxygenUntil.valueOf() + seconds * 1000),
+            oxygenUntil: new Date(oxygenUntil.valueOf() + ms),
         },
-    };
+    });
 };
 
-export const makeRemoveOxygenTransform = (seconds: number): Transform => (
+export const makeRemoveOxygenTransform = (seconds: number, verbose = true): Transform => (
     state
 ) => {
     const oxygenUntil = state.playerState.oxygenUntil.valueOf();
@@ -31,13 +33,17 @@ export const makeRemoveOxygenTransform = (seconds: number): Transform => (
         )}.`;
     }
 
-    return {
+    const ms = seconds * 1000;
+
+    const messages = verbose ? [`You have used ${Util.formatDuration(ms)} for Oxygen.`] : [];
+
+    return makeAddMessageTransform(...messages)({
         ...state,
         playerState: {
             ...state.playerState,
             oxygenUntil: new Date(oxygenUntil - seconds * 1000),
         },
-    };
+    });
 };
 
 export const updateStreamCooldownTransform: Transform = (state) => {

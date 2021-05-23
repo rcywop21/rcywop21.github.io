@@ -9,7 +9,7 @@ import {
 } from './stateMgr';
 
 const transforms: Record<QuestId, Transform> = {
-    [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60),
+    [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60, false),
 };
 
 export const makePostCompletionTransform = (questId: QuestId): Transform => (
