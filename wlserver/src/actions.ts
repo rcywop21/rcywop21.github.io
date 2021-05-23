@@ -14,7 +14,7 @@ import {
     updateStreamCooldownTransform,
 } from './oxygen';
 import { makePostCompletionTransform } from './questRewards';
-import { identityTransform, Transform } from './stateMgr';
+import { identityTransform, makeAddMessageTransform, Transform } from './stateMgr';
 
 const actionList = {
     underwater: Object.values(Actions.ALL_UNDERWATER),
@@ -27,7 +27,9 @@ export const makeIssueQuestTransform = (questId: QuestId): Transform => (
     if (state.playerState.quests[questId]) return;
     const questDetails = quests[questId];
     if (questDetails === undefined) throw `Unknown quest ID ${questId}`;
-    return {
+    return makeAddMessageTransform(
+            `You have received a new quest - ${quests[questId].name}. Check your Quest Log for more information.`,
+    )({
         ...state,
         playerState: {
             ...state.playerState,
@@ -40,11 +42,7 @@ export const makeIssueQuestTransform = (questId: QuestId): Transform => (
                 },
             },
         },
-        messages: [
-            ...state.messages,
-            `You have received a new quest - ${quests[questId].name}. Check your Quest Log for more information.`,
-        ],
-    };
+    });
 };
 
 export const makeAdvanceQuestTransform = (
@@ -114,7 +112,9 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
     [Locations.locationIds.SHORES]: (state) => {
         switch (state.playerState.stagedAction) {
             case Actions.specificActions.SHORES.DIVE: {
-                return makeAdvanceQuestTransform(
+                return makeAddMessageTransform(
+                        'You dive into the deep blue sea... and arrive at the Shallows!',
+            )(makeAdvanceQuestTransform(
                     questIds.CHAPTER_1,
                     0
                 )({
@@ -124,11 +124,7 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
                         oxygenUntil: new Date(Date.now() + 20 * 60 * 1000),
                         locationId: Locations.locationIds.SHALLOWS,
                     },
-                    messages: [
-                        ...state.messages,
-                        'You dive into the deep blue sea... and arrive at the Shallows!',
-                    ],
-                });
+                }));
             }
         }
 
@@ -147,17 +143,13 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
                     makeAdvanceQuestTransform(
                         questIds.FINCHES,
                         0
-                    )({
-                        globalState: state.globalState,
+                    )(makeAddMessageTransform('After some hard work and effort, you are now able to understand the ancient language.')({
+                        ...state,
                         playerState: {
                             ...state.playerState,
                             knowsLanguage: true,
                         },
-                        messages: [
-                            ...state.messages,
-                            'After some hard work and effort, you are now able to understand the ancient language.',
-                        ],
-                    })
+                    }))
                 );
             }
             case Actions.ALL_OXYGEN.GET_OXYGEN:
@@ -268,17 +260,15 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
                     questIds.FINCHES,
                     1
                 )(
-                    makeRemoveOxygenTransform(300)({
-                        globalState: state.globalState,
+                    makeRemoveOxygenTransform(300)(makeAddMessageTransform(
+                            'You find a mysterious engraving at the base of the statue. It seems to be written in some sort of ancient language...',
+                )({
+                        ...state,
                         playerState: {
                             ...state.playerState,
                             foundEngraving: true,
                         },
-                        messages: [
-                            ...state.messages,
-                            'You find a mysterious engraving at the base of the statue. It seems to be written in some sort of ancient language...',
-                        ],
-                    })
+                    }))
                 );
 
             case Actions.specificActions.STATUE.DECODE_ENGRAVING: {
@@ -289,13 +279,7 @@ const applyLocationActions: Record<Locations.LocationId, Transform> = {
                     return makeAdvanceQuestTransform(
                         questIds.FINCHES,
                         2
-                    )({
-                        ...state,
-                        messages: [
-                            ...state.messages,
-                            'You have decoded the ancient engraving.',
-                        ],
-                    });
+                    )(makeAddMessageTransform('You have decoded the engraving.')(state));
                 }
                 throw 'Requirements not met.';
             }
@@ -309,18 +293,14 @@ const applyUnderwaterAction: Transform = (state) => {
 
     switch (state.playerState.stagedAction) {
         case Actions.ALL_UNDERWATER.RESURFACE:
-            return {
+            return makeAddMessageTransform('You have resurfaced and returned to Sleepy Shores.')({
                 ...state,
                 playerState: {
                     ...state.playerState,
                     oxygenUntil: null,
                     locationId: Locations.locationIds.SHORES,
                 },
-                messages: [
-                    ...state.messages,
-                    'You have resurfaced and returned to Sleepy Shores.',
-                ],
-            };
+            });
 
         case Actions.ALL_UNDERWATER.STORE_OXYGEN: {
             const { oxygenUntil, storedOxygen } = state.playerState;
@@ -331,7 +311,9 @@ const applyUnderwaterAction: Transform = (state) => {
                 0,
                 oxygenUntil.valueOf() - Date.now() - 2 * 60 * 1000
             );
-            return {
+            return makeAddMessageTransform(`You have transferred ${Util.formatDuration(
+                        oxygenToStore
+                    )} of Oxygen to storage.`)({
                 ...state,
                 playerState: {
                     ...state.playerState,
@@ -340,13 +322,7 @@ const applyUnderwaterAction: Transform = (state) => {
                     ),
                     storedOxygen: storedOxygen + oxygenToStore,
                 },
-                messages: [
-                    ...state.messages,
-                    `You have transferred ${Util.formatDuration(
-                        oxygenToStore
-                    )} of Oxygen to storage.`,
-                ],
-            };
+            });
         }
 
         case Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN: {
@@ -354,20 +330,16 @@ const applyUnderwaterAction: Transform = (state) => {
             if (storedOxygen === null)
                 throw "You cannot perform this action as you don't have an oxygen tank.";
 
-            return {
+            return makeAddMessageTransform(`You have withdrawn ${Util.formatDuration(
+                        storedOxygen
+                    )} of Oxygen from storage.`)({
                 ...state,
                 playerState: {
                     ...state.playerState,
                     oxygenUntil: new Date(oxygenUntil.valueOf() + storedOxygen),
                     storedOxygen: 0,
                 },
-                messages: [
-                    ...state.messages,
-                    `You have withdrawn ${Util.formatDuration(
-                        storedOxygen
-                    )} of Oxygen from storage.`,
-                ],
-            };
+            });
         }
     }
 

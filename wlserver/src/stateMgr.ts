@@ -70,6 +70,11 @@ export const setAction = (playerId: TeamId, action: string | null): void => {
     }
 };
 
+export const makeAddMessageTransform = (...newMsg: string[]): Transform => (state) => ({
+    ...state,
+    messages: state.messages.concat(newMsg),
+});
+
 export const killTransform: Transform = (state) => {
     const playerQuests: Record<QuestId, QuestState> = {};
     Object.entries(state.playerState.quests).forEach(
@@ -85,19 +90,15 @@ export const killTransform: Transform = (state) => {
         }
     );
 
-    return {
-        globalState: state.globalState,
+    return makeAddMessageTransform('You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...')({
+        ...state,
         playerState: {
             ...state.playerState,
             locationId: Locations.locationIds.SHORES,
             oxygenUntil: null,
             quests: playerQuests,
         },
-        messages: [
-            ...state.messages,
-            'You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...',
-        ],
-    };
+    });
 };
 
 export const identityTransform: Transform = (x) => x;
