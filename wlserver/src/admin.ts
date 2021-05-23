@@ -181,7 +181,10 @@ export const onAdminHandler: SocketHandler<string[]> = async (
 
     try {
         func(payload, reply);
-        logger.log('info', `Successfully executed admin command ${command} ${payload}.`)
+        logger.log(
+            'info',
+            `Successfully executed admin command ${command} ${payload}.`
+        );
     } catch (e) {
         reply('error', e);
     }
