@@ -64,7 +64,11 @@ const Game = (props: GameProps): React.ReactElement => {
                 handleAction={handleSpecificAction} 
                 handleTravel={handleTravel} 
             />
-            <BottomBar notifications={playerNotifs} quests={null} />
+            <BottomBar
+                key={playerNotifs.length}
+                notifications={playerNotifs} 
+                quests={playerState.quests} 
+            />
             <Journal />
         </div>
     );

@@ -1,12 +1,12 @@
 import React from 'react';
 import Notifications from './Notifications';
 import QuestLog from './QuestLog';
-import { Message } from 'wlcommon';
+import { Message, QuestId, QuestState } from 'wlcommon';
 import './BottomBar.css';
 
 export interface BottomBarProps {
     notifications: Message[];
-    quests: any;
+    quests: Record<QuestId, QuestState>;
 }
 
 const BottomBar = (props: BottomBarProps): React.ReactElement => {
@@ -14,7 +14,7 @@ const BottomBar = (props: BottomBarProps): React.ReactElement => {
 
     return (
         <div className="bottomBar">
-            <Notifications notifications={notifications} />
+            <Notifications key = {notifications.length} notifications={notifications} />
             <QuestLog quests={quests} />
         </div>
     );
