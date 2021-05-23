@@ -1,7 +1,12 @@
 import { QuestId, questIds, quests } from 'wlcommon';
 import { makeIssueQuestTransform } from './actions';
 import { makeAddOxygenTransform } from './oxygen';
-import { identityTransform, makeAddMessageTransform, Transform, TransformState } from './stateMgr';
+import {
+    identityTransform,
+    makeAddMessageTransform,
+    Transform,
+    TransformState,
+} from './stateMgr';
 
 const transforms: Record<QuestId, Transform> = {
     [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60),

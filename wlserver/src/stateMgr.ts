@@ -70,7 +70,9 @@ export const setAction = (playerId: TeamId, action: string | null): void => {
     }
 };
 
-export const makeAddMessageTransform = (...newMsg: string[]): Transform => (state) => ({
+export const makeAddMessageTransform = (...newMsg: string[]): Transform => (
+    state
+) => ({
     ...state,
     messages: state.messages.concat(newMsg),
 });
@@ -90,7 +92,9 @@ export const killTransform: Transform = (state) => {
         }
     );
 
-    return makeAddMessageTransform('You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...')({
+    return makeAddMessageTransform(
+        'You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'
+    )({
         ...state,
         playerState: {
             ...state.playerState,
