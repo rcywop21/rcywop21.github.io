@@ -8,6 +8,7 @@ import {
     notifyGameState,
     notifyPlayerState,
 } from './connections';
+import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
 import { Reply, SocketHandler } from './socketHandlers';
 import { applyTransform, gameState, setAction } from './stateMgr';
@@ -167,19 +168,20 @@ export const onAdminHandler: SocketHandler<string[]> = async (
 
     const command = payload.shift();
 
+    if (command === 'help') {
+        reply(
+            'cmdhelp',
+            `Valid commands are: ${Object.keys(commands).join(', ')}`
+        );
+        return;
+    }
+
+    const func = commands[command];
+    if (func === undefined) throw `${command} is not a known command.`;
+
     try {
-        if (command === 'help') {
-            reply(
-                'cmdhelp',
-                `Valid commands are: ${Object.keys(commands).join(', ')}`
-            );
-            return;
-        }
-
-        const func = commands[command];
-        if (func === undefined) throw `${command} is not a known command.`;
-
         func(payload, reply);
+        logger.log('info', `Successfully executed admin command ${command} ${payload}.`)
     } catch (e) {
         reply('error', e);
     }

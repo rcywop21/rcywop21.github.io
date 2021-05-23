@@ -1,4 +1,5 @@
 import { Locations, Util } from 'wlcommon';
+import logger from './logger';
 import { makeAddMessageTransform, Transform } from './stateMgr';
 
 export const makeAddOxygenTransform = (seconds: number, verbose = true): Transform => (
@@ -7,7 +8,9 @@ export const makeAddOxygenTransform = (seconds: number, verbose = true): Transfo
     const { oxygenUntil } = state.playerState;
     if (oxygenUntil === null) return state;
     const ms = seconds * 1000;
-    const messages = verbose ? [`You have received ${Util.formatDuration(ms)} of Oxygen.`] : [];
+    const duration = Util.formatDuration(ms);
+    const messages = verbose ? [`You have received ${duration} of Oxygen.`] : [];
+    logger.log('info', `Player ${state.playerState.id} has received ${duration} of Oxygen.`);
     return makeAddMessageTransform(...messages)({
         ...state,
         playerState: {
@@ -34,8 +37,10 @@ export const makeRemoveOxygenTransform = (seconds: number, verbose = true): Tran
     }
 
     const ms = seconds * 1000;
+    const duration = Util.formatDuration(ms);
+    const messages = verbose ? [`You have used ${duration} for Oxygen.`] : [];
 
-    const messages = verbose ? [`You have used ${Util.formatDuration(ms)} for Oxygen.`] : [];
+    logger.log('info', `Player ${state.playerState.id} has used ${duration} of Oxygen.`)
 
     return makeAddMessageTransform(...messages)({
         ...state,
@@ -54,6 +59,8 @@ export const updateStreamCooldownTransform: Transform = (state) => {
     const expiry = state.playerState.streamCooldownExpiry[location]?.valueOf();
     if (expiry !== undefined && expiry.valueOf() > Date.now())
         throw 'This oxygen stream is still on cooldown, please wait.';
+
+    logger.log('info', `Player ${state.playerState.id} has started their cooldown ofthe Oxygen Stream at ${location}.`)
 
     return {
         ...state,

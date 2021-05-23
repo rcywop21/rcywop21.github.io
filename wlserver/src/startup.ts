@@ -2,7 +2,8 @@ import { PlayerState, questIds, TeamId } from 'wlcommon';
 import { makeIssueQuestTransform } from './actions';
 import { applyTransform, gameState } from './stateMgr';
 
-const makeStartingPlayerState = (): PlayerState => ({
+const makeStartingPlayerState = (id: TeamId): PlayerState => ({
+    id,
     locationId: 'Shores',
     oxygenUntil: null,
     quests: {},
@@ -21,7 +22,7 @@ const makeStartingPlayerState = (): PlayerState => ({
 
 const setupGameState = (): void => {
     for (let i = 0; i < 10; ++i) {
-        gameState.players.push(makeStartingPlayerState());
+        gameState.players.push(makeStartingPlayerState(i as TeamId));
         applyTransform(
             makeIssueQuestTransform(questIds.CHAPTER_1),
             i as TeamId
