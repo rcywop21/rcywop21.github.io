@@ -65,6 +65,11 @@ export const itemDetails = {
         description:
             "It's a pan made of pyrite, a mineral also known as fool's gold.",
     },
+    LIBRARY_PASS: {
+        id: 'LibraryPass',
+        name: 'Library Pass',
+        description: "It lets you read books from the Restricted Section of the Marine Library. The Chief Librarian has the authority to bestow it on individuals she deems worthy."
+    }
 };
 
 export const itemsById: Record<ItemId, Item> = {};
