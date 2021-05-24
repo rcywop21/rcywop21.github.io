@@ -4,6 +4,7 @@ import './OnActionPopup.css';
 
 export interface OnActionPopupProps {
     action: Action | null;
+    priority?: boolean;
     isMentor?: boolean;
     mentorProps?: OnActionPopupMentorProps;
 }
@@ -14,10 +15,10 @@ export interface OnActionPopupMentorProps {
 }
 
 const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
-    const { action, isMentor, mentorProps } = props;
+    const { action, priority, isMentor, mentorProps } = props;
     
-    if (!action) {
-        return <React.Fragment></React.Fragment>
+    if (!action || (isMentor && action === "pause")) {
+        return <React.Fragment></React.Fragment>;
     }
     
     if (isMentor && mentorProps) {
@@ -36,12 +37,29 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
         );
     }
     
-    return (
-        <React.Fragment>
-            <div className="onActionPopup">
+    let popupText: React.ReactElement;
+    if (action === "pause") {
+        popupText = (
+            <React.Fragment>
+                <h2>Pause</h2>
+                <p>Your mentor has paused the exercise.</p>
+                <p>Please wait for your mentor to resume...</p>
+            </React.Fragment>
+        );
+    } else {
+        popupText = (
+            <React.Fragment>
                 <h2>Performing Action...</h2>
                 <p>You are currently performing an action: {action}</p>
-                <p>Please wait for mentor approval</p>
+                <p>Please wait for mentor approval...</p>
+            </React.Fragment>
+        );
+    }
+    
+    return (
+        <React.Fragment>
+            <div className={`onActionPopup ${priority ? "priorityLayer" : "normalLayer"}`}>
+                {popupText}
             </div>
             <div className="onActionBackgroundShroud"></div>
         </React.Fragment>

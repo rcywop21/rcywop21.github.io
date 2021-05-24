@@ -5,6 +5,7 @@ import { OnActionPopupMentorProps } from './Popups/OnActionPopup';
 import { SocketContext } from '../socket/socket';
 
 const MentorGame = (props: GameProps): React.ReactElement => {
+    const { playerState } = props;
     
     const socket = React.useContext(SocketContext);
     
@@ -25,10 +26,23 @@ const MentorGame = (props: GameProps): React.ReactElement => {
         onActionPopupMentorProps: onActionPopupMentorProps
     }
     
+    function onPause() {
+        //Implement actual pause functionality
+        if (playerState.pausedOxygen) {
+            socket?.emit("resume");
+        } else {
+            socket?.emit("pause");
+        }
+    }
+    
     return (
         <div>
             <div style={{height: "70px"}}></div>
-            <span style={{border: "2px solid green"}}>Mentor Powers!</span>
+            <p style={{border: "2px solid green"}}>Mentor Powers!</p>
+            <span><b>Pause</b> disables all player actions and pauses the oxygen timer. </span>
+            <span>{playerState.pausedOxygen ? "Your team is currently paused. " : ""}</span>
+            <span>&emsp;</span>
+            <button onClick={onPause}>{playerState.pausedOxygen ? "Resume" : "Pause"}</button>
             <Game {...props} isMentor={true} gameMentorProps={gameMentorProps}/>
         </div>
     );

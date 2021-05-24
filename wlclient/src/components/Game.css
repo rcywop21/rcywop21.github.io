@@ -4,5 +4,12 @@
     position: relative;
     width: 1024px;
     height: 1300px;
+}
+
+.bigTopGap {
     margin-top: 100px;
+}
+
+.smallTopGap {
+    margin-top: 30px;
 }

@@ -1,6 +1,5 @@
 .onActionPopup {
     position: absolute;
-    z-index: 299;
     left: 157px;
     top: 120px;
     width: 710px;
@@ -17,4 +16,12 @@
     width: 1024px;
     height: 607px;
     background-color: #44444460;
+}
+
+.priorityLayer {
+    z-index: 1299;
+}
+
+.normalLayer {
+    z-index: 299;
 }

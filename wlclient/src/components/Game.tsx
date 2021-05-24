@@ -90,7 +90,7 @@ const Game = (props: GameProps): React.ReactElement => {
     }
     
     return (
-        <div className="game">
+        <div className={`game ${isMentor ? "smallTopGap" : "bigTopGap"}`}>
             <TopBar 
                 inventory={playerState.inventory} 
                 oxygenUntil={playerState.oxygenUntil} 
@@ -104,6 +104,9 @@ const Game = (props: GameProps): React.ReactElement => {
                 triggerTooltip={triggerTooltip}
                 isMentor={isMentor}
             />
+            <OnActionPopup 
+                action={playerState.pausedOxygen ? "pause" : null} 
+                isMentor={isMentor} />
             <OnActionPopup {...onActionPopupProps} />
             <Tooltip 
                 isVisible={isTooltipVisible}
