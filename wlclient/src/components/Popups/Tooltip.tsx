@@ -1,5 +1,5 @@
 import React from 'react';
-import { itemsById } from 'wlcommon';
+import { itemsById, Locations } from 'wlcommon';
 import './Tooltip.css';
 
 export interface TooltipProps {
@@ -12,7 +12,8 @@ export interface TooltipProps {
 export const tooltipTypes = {
     NONE: null,
     INVENTORY: "inventory",
-    ACTION: "action"
+    ACTION: "action",
+    LOCATION: "location"
 } as const;
 
 export type TooltipType = (typeof tooltipTypes)[keyof typeof tooltipTypes];
@@ -41,6 +42,12 @@ const Tooltip = (props: TooltipProps): React.ReactElement => {
                 <p>{data[2]}</p>
             </React.Fragment>
         );
+    }
+    
+    if (tooltipType === tooltipTypes.LOCATION) {
+        const locationData = Locations.locationsMapping[data[0]];
+        title = locationData.name;
+        details = <p>{locationData.description}</p>;
     }
     
     const style = {

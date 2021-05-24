@@ -11,8 +11,8 @@ export interface ActionProps {
     isVisible: boolean;
     isEnabled: boolean;
     handleAction: () => void;
-    triggerTooltip: (t: TooltipType, d: string[], b?: boolean) => () => void;
-    tooltipInfo?: string[];
+    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
+    tooltipInfo: string[];
 }
 
 export const Action = (props: ActionProps): React.ReactElement => {
@@ -24,7 +24,7 @@ export const Action = (props: ActionProps): React.ReactElement => {
         display: isVisible ? "" : "none"
     };
     
-    const isTooltipRightSide = x < "512px";
+    const isTooltipRightSide = x.length < 5 || x < "512px";
 
     return (
         <div
@@ -32,7 +32,7 @@ export const Action = (props: ActionProps): React.ReactElement => {
             style={position}
             onClick={isEnabled ? handleAction : undefined}
             onMouseEnter={triggerTooltip(tooltipTypes.ACTION, tooltipInfo ? tooltipInfo : ["derp", "", ""], isTooltipRightSide)}
-            onMouseLeave={triggerTooltip(tooltipTypes.ACTION, tooltipInfo ? tooltipInfo: ["derp", "", ""])}
+            onMouseLeave={triggerTooltip()}
         >
             <p>{action}</p>
         </div>
