@@ -121,7 +121,7 @@ const applyLocationActions: Record<
     Record<Action, Transform>
 > = {
     [Locations.locationIds.SHORES]: {
-        [Actions.specificActions.SHORES.DIVE]: composite(
+        [Actions.specificActions.SHORES.DIVE]: (state) => composite(
             makeAdvanceQuestTransform(questIds.CHAPTER_1, 0),
             makeAddMessageTransform(
                 'You dive into the deep blue sea... and arrive at the Shallows!'
@@ -134,7 +134,7 @@ const applyLocationActions: Record<
                 'locationId',
                 Locations.locationIds.SHALLOWS
             )
-        ),
+        )(state),
     },
     [Locations.locationIds.CORALS]: {
         [Actions.specificActions.CORALS.EXPLORE]: composite(
