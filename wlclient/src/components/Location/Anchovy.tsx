@@ -1,7 +1,6 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { tooltipTypes } from '../Popups/Tooltip';
 import { Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 

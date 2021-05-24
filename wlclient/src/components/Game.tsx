@@ -4,7 +4,7 @@ import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
 import OnActionPopup from './Popups/OnActionPopup';
-import { TooltipType, tooltipTypes } from './Popups/Tooltip';
+import { TooltipType } from './Popups/Tooltip';
 import Tooltip from './Popups/Tooltip';
 import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
 import './Game.css';
@@ -59,7 +59,7 @@ const Game = (props: GameProps): React.ReactElement => {
     
     function triggerTooltip(type: TooltipType = null, data = [""], isRightSide = true) {
         return () => {
-            setIsTooltipVisible(!isTooltipVisible);
+            setIsTooltipVisible(type ? true : false);
             if (type) {
                 setTooltipType(type);
                 setTooltipData(data);

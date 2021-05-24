@@ -1,7 +1,6 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { tooltipTypes } from '../Popups/Tooltip';
 import { Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
@@ -44,7 +43,6 @@ const Alcove = (props: SpecificLocationProps): React.ReactElement => {
         <React.Fragment>
             <img src={imgDirectoryGenerator('alcove.png')} />
             {actionProps.map((info: ActionProps) => {
-                const key = info.action;
                 return <Action key="" {...info} />;
             })}
         </React.Fragment>
