@@ -14,6 +14,7 @@ export interface GameProps {
     globalState: GlobalState;
     playerState: PlayerState;
     teamId: number;
+    isMentor?: boolean;
 }
 
 /*
@@ -36,7 +37,7 @@ export interface GameProps {
 */
 
 const Game = (props: GameProps): React.ReactElement => {
-    const { globalState, playerState, teamId } = props;
+    const { globalState, playerState, teamId, isMentor } = props;
 
     const [isTooltipVisible, setIsTooltipVisible] = React.useState<boolean>(false);
     const [tooltipType, setTooltipType] = React.useState<TooltipType>(null);
@@ -50,7 +51,9 @@ const Game = (props: GameProps): React.ReactElement => {
     }
 
     function handleAction(action: string) {
-        socket?.emit('action', action);
+        if (!isMentor) {
+            socket?.emit('action', action);
+        }
     }
 
     function handleTravel(location: Locations.LocationId) {
