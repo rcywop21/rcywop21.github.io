@@ -8,6 +8,7 @@ import {
     itemDetails,
     Action,
 } from 'wlcommon';
+import { locationIds } from 'wlcommon/build/locations';
 import { makeAddItemTransform } from './inventory';
 import logger from './logger';
 import {
@@ -123,12 +124,13 @@ const applyLocationActions: Record<
     [Locations.locationIds.SHORES]: {
         [Actions.specificActions.SHORES.DIVE]: (state) => composite(
             makeAdvanceQuestTransform(questIds.CHAPTER_1, 0),
+            makeAdvanceQuestTransform(questIds.SHRINE_2, 2),
             makeAddMessageTransform(
                 'You dive into the deep blue sea... and arrive at the Shallows!'
             ),
             makePlayerStatTransform(
                 'oxygenUntil',
-                new Date(Date.now() + 20 * 60 * 1000)
+                new Date(Date.now() + (state.playerState.challengeMode ? 20 * 60 * 1000 : 10 * 60 * 1000)),
             ),
             makePlayerStatTransform(
                 'locationId',
@@ -375,7 +377,18 @@ const applyLocationActions: Record<
                 updateStreamCooldownTransform
             )(state);
         }
-    }
+    },
+    [Locations.locationIds.KELP]: {
+        [Actions.specificActions.KELP.EXPLORE]: composite(
+            makeIssueQuestTransform(questIds.SHRINE_1),
+            makeRemoveOxygenTransform(300)
+        ),
+        [Actions.specificActions.KELP.CLIMB_DOWN]: composite(
+            makeAdvanceQuestTransform(questIds.SHRINE_1, 0),
+            makePlayerStatTransform('locationId', locationIds.SHRINE),
+            makePlayerStatTransform('unlockedShrine', true),
+        ),
+    },
 };
 
 const applyUnderwaterAction: Transform = (state) => {
@@ -384,16 +397,12 @@ const applyUnderwaterAction: Transform = (state) => {
 
     switch (state.playerState.stagedAction) {
         case Actions.ALL_UNDERWATER.RESURFACE:
-            return makeAddMessageTransform(
-                'You have resurfaced and returned to Sleepy Shores.'
-            )({
-                ...state,
-                playerState: {
-                    ...state.playerState,
-                    oxygenUntil: null,
-                    locationId: Locations.locationIds.SHORES,
-                },
-            });
+            return composite(
+                makeAddMessageTransform('You have resurfaced and returned to Sleepy Shores.'),
+                makeAdvanceQuestTransform(questIds.SHRINE_2, 0),
+                makePlayerStatTransform('oxygenUntil', null),
+                makePlayerStatTransform('locationId', Locations.locationIds.SHORES)
+            )(state);
 
         case Actions.ALL_UNDERWATER.STORE_OXYGEN: {
             const { oxygenUntil, storedOxygen } = state.playerState;
