@@ -37,8 +37,9 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
                         ): React.ReactElement => {
                             const location: Locations.Location =
                                 Locations.locationsMapping[locationId];
+                            const travellable = { display: location.hidden ? "none" : ""}
                             return (
-                                <button
+                                <button className="travelButton" style={travellable}
                                     key=""
                                     onClick={handleTravelClosePopup(
                                         location.id

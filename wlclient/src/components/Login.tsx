@@ -121,7 +121,7 @@ const Login = (props: LoginProps): React.ReactElement => {
                 onChange={(e) => setPassword(e.target.value)}
             ></input>
             <div>
-                <button onClick={handleLogin}>Login</button>
+                <button className="loginButton" onClick={handleLogin}>Login</button>
             </div>
             <div>
                 {hasErrorMessage && (
