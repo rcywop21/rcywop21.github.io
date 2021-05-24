@@ -1,4 +1,7 @@
+/*eslint-disable*/
+
 import React from 'react';
+import { tooltipTypes, TooltipType } from '../Popups/Tooltip';
 import './Action.css';
 
 export interface ActionProps {
@@ -8,22 +11,28 @@ export interface ActionProps {
     isVisible: boolean;
     isEnabled: boolean;
     handleAction: () => void;
+    triggerTooltip: (t: TooltipType, d: string[], b?: boolean) => () => void;
+    tooltipInfo?: string[];
 }
 
 export const Action = (props: ActionProps): React.ReactElement => {
-    const { action, x, y, isVisible, isEnabled, handleAction } = props;
+    const { action, x, y, isVisible, isEnabled, handleAction, triggerTooltip, tooltipInfo } = props;
     
     const position = {
         top: y,
         left: x,
         display: isVisible ? "" : "none"
     };
+    
+    const isTooltipRightSide = x < "512px";
 
     return (
         <div
             className={`action ${isEnabled ? "enabled" : "disabled"}`} 
             style={position}
             onClick={isEnabled ? handleAction : undefined}
+            onMouseEnter={triggerTooltip(tooltipTypes.ACTION, tooltipInfo ? tooltipInfo : ["derp", "", ""], isTooltipRightSide)}
+            onMouseLeave={triggerTooltip(tooltipTypes.ACTION, tooltipInfo ? tooltipInfo: ["derp", "", ""])}
         >
             <p>{action}</p>
         </div>

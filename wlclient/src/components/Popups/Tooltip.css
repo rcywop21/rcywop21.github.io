@@ -1,24 +1,32 @@
 .tooltip {
     position: absolute;
-    right: 0px;
     bottom: 693px;
     width: 400px;
+    min-height: 10px;
     z-index: 1200;
-    background-color: #44444480;
+    background-color: #22222290;
+}
+
+.rightTooltip { 
+    right: 0px;
+}
+
+.leftTooltip {
+    left: 0px;
 }
 
 .tooltipTitle {
     margin: 0;
-    padding: 5px 5px 0 5px;
-    text-align: right;
+    padding: 5px;
+    text-align: left;
     font-size: 24px;
     color: #FF836E;
 }
 
-.tooltipText {
+.tooltipText > p{
     margin: 0;
-    padding: 5px;
-    text-align: right;
+    padding: 0 5px 5px 5px;
+    text-align: left;
     font-size: 16px;
     color: white;
 }

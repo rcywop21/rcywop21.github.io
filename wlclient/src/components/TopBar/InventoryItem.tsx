@@ -5,7 +5,7 @@ import './InventoryItem.css';
 
 export interface InventoryItemProps {
     name: ItemId;
-    triggerTooltip: (t?: TooltipType, d?: string) => () => void;
+    triggerTooltip: (t?: TooltipType, d?: string[]) => () => void;
 }
 
 const INVENTORY_ITEMS_ASSET_MAP: Map<ItemId, string> = new Map([
@@ -32,7 +32,7 @@ function getImg(item: ItemId): string {
 const InventoryItem = (props: InventoryItemProps): React.ReactElement => {
     const { name, triggerTooltip } = props;
     
-    const triggerTooltipWithData = triggerTooltip(tooltipTypes.INVENTORY, name);
+    const triggerTooltipWithData = triggerTooltip(tooltipTypes.INVENTORY, [name]);
 
     return (
         <div 

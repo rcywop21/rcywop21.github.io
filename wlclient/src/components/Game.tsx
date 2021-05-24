@@ -4,7 +4,7 @@ import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
 import OnActionPopup from './Popups/OnActionPopup';
-import { TooltipType } from './Popups/Tooltip';
+import { TooltipType, tooltipTypes } from './Popups/Tooltip';
 import Tooltip from './Popups/Tooltip';
 import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
 import './Game.css';
@@ -40,7 +40,8 @@ const Game = (props: GameProps): React.ReactElement => {
 
     const [isTooltipVisible, setIsTooltipVisible] = React.useState<boolean>(false);
     const [tooltipType, setTooltipType] = React.useState<TooltipType>(null);
-    const [tooltipData, setTooltipData] = React.useState<string>("");
+    const [tooltipData, setTooltipData] = React.useState<string[]>([""]);
+    const [isTooltipRightSide, setIsTooltipRightSide] = React.useState<boolean>(true);
     
     const socket = React.useContext(SocketContext);
 
@@ -56,12 +57,13 @@ const Game = (props: GameProps): React.ReactElement => {
         return () => socket?.emit('travel', location);
     }
     
-    function triggerTooltip(type: TooltipType = null, data = "") {
+    function triggerTooltip(type: TooltipType = null, data = [""], isRightSide = true) {
         return () => {
             setIsTooltipVisible(!isTooltipVisible);
             if (type) {
                 setTooltipType(type);
                 setTooltipData(data);
+                setIsTooltipRightSide(isRightSide);
             }
         };
     }
@@ -80,13 +82,15 @@ const Game = (props: GameProps): React.ReactElement => {
             <LocationComponent 
                 playerState={playerState} 
                 handleAction={handleSpecificAction} 
-                handleTravel={handleTravel} 
+                handleTravel={handleTravel}
+                triggerTooltip={triggerTooltip}
             />
             <OnActionPopup action={playerState.stagedAction} />
             <Tooltip 
                 isVisible={isTooltipVisible}
                 tooltipType={tooltipType}
                 data={tooltipData}
+                isRightSide={isTooltipRightSide}
             />
             <BottomBar
                 key={playerNotifs.length}

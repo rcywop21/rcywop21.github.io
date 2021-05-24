@@ -1,6 +1,7 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import TravelPopup from './TravelPopup';
+import { TooltipType, tooltipTypes } from '../Popups/Tooltip';
 import { Locations, PlayerState } from 'wlcommon';
 import './LocationComponent.css';
 
@@ -26,84 +27,93 @@ export interface LocationProps {
     playerState: PlayerState;
     handleAction: (a: string) => () => void;
     handleTravel: (a: Locations.LocationId) => () => void;
+    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
 }
 
 export interface SpecificLocationProps {
     playerState: PlayerState;
     handleAction: (a: string) => () => void;
+    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
 }
 
 export function getSpecificLocationComponent(playerState: PlayerState,
-    handleAction: (a: string) => () => void): React.ReactElement {
+    handleAction: (a: string) => () => void, 
+    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void): React.ReactElement {
+        
+    const specificLocationComponentProps = {
+        playerState: playerState,
+        handleAction: handleAction,
+        triggerTooltip: triggerTooltip
+    };
             
     const SPECIFIC_LOCATION_COMPONENT_MAP: Map<Locations.LocationId, React.ReactElement> = new Map([
         [
             Locations.locationIds.SHALLOWS, 
-            <Shallows key="" playerState={playerState} handleAction={handleAction} />
+            <Shallows key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.SHORES, 
-            <Shores key="" playerState={playerState} handleAction={handleAction} />
+            <Shores key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.CORALS, 
-            <Corals key="" playerState={playerState} handleAction={handleAction} />
+            <Corals key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.STORE, 
-            <Store key="" playerState={playerState} handleAction={handleAction} />
+            <Store key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.WOODS, 
-            <Woods key="" playerState={playerState} handleAction={handleAction} />
+            <Woods key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.STATUE, 
-            <Statue key="" playerState={playerState} handleAction={handleAction} />
+            <Statue key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.LIBRARY, 
-            <Library key="" playerState={playerState} handleAction={handleAction} />
+            <Library key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.ANCHOVY, 
-            <Anchovy key="" playerState={playerState} handleAction={handleAction} />
+            <Anchovy key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.BARNACLE, 
-            <Barnacle key="" playerState={playerState} handleAction={handleAction} />
+            <Barnacle key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.SALMON, 
-            <Salmon key="" playerState={playerState} handleAction={handleAction} />
+            <Salmon key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.KELP, 
-            <Kelp key="" playerState={playerState} handleAction={handleAction} />
+            <Kelp key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.UMBRAL, 
-            <Umbral key="" playerState={playerState} handleAction={handleAction} />
+            <Umbral key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.TUNA, 
-            <Tuna key="" playerState={playerState} handleAction={handleAction} />
+            <Tuna key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.CATFISH, 
-            <Catfish key="" playerState={playerState} handleAction={handleAction} />
+            <Catfish key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.BUBBLE, 
-            <Bubble key="" playerState={playerState} handleAction={handleAction} />
+            <Bubble key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.SHRINE, 
-            <Shrine key="" playerState={playerState} handleAction={handleAction} />
+            <Shrine key="" {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.ALCOVE, 
-            <Alcove key="" playerState={playerState} handleAction={handleAction} />
+            <Alcove key="" {...specificLocationComponentProps} />
         ],
     ]);
     
@@ -119,7 +129,7 @@ export function imgDirectoryGenerator(imgFileName: string): string {
 }
 
 const LocationComponent = (props: LocationProps): React.ReactElement => {
-    const { playerState, handleAction, handleTravel } = props;
+    const { playerState, handleAction, handleTravel, triggerTooltip } = props;
     
     const location: Locations.Location = Locations.locationsMapping[playerState.locationId];
     
@@ -132,13 +142,15 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
         y: "433px",
         isVisible: isTravelVisible,
         isEnabled: true,
-        handleAction: (): void => { setIsTravelPopupVisible(true); }
+        handleAction: (): void => { setIsTravelPopupVisible(true); },
+        triggerTooltip: triggerTooltip,
+        tooltipInfo: ["Travel", "Go somewhere else in this wonderful world!", ""]
     }
     
     return (
         <div className="location">
             <p className="currLocationTitle">{location.name}</p>
-            { getSpecificLocationComponent(playerState, handleAction) }
+            { getSpecificLocationComponent(playerState, handleAction, triggerTooltip) }
             <Action {...travelActionProps} />
             <TravelPopup
                 isVisible={isTravelPopupVisible} 

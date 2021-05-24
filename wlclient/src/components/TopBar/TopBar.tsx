@@ -9,7 +9,7 @@ export interface TopBarProps {
     inventory: Record<ItemId, ItemRecord>;
     oxygenUntil: Date | null;
     crimsonUntil: Date;
-    triggerTooltip: (t?:TooltipType, d?:string) => () => void;
+    triggerTooltip: (t?:TooltipType, d?:string[]) => () => void;
 }
 
 const TopBar = (props: TopBarProps): React.ReactElement => {

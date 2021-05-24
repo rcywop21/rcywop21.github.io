@@ -1,6 +1,7 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
+import { tooltipTypes } from '../Popups/Tooltip';
 import { Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
@@ -22,7 +23,7 @@ const actions: Record<string, PlayerAction> = {
 }
 
 const Corals = (props: SpecificLocationProps): React.ReactElement => {
-    const { playerState, handleAction } = props;
+    const { playerState, handleAction, triggerTooltip } = props;
 
     if (playerState.storedOxygen == null) {
         actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
@@ -41,7 +42,9 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
             y: playerAction.y,
             isVisible: playerAction.isVisible,
             isEnabled: playerAction.isEnabled,
-            handleAction: handleAction(key)
+            handleAction: handleAction(key),
+            triggerTooltip: triggerTooltip,
+            tooltipInfo: [key, playerAction.description, playerAction.task]
         }
         actionProps.push(currActionProps);
     }

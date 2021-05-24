@@ -1,6 +1,7 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
+import { tooltipTypes } from '../Popups/Tooltip';
 import { Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
@@ -10,7 +11,7 @@ const actions: Record<string, PlayerAction> = {
 }
 
 const Shores = (props: SpecificLocationProps): React.ReactElement => {
-    const { handleAction } = props;
+    const { handleAction, triggerTooltip } = props;
     
     const actionProps: ActionProps[] = [];
     for (const key in actions) {
@@ -21,7 +22,9 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
             y: playerAction.y,
             isVisible: playerAction.isVisible,
             isEnabled: playerAction.isEnabled,
-            handleAction: handleAction(key)
+            handleAction: handleAction(key),
+            triggerTooltip: triggerTooltip,
+            tooltipInfo: [key, playerAction.description, playerAction.task]
         }
         actionProps.push(currActionProps);
     }

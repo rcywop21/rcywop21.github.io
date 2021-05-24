@@ -5,7 +5,8 @@ import './Tooltip.css';
 export interface TooltipProps {
     isVisible: boolean;
     tooltipType: TooltipType;
-    data: string;
+    data: string[];
+    isRightSide: boolean;
 }
 
 export const tooltipTypes = {
@@ -17,31 +18,44 @@ export const tooltipTypes = {
 export type TooltipType = (typeof tooltipTypes)[keyof typeof tooltipTypes];
 
 const Tooltip = (props: TooltipProps): React.ReactElement => {
-    const { isVisible, tooltipType, data } = props;
+    const { isVisible, tooltipType, data, isRightSide } = props;
     
     let title = "";
-    let details = "";
+    let details = <React.Fragment></React.Fragment>;
     
     if (!tooltipType) {
         return <React.Fragment></React.Fragment>
     }
     
     if (tooltipType === tooltipTypes.INVENTORY) {
-        const itemData = itemsById[data];
+        const itemData = itemsById[data[0]];
         title = itemData.name;
-        details = itemData.description;
+        details = <p>itemData.description</p>;
+    }
+    
+    if (tooltipType === tooltipTypes.ACTION) {
+        title = data[0];
+        details = (
+            <React.Fragment>
+                <p>{data[1]}</p>
+                <p>{data[2]}</p>
+            </React.Fragment>
+        );
     }
     
     const style = {
         display: isVisible ? "" : "none"
     }
     
-    const testText = "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!";
+    const side = isRightSide ? "rightTooltip" : "leftTooltip";
     
     return (
-        <div className="tooltip" style={style}>
+        <div 
+            className={`tooltip ${side}`} 
+            style={style}
+        >
             <h2 className="tooltipTitle">{title}</h2>
-            <p className="tooltipText">{details}</p>
+            <div className="tooltipText">{details}</div>
         </div>
     );
 }
