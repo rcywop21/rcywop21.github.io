@@ -75,7 +75,6 @@ const commands = {
             default:
                 throw `Unknown option ${payload[0]}.`;
         }
-        notifyGameState();
     },
     setaction: (payload: string[], reply: Reply): void => {
         const playerId = getPlayerId(payload);
@@ -87,13 +86,11 @@ const commands = {
                 : action
         );
         reply('cmdok', `Action set to ${action}.`);
-        notifyPlayerState(playerId);
     },
     approve: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
         applyTransform(applyAction, playerId);
         reply('cmdok', 'Action approved.');
-        notifyPlayerState(playerId);
     },
     issuequest: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -102,7 +99,6 @@ const commands = {
             throw `Invalid quest ID ${questId}.`;
         applyTransform(makeIssueQuestTransform(questId), playerId);
         reply('cmdok', 'Quest issued.');
-        notifyPlayerState(playerId);
     },
     advance: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -121,7 +117,6 @@ const commands = {
             playerId
         );
         reply('cmdok', 'Quest advanced.');
-        notifyPlayerState(playerId);
     },
     move: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -140,7 +135,6 @@ const commands = {
         }
         applyTransform(makeAddOxygenTransform(delta), playerId);
         reply('cmdok', 'Oxygen added.');
-        notifyPlayerState(playerId);
     },
     resetcd: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);

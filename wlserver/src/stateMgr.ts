@@ -43,9 +43,17 @@ export const applyTransform = (
         messages: [],
     });
 
-    gameState.global = globalState;
-    gameState.players[playerId] = playerState;
-    gameState.players[playerId].stagedAction = null;
+    if (gameState.global !== globalState) {
+        gameState.global = globalState;
+        notifyGameState();
+    }
+
+    if (gameState.players[playerId] !== playerState) {
+        gameState.players[playerId] = playerState;
+        gameState.players[playerId].stagedAction = null;
+        notifyPlayerState(playerId);
+    }
+
     messages.forEach((message) =>
         gameState.global.messages.push({
             time: new Date(),
@@ -53,6 +61,8 @@ export const applyTransform = (
             message,
         })
     );
+
+    if (messages.length) notifyNewMessages(messages.length);
 };
 
 export const setAction = (playerId: TeamId, action: string | null): void => {
