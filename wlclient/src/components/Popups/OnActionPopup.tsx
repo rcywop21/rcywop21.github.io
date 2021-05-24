@@ -25,7 +25,7 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
         const { handleActionApprove, handleActionReject } = mentorProps;
         return (
             <React.Fragment>
-                <div className="onActionPopup">
+                <div className={`onActionPopup ${priority ? "priorityLayer" : "normalLayer"}`}>
                     <h2>Performing Action...</h2>
                     <p>Your group is currently performing an action: {action}</p>
                     <p>Approve?</p>
