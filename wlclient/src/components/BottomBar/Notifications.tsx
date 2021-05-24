@@ -16,7 +16,7 @@ const Notifications = (props: NotificationsProps): React.ReactElement => {
     
     return (
         <div className="notifications">
-            <h2 className="notifTitle">NOTIFICATIONS {notifications.length}</h2>
+            <h2 className="notifTitle">NOTIFICATIONS</h2>
             <div className="innerNotifBox">
                 {notifications.map((message: Message) => {
                     return (<p 

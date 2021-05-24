@@ -36,10 +36,11 @@ const Tooltip = (props: TooltipProps): React.ReactElement => {
     
     if (tooltipType === tooltipTypes.ACTION) {
         title = data[0];
+        const reqLine = data[2] ? <p><b>Requirement</b>: {data[2]}</p> : undefined;
         details = (
             <React.Fragment>
                 <p>{data[1]}</p>
-                <p>{data[2]}</p>
+                {reqLine}
             </React.Fragment>
         );
     }
