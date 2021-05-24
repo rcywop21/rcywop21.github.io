@@ -31,7 +31,7 @@ const Tooltip = (props: TooltipProps): React.ReactElement => {
     if (tooltipType === tooltipTypes.INVENTORY) {
         const itemData = itemsById[data[0]];
         title = itemData.name;
-        details = <p>itemData.description</p>;
+        details = <p>{itemData.description}</p>;
     }
     
     if (tooltipType === tooltipTypes.ACTION) {
