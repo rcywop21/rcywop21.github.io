@@ -3,6 +3,7 @@ import authenticateSocket from './src/connections';
 import {
     onAcceptHandler,
     onActionHandler,
+    onPauseHandler,
     onRejectionHandler,
     onTravelHandler,
 } from './src/socketHandlers';
@@ -33,6 +34,9 @@ io.on('connection', (socket) => {
     );
     socket.on('admin', (payload, reply) =>
         onAdminHandler(socket, payload, reply, io)
+    );
+    socket.on('pause', (payload, reply) =>
+        onPauseHandler(socket, payload, reply, io)
     );
 });
 

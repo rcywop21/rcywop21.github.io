@@ -8,7 +8,7 @@ import {
     notifyGameState,
 } from './connections';
 import logger from './logger';
-import { applyTransform, gameState, setAction } from './stateMgr';
+import { applyTransform, gameState, pauseTransform, resumeTransform, setAction } from './stateMgr';
 
 export type Socket = BaseSocket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -115,3 +115,23 @@ export const onTravelHandler: SocketHandler<string> = async (
 
     notifyPlayerState(credentials.groupNum);
 };
+
+export const onPauseHandler: SocketHandler<boolean> = async (socket, payload, reply) => {
+    const credentials = getCredentials(socket.id);
+    const clientType = credentials?.clientType;
+    if (clientType !== 'mentor' && clientType !== 'admin')
+        return reply('error', 'Not authenticated.');
+    
+    logger.log(
+        'info',
+        `Group ${credentials.groupNum} has ${payload ? 'paused' : 'resumed'} their game.`
+    );
+
+    if (payload) {
+        applyTransform(pauseTransform, credentials.groupNum);
+        return reply('ok', 'Game paused.');
+    } else {
+        applyTransform(resumeTransform, credentials.groupNum);
+        return reply('ok', 'Game resumed.')
+    }
+}
