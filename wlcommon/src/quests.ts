@@ -203,9 +203,9 @@ const questList: Quest[] = [
         stages: [
             "Perform the 'Resurface' action at the Shallows to travel to Sleepy Shores. WARNING: You will lose all your Oxygen when you do this action.",
             "Get a Unicorn's Hair at the Whispering Woods.",
-            'Return to the Undersea. WARNING: This will put you in Challenge Mode.',
+            "Return to the Undersea. WARNING: Diving with a Unicorn's Hair in your inventory will put you in Challenge Mode.",
             "Perform the 'Give Unicorn's Hair' action at the Shrine of the Innocent.",
-            'Survive for 30 minutes without resurfacing.',
+            'Survive for 30 minutes in Challenge Mode without resurfacing.',
             "Perform the 'Collect Unicorn Tear' action at the Shrine of the Innocent.",
         ],
         stageOrder: 'inOrder',
@@ -222,8 +222,7 @@ const questList: Quest[] = [
         ].join('\n\n'),
         stages: [
             'Get a Pyrite Pan at Barnacle Residences.',
-            'Return to the Umbral Ruins.',
-            "Perform the 'Give Pyrite Pan' action at the Umbral Ruins.",
+            "Perform the 'Show Pyrite Pan' action at the Umbral Ruins.",
         ],
         stageOrder: 'inOrder',
         unlocks: questIds.CLOAK_2,

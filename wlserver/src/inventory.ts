@@ -17,3 +17,27 @@ export const makeAddItemTransform = (
         },
     },
 });
+
+export const makeRemoveItemTransform = (
+    itemId: ItemId,
+    qty: number
+): Transform => (state) => {
+    const oldRecord = state.playerState.inventory[itemId];
+    if (oldRecord && oldRecord.qty >= qty) {
+        return {
+            ...state,
+            playerState: {
+                ...state.playerState,
+                inventory: {
+                    ...state.playerState.inventory,
+                    [itemId]: {
+                        qty: oldRecord.qty - qty,
+                        item: itemId,
+                    }
+                }
+            }
+        }
+    }
+
+    throw 'Not enough items in inventory to remove.';
+}

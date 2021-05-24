@@ -9,7 +9,7 @@ import {
     Action,
 } from 'wlcommon';
 import { locationIds } from 'wlcommon/build/locations';
-import { makeAddItemTransform } from './inventory';
+import { makeAddItemTransform, makeRemoveItemTransform } from './inventory';
 import logger from './logger';
 import {
     makeAddOxygenTransform,
@@ -135,6 +135,9 @@ const applyLocationActions: Record<
             makePlayerStatTransform(
                 'locationId',
                 Locations.locationIds.SHALLOWS
+            ),
+            makePlayerStatTransform(
+                'challengeMode', true
             )
         )(state),
     },
@@ -388,7 +391,47 @@ const applyLocationActions: Record<
             makePlayerStatTransform('locationId', locationIds.SHRINE),
             makePlayerStatTransform('unlockedShrine', true),
         ),
+        [Actions.specificActions.KELP.HARVEST]: (state) => {
+            let result = composite(
+                makeAdvanceQuestTransform(questIds.CLOAK_3, 0),
+                makeAddItemTransform(itemDetails.BLINKSEED.id, 1)
+            )(state);
+            if (result.playerState.inventory[itemDetails.BLINKSEED.id]?.qty >= 3)
+                result = makeAdvanceQuestTransform(questIds.CLOAK_3, 1)(state);
+            return result;
+        }
     },
+    [Locations.locationIds.SHRINE]: {
+        [Actions.specificActions.SHRINE.GIVE_HAIR]: composite(
+            makeAdvanceQuestTransform(questIds.SHRINE_2, 3),
+            makeRemoveItemTransform(itemDetails.UNICORN_HAIR.id, 1)
+        ),
+        [Actions.specificActions.SHRINE.COLLECT_HAIR]: makeAdvanceQuestTransform(questIds.SHRINE_2, 5)
+    },
+    [Locations.locationIds.UMBRAL]: {
+        [Actions.specificActions.UMBRAL.EXPLORE]: makeIssueQuestTransform(questIds.CLOAK_1),
+        [Actions.specificActions.UMBRAL.GIVE_PAN]: (state) => {
+            if (state.playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty)
+                return makeAdvanceQuestTransform(questIds.CLOAK_1, 1)(state);
+            throw 'Requirements not met.';
+        },
+        [Actions.specificActions.UMBRAL.GIVE_ROCK]: composite(
+            makeAdvanceQuestTransform(questIds.CLOAK_1, 1),
+            makeRemoveItemTransform(itemDetails.BLACK_ROCK.id, 1)
+        )
+    },
+    [Locations.locationIds.WOODS]: {
+        [Actions.specificActions.WOODS.GET_HAIR]: composite(
+            makeAdvanceQuestTransform(questIds.SHRINE_2, 1),
+            makeAddItemTransform(itemDetails.UNICORN_HAIR.id, 1)
+        )
+    },
+    [Locations.locationIds.ALCOVE]: {
+        [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: composite(
+            makeAdvanceQuestTransform(questIds.CHAPTER_2, 1),
+            makeAddItemTransform(itemDetails.PEARL.id, 1)
+        )
+    }
 };
 
 const applyUnderwaterAction: Transform = (state) => {
