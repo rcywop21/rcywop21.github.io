@@ -93,17 +93,12 @@ export const killTransform: Transform = (state) => {
         }
     );
 
-    return makeAddMessageTransform(
-        'You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'
-    )({
-        ...state,
-        playerState: {
-            ...state.playerState,
-            locationId: Locations.locationIds.SHORES,
-            oxygenUntil: null,
-            quests: playerQuests,
-        },
-    });
+    return composite(
+        makeAddMessageTransform('You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'),
+        makePlayerStatTransform('locationId', Locations.locationIds.SHORES),
+        makePlayerStatTransform('quests', playerQuests),
+        makePlayerStatTransform('oxygenUntil', null),
+    )(state);
 };
 
 export const identityTransform: Transform = (x) => x;
