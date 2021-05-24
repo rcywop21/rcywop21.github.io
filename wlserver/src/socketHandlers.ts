@@ -49,7 +49,7 @@ export const onRejectionHandler: SocketHandler<undefined> = async (
 
     const { stagedAction } = gameState.players[credentials.groupNum];
     if (!stagedAction) return reply('error', 'No action to reject.');
-    setAction(credentials.groupNum as TeamId, null);
+    setAction(credentials.groupNum, null);
     notifyPlayerState(credentials.groupNum);
 };
 
@@ -64,7 +64,13 @@ export const onAcceptHandler: SocketHandler<undefined> = async (
     const { stagedAction } = gameState.players[credentials.groupNum];
     if (!stagedAction) return reply('error', 'No action to reject.');
 
-    applyTransform(applyAction, credentials.groupNum as TeamId);
+    try {
+        applyTransform(applyAction, credentials.groupNum as TeamId);
+    } catch (e) {
+        reply('error', e);
+        setAction(credentials.groupNum, null);
+        return;
+    }
 
     logger.log(
         'info',
@@ -127,11 +133,17 @@ export const onPauseHandler: SocketHandler<boolean> = async (socket, payload, re
         `Group ${credentials.groupNum} has ${payload ? 'paused' : 'resumed'} their game.`
     );
 
-    if (payload) {
-        applyTransform(pauseTransform, credentials.groupNum);
-        return reply('ok', 'Game paused.');
-    } else {
-        applyTransform(resumeTransform, credentials.groupNum);
-        return reply('ok', 'Game resumed.')
+    try {
+        if (payload) {
+            applyTransform(pauseTransform, credentials.groupNum);
+            return reply('ok', 'Game paused.');
+        } else {
+            applyTransform(resumeTransform, credentials.groupNum);
+            return reply('ok', 'Game resumed.')
+        }
+    } catch (e) {
+        reply('error', e);
+        return;
     }
+
 }
