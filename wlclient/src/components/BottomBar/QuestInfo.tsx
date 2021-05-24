@@ -20,7 +20,7 @@ const QuestInfo = (props: QuestInfoProps): React.ReactElement => {
     
     if (questInfo.stageOrder === "anyOrder") {
         for (let i = 0; i < questInfo.stages.length; i++) {
-            questSteps.push(`${i+1}. ${questInfo.stages[i]}`);
+            questSteps.push(`\u{2022} ${questInfo.stages[i]}`);
         }
     }
 

@@ -20,9 +20,9 @@
     justify-content: flex-start;
     align-items: flex-start;
     position: absolute;
-    bottom: 0px;
+    bottom: 7px;
     right: 0px;
-    height: 157px;
+    height: 150px;
     width: 284px;
     overflow: auto;
 }
