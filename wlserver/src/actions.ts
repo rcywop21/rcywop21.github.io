@@ -315,7 +315,67 @@ const applyLocationActions: Record<
             questIds.ARGUMENT,
             0
         ),
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: (state) => {
+            const { linkedStreams } = state.globalState;
+            if (linkedStreams.lastSalmonId !== undefined)
+                throw 'This stream has already been activated.';
+            if (linkedStreams.lastCatfishId === state.playerState.id)
+                throw 'Same player cannot activate both ends of the linked streams.';
+            return composite(
+                makeAddMessageTransform('You activate the Salmon Street end of the linked Oxygen Streams, waiting for someone else to activate the other end.'),
+                updateStreamCooldownTransform
+            )({
+                ...state,
+                globalState: {
+                    ...state.globalState,
+                    linkedStreams: {
+                        ...state.globalState.linkedStreams,
+                        lastSalmonId: state.playerState.id,
+                        lastSalmon: new Date(),
+                    }
+                }
+            });
+        }
     },
+    [Locations.locationIds.TUNA]: {
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: composite(
+            makeAddOxygenTransform(900),
+            updateStreamCooldownTransform
+        )
+    },
+    [Locations.locationIds.CATFISH]: {
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: (state) => {
+            const { linkedStreams } = state.globalState;
+            if (linkedStreams.lastCatfishId !== undefined)
+                throw 'This stream has already been activated.';
+            if (linkedStreams.lastSalmonId === state.playerState.id)
+                throw 'Same player cannot activate both ends of the linked streams.';
+            return composite(
+                makeAddMessageTransform('You activate the Catfish Crescent end of the linked Oxygen Streams, waiting for someone else to activate the other end.'),
+                updateStreamCooldownTransform
+            )({
+                ...state,
+                globalState: {
+                    ...state.globalState,
+                    linkedStreams: {
+                        ...state.globalState.linkedStreams,
+                        lastCatfishId: state.playerState.id,
+                        lastCatfish: new Date(),
+                    }
+                }
+            });
+        }
+    },
+    [Locations.locationIds.BUBBLE]: {
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: (state) => {
+            if (!state.playerState.hasBubblePass)
+                throw 'Requirements not met.';
+            return composite(
+                makeAddOxygenTransform(2400),
+                updateStreamCooldownTransform
+            )(state);
+        }
+    }
 };
 
 const applyUnderwaterAction: Transform = (state) => {

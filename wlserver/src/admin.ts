@@ -158,6 +158,9 @@ const commands = {
         const playerId = getPlayerId(payload);
         applyTransform(resumeTransform, playerId);
         reply('cmdok', `Player ${playerId} resumed.`);
+    },
+    time: (_: string[], reply: Reply) => {
+        reply('cmdok', new Date());
     }
 };
 

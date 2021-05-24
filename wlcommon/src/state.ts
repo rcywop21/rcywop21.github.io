@@ -24,6 +24,8 @@ export interface GlobalState {
     linkedStreams: {
         lastSalmon?: Date;
         lastCatfish?: Date;
+        lastSalmonId?: TeamId;
+        lastCatfishId?: TeamId;
     }
 }
 

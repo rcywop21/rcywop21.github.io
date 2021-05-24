@@ -64,7 +64,10 @@ export const applyTransform = (
         })
     );
 
-    if (messages.length) notifyNewMessages(messages.length);
+    if (messages.length) { 
+        notifyNewMessages(messages.length); 
+        notifyGameState();
+    }
 };
 
 export const setAction = (playerId: TeamId, action: string | null): void => {

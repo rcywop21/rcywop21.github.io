@@ -21,18 +21,6 @@ const makeStartingPlayerState = (id: TeamId): PlayerState => ({
     pausedOxygen: null,
 });
 
-export const makeGlobalGameState = (): GlobalState => ({
-    artefactsFound: 0,
-    tritonOxygen: {
-        lastTeam: undefined,
-        lastExtract: new Date(),
-    },
-    crimsonMasterSwitch: true,
-    crimsonState: {},
-    messages: [],
-    linkedStreams: {},
-})
-
 const setupGameState = (): void => {
     for (let i = 0; i < 10; ++i) {
         gameState.players.push(makeStartingPlayerState(i as TeamId));

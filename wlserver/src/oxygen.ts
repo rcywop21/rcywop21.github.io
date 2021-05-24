@@ -45,7 +45,7 @@ export const makeRemoveOxygenTransform = (
 
     const ms = seconds * 1000;
     const duration = Util.formatDuration(ms);
-    const messages = verbose ? [`You have used ${duration} for Oxygen.`] : [];
+    const messages = verbose ? [`You have used ${duration} of Oxygen.`] : [];
 
     logger.log(
         'info',
