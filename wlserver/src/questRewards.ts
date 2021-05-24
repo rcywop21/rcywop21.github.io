@@ -33,7 +33,7 @@ const postUnlock: Record<QuestId, Transform> = {
             ? makeAdvanceQuestTransform(questIds.ARTEFACTS_2, 0)
             : identityTransform)(state),
     [questIds.CLOAK_1]: (state) => (state.playerState.inventory[itemDetails.BLACK_ROCK.id]?.qty ? makeAdvanceQuestTransform(questIds.CLOAK_2, 0) : identityTransform)(state),
-    [questIds.SHRINE_2]: makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)
+    [questIds.SHRINE_2]: (state) => makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(state)
 };
 
 export const makePostCompletionTransform = (questId: QuestId): Transform => (
