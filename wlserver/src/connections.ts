@@ -110,3 +110,7 @@ export const notifyPlayerState = (groupNum: TeamId): void => {
 export const notifyGameState = (): void => {
     io.to(ROOMS.AUTHENTICATED).emit('global_update', gameState.global);
 };
+
+export const notifyNewMessages = (count: number): void => {
+    io.to(ROOMS.AUTHENTICATED).emit('new_msgs', count);
+}

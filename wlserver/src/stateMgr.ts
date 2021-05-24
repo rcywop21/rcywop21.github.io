@@ -7,7 +7,7 @@ import {
     QuestState,
     TeamId,
 } from 'wlcommon';
-import { notifyPlayerState } from './connections';
+import { notifyGameState, notifyNewMessages, notifyPlayerState } from './connections';
 import logger from './logger';
 
 export interface TransformState {
@@ -18,18 +18,20 @@ export interface TransformState {
 
 export type Transform = (result: TransformState) => TransformState;
 
-export const gameState: GameState = {
-    global: {
-        artefactsFound: 0,
-        tritonOxygen: {
-            lastTeam: undefined,
-            lastExtract: new Date(),
-        },
-        crimsonMasterSwitch: true,
-        crimsonState: {},
-        messages: [],
-        linkedStreams: {},
+export const makeGlobalGameState = (): GlobalState => ({
+    artefactsFound: 0,
+    tritonOxygen: {
+        lastTeam: undefined,
+        lastExtract: new Date(),
     },
+    crimsonMasterSwitch: true,
+    crimsonState: {},
+    messages: [],
+    linkedStreams: {},
+})
+
+export const gameState: GameState = {
+    global: makeGlobalGameState(),
     players: [],
 };
 
@@ -124,6 +126,37 @@ export function makePlayerStatTransform<T extends keyof PlayerState>(
             [key]: value,
         },
     });
+}
+
+export const pauseTransform: Transform = (state) => {
+    if (state.playerState.pausedOxygen !== null)
+        throw 'Player is already paused.';
+
+    const pausedOxygen = state.playerState.oxygenUntil === null ? -1 : state.playerState.oxygenUntil.valueOf() - Date.now();
+    return {
+        ...state,
+        playerState: {
+            ...state.playerState,
+            oxygenUntil: null,
+            pausedOxygen
+        }
+    };
+};
+
+export const resumeTransform: Transform = (state) => {
+    if (state.playerState.pausedOxygen === null)
+        throw 'Player is not paused.';
+
+    const oxygenUntil = state.playerState.pausedOxygen === -1 ? null : new Date(Date.now() + state.playerState.pausedOxygen);
+
+    return {
+        ...state,
+        playerState: {
+            ...state.playerState,
+            oxygenUntil,
+            pausedOxygen: null,
+        }
+    }
 }
 
 export const composite = (...transforms: Transform[]): Transform =>

@@ -1,4 +1,4 @@
-import { PlayerState, questIds, TeamId } from 'wlcommon';
+import { GlobalState, PlayerState, questIds, TeamId } from 'wlcommon';
 import { makeIssueQuestTransform } from './actions';
 import { applyTransform, gameState } from './stateMgr';
 
@@ -18,7 +18,20 @@ const makeStartingPlayerState = (id: TeamId): PlayerState => ({
     unlockedAlcove: false,
     unlockedShrine: false,
     unlockedWoods: false,
+    pausedOxygen: null,
 });
+
+export const makeGlobalGameState = (): GlobalState => ({
+    artefactsFound: 0,
+    tritonOxygen: {
+        lastTeam: undefined,
+        lastExtract: new Date(),
+    },
+    crimsonMasterSwitch: true,
+    crimsonState: {},
+    messages: [],
+    linkedStreams: {},
+})
 
 const setupGameState = (): void => {
     for (let i = 0; i < 10; ++i) {

@@ -11,7 +11,7 @@ import {
 import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
 import { Reply, SocketHandler } from './socketHandlers';
-import { applyTransform, gameState, setAction } from './stateMgr';
+import { applyTransform, gameState, pauseTransform, resumeTransform, setAction } from './stateMgr';
 
 const commands = {
     state: (payload: string[], reply: Reply): void => {
@@ -149,6 +149,16 @@ const commands = {
         reply('cmdok', `Cooldown reset for stream ${oxygenStream}.`);
         notifyPlayerState(playerId);
     },
+    pause: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        applyTransform(pauseTransform, playerId);
+        reply('cmdok', `Player ${playerId} paused.`);
+    },
+    resume: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        applyTransform(resumeTransform, playerId);
+        reply('cmdok', `Player ${playerId} resumed.`);
+    }
 };
 
 export const onAdminHandler: SocketHandler<string[]> = async (
