@@ -8,7 +8,8 @@ import {
     itemDetails,
     Action,
 } from 'wlcommon';
-import { makeAddItemTransform } from './inventory';
+import { locationIds } from 'wlcommon/build/locations';
+import { makeAddItemTransform, makeRemoveItemTransform } from './inventory';
 import logger from './logger';
 import {
     makeAddOxygenTransform,
@@ -121,20 +122,24 @@ const applyLocationActions: Record<
     Record<Action, Transform>
 > = {
     [Locations.locationIds.SHORES]: {
-        [Actions.specificActions.SHORES.DIVE]: composite(
+        [Actions.specificActions.SHORES.DIVE]: (state) => composite(
             makeAdvanceQuestTransform(questIds.CHAPTER_1, 0),
+            makeAdvanceQuestTransform(questIds.SHRINE_2, 2),
             makeAddMessageTransform(
                 'You dive into the deep blue sea... and arrive at the Shallows!'
             ),
             makePlayerStatTransform(
                 'oxygenUntil',
-                new Date(Date.now() + 20 * 60 * 1000)
+                new Date(Date.now() + (state.playerState.challengeMode ? 20 * 60 * 1000 : 10 * 60 * 1000)),
             ),
             makePlayerStatTransform(
                 'locationId',
                 Locations.locationIds.SHALLOWS
+            ),
+            makePlayerStatTransform(
+                'challengeMode', true
             )
-        ),
+        )(state),
     },
     [Locations.locationIds.CORALS]: {
         [Actions.specificActions.CORALS.EXPLORE]: composite(
@@ -315,7 +320,118 @@ const applyLocationActions: Record<
             questIds.ARGUMENT,
             0
         ),
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: (state) => {
+            const { linkedStreams } = state.globalState;
+            if (linkedStreams.lastSalmonId !== undefined)
+                throw 'This stream has already been activated.';
+            if (linkedStreams.lastCatfishId === state.playerState.id)
+                throw 'Same player cannot activate both ends of the linked streams.';
+            return composite(
+                makeAddMessageTransform('You activate the Salmon Street end of the linked Oxygen Streams, waiting for someone else to activate the other end.'),
+                updateStreamCooldownTransform
+            )({
+                ...state,
+                globalState: {
+                    ...state.globalState,
+                    linkedStreams: {
+                        ...state.globalState.linkedStreams,
+                        lastSalmonId: state.playerState.id,
+                        lastSalmon: new Date(),
+                    }
+                }
+            });
+        }
     },
+    [Locations.locationIds.TUNA]: {
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: composite(
+            makeAddOxygenTransform(900),
+            updateStreamCooldownTransform
+        )
+    },
+    [Locations.locationIds.CATFISH]: {
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: (state) => {
+            const { linkedStreams } = state.globalState;
+            if (linkedStreams.lastCatfishId !== undefined)
+                throw 'This stream has already been activated.';
+            if (linkedStreams.lastSalmonId === state.playerState.id)
+                throw 'Same player cannot activate both ends of the linked streams.';
+            return composite(
+                makeAddMessageTransform('You activate the Catfish Crescent end of the linked Oxygen Streams, waiting for someone else to activate the other end.'),
+                updateStreamCooldownTransform
+            )({
+                ...state,
+                globalState: {
+                    ...state.globalState,
+                    linkedStreams: {
+                        ...state.globalState.linkedStreams,
+                        lastCatfishId: state.playerState.id,
+                        lastCatfish: new Date(),
+                    }
+                }
+            });
+        }
+    },
+    [Locations.locationIds.BUBBLE]: {
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: (state) => {
+            if (!state.playerState.hasBubblePass)
+                throw 'Requirements not met.';
+            return composite(
+                makeAddOxygenTransform(2400),
+                updateStreamCooldownTransform
+            )(state);
+        }
+    },
+    [Locations.locationIds.KELP]: {
+        [Actions.specificActions.KELP.EXPLORE]: composite(
+            makeIssueQuestTransform(questIds.SHRINE_1),
+            makeRemoveOxygenTransform(300)
+        ),
+        [Actions.specificActions.KELP.CLIMB_DOWN]: composite(
+            makeAdvanceQuestTransform(questIds.SHRINE_1, 0),
+            makePlayerStatTransform('locationId', locationIds.SHRINE),
+            makePlayerStatTransform('unlockedShrine', true),
+        ),
+        [Actions.specificActions.KELP.HARVEST]: (state) => {
+            let result = composite(
+                makeAdvanceQuestTransform(questIds.CLOAK_3, 0),
+                makeAddItemTransform(itemDetails.BLINKSEED.id, 1)
+            )(state);
+            if (result.playerState.inventory[itemDetails.BLINKSEED.id]?.qty >= 3)
+                result = makeAdvanceQuestTransform(questIds.CLOAK_3, 1)(state);
+            return result;
+        }
+    },
+    [Locations.locationIds.SHRINE]: {
+        [Actions.specificActions.SHRINE.GIVE_HAIR]: composite(
+            makeAdvanceQuestTransform(questIds.SHRINE_2, 3),
+            makeRemoveItemTransform(itemDetails.UNICORN_HAIR.id, 1)
+        ),
+        [Actions.specificActions.SHRINE.COLLECT_HAIR]: makeAdvanceQuestTransform(questIds.SHRINE_2, 5)
+    },
+    [Locations.locationIds.UMBRAL]: {
+        [Actions.specificActions.UMBRAL.EXPLORE]: makeIssueQuestTransform(questIds.CLOAK_1),
+        [Actions.specificActions.UMBRAL.GIVE_PAN]: (state) => {
+            if (state.playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty)
+                return makeAdvanceQuestTransform(questIds.CLOAK_1, 1)(state);
+            throw 'Requirements not met.';
+        },
+        [Actions.specificActions.UMBRAL.GIVE_ROCK]: composite(
+            makeAdvanceQuestTransform(questIds.CLOAK_1, 1),
+            makeRemoveItemTransform(itemDetails.BLACK_ROCK.id, 1)
+        )
+    },
+    [Locations.locationIds.WOODS]: {
+        [Actions.specificActions.WOODS.GET_HAIR]: composite(
+            makeAdvanceQuestTransform(questIds.SHRINE_2, 1),
+            makeAddItemTransform(itemDetails.UNICORN_HAIR.id, 1)
+        )
+    },
+    [Locations.locationIds.ALCOVE]: {
+        [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: composite(
+            makeAdvanceQuestTransform(questIds.CHAPTER_2, 1),
+            makeAddItemTransform(itemDetails.PEARL.id, 1)
+        )
+    }
 };
 
 const applyUnderwaterAction: Transform = (state) => {
@@ -324,16 +440,12 @@ const applyUnderwaterAction: Transform = (state) => {
 
     switch (state.playerState.stagedAction) {
         case Actions.ALL_UNDERWATER.RESURFACE:
-            return makeAddMessageTransform(
-                'You have resurfaced and returned to Sleepy Shores.'
-            )({
-                ...state,
-                playerState: {
-                    ...state.playerState,
-                    oxygenUntil: null,
-                    locationId: Locations.locationIds.SHORES,
-                },
-            });
+            return composite(
+                makeAddMessageTransform('You have resurfaced and returned to Sleepy Shores.'),
+                makeAdvanceQuestTransform(questIds.SHRINE_2, 0),
+                makePlayerStatTransform('oxygenUntil', null),
+                makePlayerStatTransform('locationId', Locations.locationIds.SHORES)
+            )(state);
 
         case Actions.ALL_UNDERWATER.STORE_OXYGEN: {
             const { oxygenUntil, storedOxygen } = state.playerState;

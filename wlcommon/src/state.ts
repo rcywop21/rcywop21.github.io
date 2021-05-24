@@ -24,6 +24,8 @@ export interface GlobalState {
     linkedStreams: {
         lastSalmon?: Date;
         lastCatfish?: Date;
+        lastSalmonId?: TeamId;
+        lastCatfishId?: TeamId;
     }
 }
 
@@ -40,7 +42,7 @@ export interface PlayerState {
     quests: Record<QuestId, QuestState>;
     inventory: Record<ItemId, ItemRecord>;
     streamCooldownExpiry: Record<LocationId, Date>;
-    storedOxygen: number | null;
+    storedOxygen: number | null; // number if have pump, null otherwise
     stagedAction: Action | null;
     knowsCrimson: boolean;
     knowsLanguage: boolean;
@@ -51,6 +53,8 @@ export interface PlayerState {
     unlockedAlcove?: boolean;
     unlockedShrine?: boolean;
     unlockedWoods?: boolean;
+    pausedOxygen: number | null; // number (millisec) if paused, null otherwise
+    challengeMode?: boolean;
 }
 
 export interface Message {

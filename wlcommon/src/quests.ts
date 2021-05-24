@@ -196,15 +196,16 @@ const questList: Quest[] = [
         when: 'You received this quest by completing Shrine of the Innocent, Part 1',
         description: [
             'The shrinekeeper seems surprised at your arrival. He says that it is very rare for the shrine to have visitors.',
-            "After you tell him about the purpose of your journey, the shrinekeeper tells you that the shrine has a magic circle that takes 30 minutes to change a Unicorn's Hair into a Unicorn's Tear. You can get Unicorn's Hair at the Whispering Woods, a clearing located on the surface near the Sleepy Shores.",
-            "You will then have to bring the Unicorn's Tear back to the shrine. However, the Unicorn's Hair will interfere with your ability to collect Oxygen. While the Unicorn's Hair is in your inventory, all Oxygen you receive from Diving, Oxygen Streams or performing any other actions will be reduced by half.",
+            "After you tell him about the purpose of your journey, the shrinekeeper tells you that you can perform a ritual to receive a Unicorn Tear.",
+            "First, you will have to return to the surface to obtain a Unicorn's Hair. After getting the Unicorn's Hair, you will enter Challenge Mode. You must then return to the undersea, give the Unicorn's Hair to the Shrine, and then survive for 30 minutes in Challenge Mode.",
+            'When in Challenge Mode, you will only get HALF the normal amount of Oxygen from diving and Oxygen Streams. Oxygen Pumps will also not work in Challenge Mode.'
         ].join('\n\n'),
         stages: [
             "Perform the 'Resurface' action at the Shallows to travel to Sleepy Shores. WARNING: You will lose all your Oxygen when you do this action.",
-            "Get a Unicorn's Hair at the Whispering Woods. WARNING: Once you have the Unicorn's Hair in your inventory, your ability to collect Oxygen will be affected!",
-            'Return to the Undersea.',
+            "Get a Unicorn's Hair at the Whispering Woods.",
+            "Return to the Undersea. WARNING: Diving with a Unicorn's Hair in your inventory will put you in Challenge Mode.",
             "Perform the 'Give Unicorn's Hair' action at the Shrine of the Innocent.",
-            'Survive for 30 minutes without resurfacing.',
+            'Survive for 30 minutes in Challenge Mode without resurfacing.',
             "Perform the 'Collect Unicorn Tear' action at the Shrine of the Innocent.",
         ],
         stageOrder: 'inOrder',
@@ -221,8 +222,7 @@ const questList: Quest[] = [
         ].join('\n\n'),
         stages: [
             'Get a Pyrite Pan at Barnacle Residences.',
-            'Return to the Umbral Ruins.',
-            "Perform the 'Give Pyrite Pan' action at the Umbral Ruins.",
+            "Perform the 'Show Pyrite Pan' action at the Umbral Ruins.",
         ],
         stageOrder: 'inOrder',
         unlocks: questIds.CLOAK_2,

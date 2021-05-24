@@ -11,7 +11,7 @@ import {
 import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
 import { Reply, SocketHandler } from './socketHandlers';
-import { applyTransform, gameState, setAction } from './stateMgr';
+import { applyTransform, gameState, pauseTransform, resumeTransform, setAction } from './stateMgr';
 
 const commands = {
     state: (payload: string[], reply: Reply): void => {
@@ -75,7 +75,6 @@ const commands = {
             default:
                 throw `Unknown option ${payload[0]}.`;
         }
-        notifyGameState();
     },
     setaction: (payload: string[], reply: Reply): void => {
         const playerId = getPlayerId(payload);
@@ -87,13 +86,11 @@ const commands = {
                 : action
         );
         reply('cmdok', `Action set to ${action}.`);
-        notifyPlayerState(playerId);
     },
     approve: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
         applyTransform(applyAction, playerId);
         reply('cmdok', 'Action approved.');
-        notifyPlayerState(playerId);
     },
     issuequest: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -102,7 +99,6 @@ const commands = {
             throw `Invalid quest ID ${questId}.`;
         applyTransform(makeIssueQuestTransform(questId), playerId);
         reply('cmdok', 'Quest issued.');
-        notifyPlayerState(playerId);
     },
     advance: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -121,7 +117,6 @@ const commands = {
             playerId
         );
         reply('cmdok', 'Quest advanced.');
-        notifyPlayerState(playerId);
     },
     move: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -140,7 +135,6 @@ const commands = {
         }
         applyTransform(makeAddOxygenTransform(delta), playerId);
         reply('cmdok', 'Oxygen added.');
-        notifyPlayerState(playerId);
     },
     resetcd: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
@@ -155,6 +149,19 @@ const commands = {
         reply('cmdok', `Cooldown reset for stream ${oxygenStream}.`);
         notifyPlayerState(playerId);
     },
+    pause: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        applyTransform(pauseTransform, playerId);
+        reply('cmdok', `Player ${playerId} paused.`);
+    },
+    resume: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        applyTransform(resumeTransform, playerId);
+        reply('cmdok', `Player ${playerId} resumed.`);
+    },
+    time: (_: string[], reply: Reply) => {
+        reply('cmdok', new Date());
+    }
 };
 
 export const onAdminHandler: SocketHandler<string[]> = async (

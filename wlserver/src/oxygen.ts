@@ -6,9 +6,9 @@ export const makeAddOxygenTransform = (
     seconds: number,
     verbose = true
 ): Transform => (state) => {
-    const { oxygenUntil } = state.playerState;
+    const { oxygenUntil, challengeMode } = state.playerState;
     if (oxygenUntil === null) return state;
-    const ms = seconds * 1000;
+    const ms = seconds * (challengeMode ? 500 : 1000);
     const duration = Util.formatDuration(ms);
     const messages = verbose
         ? [`You have received ${duration} of Oxygen.`]
@@ -45,7 +45,7 @@ export const makeRemoveOxygenTransform = (
 
     const ms = seconds * 1000;
     const duration = Util.formatDuration(ms);
-    const messages = verbose ? [`You have used ${duration} for Oxygen.`] : [];
+    const messages = verbose ? [`You have used ${duration} of Oxygen.`] : [];
 
     logger.log(
         'info',

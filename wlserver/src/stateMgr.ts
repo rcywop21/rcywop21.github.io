@@ -7,7 +7,7 @@ import {
     QuestState,
     TeamId,
 } from 'wlcommon';
-import { notifyPlayerState } from './connections';
+import { notifyGameState, notifyNewMessages, notifyPlayerState } from './connections';
 import logger from './logger';
 
 export interface TransformState {
@@ -18,18 +18,20 @@ export interface TransformState {
 
 export type Transform = (result: TransformState) => TransformState;
 
-export const gameState: GameState = {
-    global: {
-        artefactsFound: 0,
-        tritonOxygen: {
-            lastTeam: undefined,
-            lastExtract: new Date(),
-        },
-        crimsonMasterSwitch: true,
-        crimsonState: {},
-        messages: [],
-        linkedStreams: {},
+export const makeGlobalGameState = (): GlobalState => ({
+    artefactsFound: 0,
+    tritonOxygen: {
+        lastTeam: undefined,
+        lastExtract: new Date(),
     },
+    crimsonMasterSwitch: true,
+    crimsonState: {},
+    messages: [],
+    linkedStreams: {},
+})
+
+export const gameState: GameState = {
+    global: makeGlobalGameState(),
     players: [],
 };
 
@@ -43,9 +45,17 @@ export const applyTransform = (
         messages: [],
     });
 
-    gameState.global = globalState;
-    gameState.players[playerId] = playerState;
-    gameState.players[playerId].stagedAction = null;
+    if (gameState.global !== globalState) {
+        gameState.global = globalState;
+        notifyGameState();
+    }
+
+    if (gameState.players[playerId] !== playerState) {
+        gameState.players[playerId] = playerState;
+        gameState.players[playerId].stagedAction = null;
+        notifyPlayerState(playerId);
+    }
+
     messages.forEach((message) =>
         gameState.global.messages.push({
             time: new Date(),
@@ -53,6 +63,11 @@ export const applyTransform = (
             message,
         })
     );
+
+    if (messages.length) { 
+        notifyNewMessages(messages.length); 
+        notifyGameState();
+    }
 };
 
 export const setAction = (playerId: TeamId, action: string | null): void => {
@@ -93,17 +108,12 @@ export const killTransform: Transform = (state) => {
         }
     );
 
-    return makeAddMessageTransform(
-        'You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'
-    )({
-        ...state,
-        playerState: {
-            ...state.playerState,
-            locationId: Locations.locationIds.SHORES,
-            oxygenUntil: null,
-            quests: playerQuests,
-        },
-    });
+    return composite(
+        makeAddMessageTransform('You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'),
+        makePlayerStatTransform('locationId', Locations.locationIds.SHORES),
+        makePlayerStatTransform('quests', playerQuests),
+        makePlayerStatTransform('oxygenUntil', null),
+    )(state);
 };
 
 export const identityTransform: Transform = (x) => x;
@@ -119,6 +129,37 @@ export function makePlayerStatTransform<T extends keyof PlayerState>(
             [key]: value,
         },
     });
+}
+
+export const pauseTransform: Transform = (state) => {
+    if (state.playerState.pausedOxygen !== null)
+        throw 'Player is already paused.';
+
+    const pausedOxygen = state.playerState.oxygenUntil === null ? -1 : state.playerState.oxygenUntil.valueOf() - Date.now();
+    return {
+        ...state,
+        playerState: {
+            ...state.playerState,
+            oxygenUntil: null,
+            pausedOxygen
+        }
+    };
+};
+
+export const resumeTransform: Transform = (state) => {
+    if (state.playerState.pausedOxygen === null)
+        throw 'Player is not paused.';
+
+    const oxygenUntil = state.playerState.pausedOxygen === -1 ? null : new Date(Date.now() + state.playerState.pausedOxygen);
+
+    return {
+        ...state,
+        playerState: {
+            ...state.playerState,
+            oxygenUntil,
+            pausedOxygen: null,
+        }
+    }
 }
 
 export const composite = (...transforms: Transform[]): Transform =>

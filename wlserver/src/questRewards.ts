@@ -24,6 +24,7 @@ const transforms: Record<QuestId, Transform> = {
         1
     ),
     [questIds.PYRITE]: makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1),
+    [questIds.SHRINE_2]: makeAddItemTransform(itemDetails.UNICORN_TEAR.id, 1),
 };
 
 const postUnlock: Record<QuestId, Transform> = {
@@ -31,6 +32,8 @@ const postUnlock: Record<QuestId, Transform> = {
         (state.playerState.knowsLanguage
             ? makeAdvanceQuestTransform(questIds.ARTEFACTS_2, 0)
             : identityTransform)(state),
+    [questIds.CLOAK_1]: (state) => (state.playerState.inventory[itemDetails.BLACK_ROCK.id]?.qty ? makeAdvanceQuestTransform(questIds.CLOAK_2, 0) : identityTransform)(state),
+    [questIds.SHRINE_2]: makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)
 };
 
 export const makePostCompletionTransform = (questId: QuestId): Transform => (
