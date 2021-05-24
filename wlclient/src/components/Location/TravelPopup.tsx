@@ -1,4 +1,5 @@
 import React from 'react';
+import { TooltipType, tooltipTypes } from '../Popups/Tooltip';
 import { Locations } from 'wlcommon';
 import './TravelPopup.css';
 
@@ -6,10 +7,11 @@ export interface TravelPopupProps {
     isVisible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     handleTravel: (a: Locations.LocationId) => () => void;
+    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
 }
 
 const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
-    const { isVisible, setVisible, handleTravel } = props;
+    const { isVisible, setVisible, handleTravel, triggerTooltip } = props;
     const visibility = isVisible ? "inline" : "none";
     const locationIds = Object.values(Locations.locationIds);
 
@@ -43,6 +45,11 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
                                     onClick={handleTravelClosePopup(
                                         location.id
                                     )}
+                                    onMouseEnter={triggerTooltip(
+                                        tooltipTypes.LOCATION, 
+                                        [location.id]
+                                    )}
+                                    onMouseLeave={triggerTooltip()}
                                 >
                                     {location.name}
                                 </button>

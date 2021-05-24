@@ -161,7 +161,9 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
             <TravelPopup
                 isVisible={isTravelPopupVisible} 
                 setVisible={setIsTravelPopupVisible} 
-                handleTravel={handleTravel} />
+                handleTravel={handleTravel} 
+                triggerTooltip={triggerTooltip}
+            />
         </div>
     );
 };
