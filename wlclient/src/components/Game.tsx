@@ -4,6 +4,7 @@ import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
 import OnActionPopup from './Popups/OnActionPopup';
+import { OnActionPopupProps, OnActionPopupMentorProps } from './Popups/OnActionPopup';
 import { TooltipType } from './Popups/Tooltip';
 import Tooltip from './Popups/Tooltip';
 import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
@@ -15,6 +16,11 @@ export interface GameProps {
     playerState: PlayerState;
     teamId: number;
     isMentor?: boolean;
+    gameMentorProps?: GameMentorProps;
+}
+
+export interface GameMentorProps {
+    onActionPopupMentorProps: OnActionPopupMentorProps;
 }
 
 /*
@@ -37,7 +43,7 @@ export interface GameProps {
 */
 
 const Game = (props: GameProps): React.ReactElement => {
-    const { globalState, playerState, teamId, isMentor } = props;
+    const { globalState, playerState, teamId, isMentor, gameMentorProps } = props;
 
     const [isTooltipVisible, setIsTooltipVisible] = React.useState<boolean>(false);
     const [tooltipType, setTooltipType] = React.useState<TooltipType>(null);
@@ -74,6 +80,15 @@ const Game = (props: GameProps): React.ReactElement => {
     const playerNotifs: Message[] = globalState.messages
         .filter(message => message.visibility === "all" || message.visibility === teamId);
     
+    const onActionPopupProps: OnActionPopupProps = {
+        action: playerState.stagedAction,
+        isMentor: isMentor,
+    };
+    
+    if (isMentor && gameMentorProps) {
+        onActionPopupProps.mentorProps = gameMentorProps.onActionPopupMentorProps;
+    }
+    
     return (
         <div className="game">
             <TopBar 
@@ -88,7 +103,7 @@ const Game = (props: GameProps): React.ReactElement => {
                 handleTravel={handleTravel}
                 triggerTooltip={triggerTooltip}
             />
-            <OnActionPopup action={playerState.stagedAction} />
+            <OnActionPopup {...onActionPopupProps} />
             <Tooltip 
                 isVisible={isTooltipVisible}
                 tooltipType={tooltipType}
