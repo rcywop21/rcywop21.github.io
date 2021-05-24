@@ -6,8 +6,10 @@ export interface NotificationProps {
     message: string;
 }
 
+const recentNotifTiming = 5000;
+
 function determineIfDateClose(d1: Date, d2: Date): boolean {
-    return (d1.valueOf() - d2.valueOf()) < 5000;
+    return (d1.valueOf() - d2.valueOf()) < recentNotifTiming;
 }
 
 function determineIfRecent(d: Date): boolean {
@@ -20,7 +22,8 @@ const Notification = (props: NotificationProps): React.ReactElement => {
     const [isRecent, setIsRecent] = React.useState<boolean>(determineIfRecent(time));
     
     if (determineIfRecent(time)) {
-        setInterval(() => setIsRecent(false), 5000);
+        setInterval(() => setIsRecent(false),
+            recentNotifTiming - (Date.now() - time.valueOf()));
     }
     
     return (
