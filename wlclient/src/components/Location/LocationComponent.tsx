@@ -28,6 +28,7 @@ export interface LocationProps {
     handleAction: (a: string) => () => void;
     handleTravel: (a: Locations.LocationId) => () => void;
     triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
+    isMentor?: boolean;
 }
 
 export interface SpecificLocationProps {
@@ -129,7 +130,7 @@ export function imgDirectoryGenerator(imgFileName: string): string {
 }
 
 const LocationComponent = (props: LocationProps): React.ReactElement => {
-    const { playerState, handleAction, handleTravel, triggerTooltip } = props;
+    const { playerState, handleAction, handleTravel, triggerTooltip, isMentor } = props;
     
     const location: Locations.Location = Locations.locationsMapping[playerState.locationId];
     
@@ -141,7 +142,11 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
         y: "433px",
         isVisible: isTravelVisible,
         isEnabled: true,
-        handleAction: (): void => { setIsTravelPopupVisible(true); },
+        handleAction: () => {
+            if (!isMentor) {
+                setIsTravelPopupVisible(true);
+            }
+        },
         triggerTooltip: triggerTooltip,
         tooltipInfo: ["Travel", "Go somewhere else in this wonderful world!", ""]
     }

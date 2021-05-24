@@ -102,6 +102,7 @@ const Game = (props: GameProps): React.ReactElement => {
                 handleAction={handleSpecificAction} 
                 handleTravel={handleTravel}
                 triggerTooltip={triggerTooltip}
+                isMentor={isMentor}
             />
             <OnActionPopup {...onActionPopupProps} />
             <Tooltip 
