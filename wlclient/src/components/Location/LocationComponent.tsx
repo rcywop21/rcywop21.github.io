@@ -124,7 +124,6 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
     const location: Locations.Location = Locations.locationsMapping[playerState.locationId];
     
     const isTravelVisible = playerState.locationId != Locations.locationIds.SHORES || playerState.unlockedWoods == true;
-    
     const [isTravelPopupVisible, setIsTravelPopupVisible] = React.useState(false);  
     const travelActionProps: ActionProps = {
         action: "Travel",
@@ -141,6 +140,7 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
             { getSpecificLocationComponent(playerState, handleAction) }
             <Action {...travelActionProps} />
             <TravelPopup
+                playerState={playerState}
                 isVisible={isTravelPopupVisible} 
                 setVisible={setIsTravelPopupVisible} 
                 handleTravel={handleTravel} />
