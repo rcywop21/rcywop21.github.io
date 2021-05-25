@@ -2,11 +2,16 @@ import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Actions, itemDetails, questIds } from 'wlcommon';
-import { PlayerAction } from '../../PlayerAction';
+import { DynamicPlayerAction, PlayerAction } from '../../PlayerAction';
+import DynamicAction, { DynamicActionProps } from './DynamicAction';
 
 const actions: Record<string, PlayerAction> = {
-    [Actions.specificActions.UMBRAL.EXPLORE]: new PlayerAction("This is a shady, run-down area. Apparently it used to be a residential district, but the Oxygen Stream here vanished one day, suddenly. You shudder as you walk around the area.", 
-        "Use 5 minutes of Oxygen.", "656px", "402px"),
+    [Actions.specificActions.UMBRAL.EXPLORE]: new DynamicPlayerAction("This is a shady, run-down area. Apparently it used to be a residential district, but the Oxygen Stream here vanished one day, suddenly. You shudder as you walk around the area.", 
+        "Use 5 minutes of Oxygen.", "656px", "402px",
+        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
+        300000,
+        (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
+        (): void => { return; },),
     [Actions.specificActions.UMBRAL.GIVE_PAN]: new PlayerAction("Give Alyusi the Pyrite Pan.", 
         "Give 1 x Pyrite Pan.", "579px", "197px",
         (playerState) => playerState.quests[questIds.CLOAK_2]?.status === 'incomplete',
@@ -28,28 +33,61 @@ const actions: Record<string, PlayerAction> = {
 const Umbral = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor } = props;
 
-    const actionProps = Object.entries(actions).map(([actionId, playerAction]) => ({
-        action: actionId,
-        x: playerAction.x,
-        y: playerAction.y,
-        isVisible: isMentor ? 
-            true :
-            playerAction.getVisibility ? 
-                playerAction.getVisibility(playerState) : 
-                true,
-        isEnabled: playerAction.getVisibility ? 
-            playerAction.getVisibility(playerState) : true &&
-            playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
-        handleAction: handleAction(actionId),
-        triggerTooltip: triggerTooltip,
-        tooltipInfo: [actionId, playerAction.description, playerAction.task]
+    const actionProps = Object.entries(actions)
+        .filter(([, playerAction]) => !(playerAction instanceof DynamicPlayerAction))
+        .map(([actionId, playerAction]) => ({
+            action: actionId,
+            x: playerAction.x,
+            y: playerAction.y,
+            isVisible: isMentor ? 
+                true :
+                playerAction.getVisibility ? 
+                    playerAction.getVisibility(playerState) : 
+                    true,
+            isEnabled: playerAction.getVisibility ? 
+                playerAction.getVisibility(playerState) : true &&
+                playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
+            handleAction: handleAction(actionId),
+            triggerTooltip: triggerTooltip,
+            tooltipInfo: [actionId, playerAction.description, playerAction.task]
     }));
-
+    
+    const dynamicActionProps = Object.entries(actions)
+        .filter(([, playerAction]) => playerAction instanceof DynamicPlayerAction)
+        .map(([actionId, playerAction]) => {
+            const dynamicPlayerAction = playerAction as DynamicPlayerAction;
+            return {
+                actionProps: {
+                    action: actionId,
+                    x: dynamicPlayerAction.x,
+                    y: dynamicPlayerAction.y,
+                    isVisible: isMentor ? 
+                        true :
+                        dynamicPlayerAction.getVisibility ? 
+                            dynamicPlayerAction.getVisibility(playerState) : 
+                            true,
+                    isEnabled: dynamicPlayerAction.getVisibility ? 
+                        dynamicPlayerAction.getVisibility(playerState) : true &&
+                        dynamicPlayerAction.getEnabled ? dynamicPlayerAction.getEnabled(playerState) : true,
+                    handleAction: handleAction(actionId),
+                    triggerTooltip: triggerTooltip,
+                    tooltipInfo: [actionId, dynamicPlayerAction.description, dynamicPlayerAction.task]
+                },
+                timeToCompare: dynamicPlayerAction.timeToCompare(playerState),
+                howRecentToTrigger: dynamicPlayerAction.howRecentToTrigger,
+                triggerEffectsIfRecent: dynamicPlayerAction.triggerEffectsIfRecent,
+                triggerEffectsIfNotRecent: dynamicPlayerAction.triggerEffectsIfNotRecent
+            };
+        });
+    
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator('umbral.png')} />
-            {actionProps.map((info: ActionProps, level) => {
-                return <Action key={level} {...info} />;
+            <img src={imgDirectoryGenerator('corals.png')} />
+            {actionProps.map((info: ActionProps, index) => {
+                return <Action key={index} {...info} />;
+            })}
+            {dynamicActionProps.map((info: DynamicActionProps, index) => {
+                return <DynamicAction key={index} {...info} />;
             })}
         </React.Fragment>
     );
