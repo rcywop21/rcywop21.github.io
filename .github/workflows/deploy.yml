@@ -35,14 +35,14 @@ jobs:
         run: |
           cd wlcommon
           npm install
-          CI=false npm run build
+          npm run build
           ../getwlcommon.sh
           
       - name: Setup wlclient
         run: |
           cd wlclient
           npm install
-          npm run build
+          CI=false npm run build
         
       - name: Deploy to github pages
         uses: JamesIves/github-pages-deploy-action@4.1.3
