@@ -7,11 +7,11 @@ import { PlayerAction } from '../../PlayerAction';
 const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.SHRINE.GIVE_HAIR]: new PlayerAction("The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn's Tear.", 
         "Give 1 x Unicorn's Hair.", "434px", "449px", undefined,
-        (playerState) => playerState.inventory[itemDetails.UNICORN_HAIR.id] !== null),
+        (playerState) => playerState.inventory[itemDetails.UNICORN_HAIR.id] !== undefined),
     [Actions.specificActions.SHRINE.COLLECT_HAIR]: new PlayerAction("Collect the Unicorn Tear from the Shrine.", 
         "Receive 1 x Unicorn Tear.", "434px", "495px",
         (playerState) => playerState.quests[questIds.SHRINE_2]?.stages[4],
-        (playerState) => playerState.inventory[itemDetails.UNICORN_TEAR.id] == null),
+        (playerState) => playerState.inventory[itemDetails.UNICORN_TEAR.id] == undefined),
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
         "No task required.", "870px", "488px",
         (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
