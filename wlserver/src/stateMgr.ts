@@ -136,13 +136,20 @@ export const pauseTransform: Transform = (state) => {
     if (state.playerState.pausedOxygen !== null)
         throw 'Player is already paused.';
 
-    const pausedOxygen = state.playerState.oxygenUntil === null ? -1 : state.playerState.oxygenUntil.valueOf() - Date.now();
+    const { oxygenUntil, challengeMode } = state.playerState;
+    const now = Date.now();
+
+    const pausedOxygen = oxygenUntil === null ? -1 : oxygenUntil.valueOf() - now;
+    const challengePausedTime = challengeMode === null ? null : challengeMode.valueOf() - now;
+
     return {
         ...state,
         playerState: {
             ...state.playerState,
             oxygenUntil: null,
-            pausedOxygen
+            pausedOxygen,
+            challengeMode: null,
+            challengePausedTime,
         }
     };
 };
@@ -151,7 +158,11 @@ export const resumeTransform: Transform = (state) => {
     if (state.playerState.pausedOxygen === null)
         throw 'Player is not paused.';
 
-    const oxygenUntil = state.playerState.pausedOxygen === -1 ? null : new Date(Date.now() + state.playerState.pausedOxygen);
+    const { pausedOxygen, challengePausedTime } = state.playerState;
+    const now = Date.now();
+
+    const oxygenUntil = pausedOxygen === -1 ? null : new Date(now + pausedOxygen);
+    const challengeMode = challengePausedTime === null ? null : new Date(now + challengePausedTime);
 
     return {
         ...state,
@@ -159,6 +170,8 @@ export const resumeTransform: Transform = (state) => {
             ...state.playerState,
             oxygenUntil,
             pausedOxygen: null,
+            challengeMode,
+            challengePausedTime: null,
         }
     }
 }
