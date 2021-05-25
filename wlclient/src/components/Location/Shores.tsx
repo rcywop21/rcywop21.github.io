@@ -5,7 +5,7 @@ import { Actions } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
-    [Actions.specificActions.SHORES.DIVE]: new PlayerAction("Dive into the deep, blue sea. After diving, you will enter the Shallows location inside the Undersea. You will start your dive with 20 minutes of Oxygen.", 
+    [Actions.specificActions.SHORES.DIVE]: new PlayerAction("Dive", "Dive into the deep, blue sea. After diving, you will enter the Shallows location inside the Undersea. You will start your dive with 20 minutes of Oxygen.", 
         "Create a shape resembling a diving board with all of your arms.", "445px", "309px")
 }
 
@@ -13,6 +13,7 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor } = props;
     
     const actionProps = Object.entries(actions).map(([actionId, playerAction]) => ({
+        display: playerAction.display,
         action: actionId,
         x: playerAction.x,
         y: playerAction.y,
@@ -26,7 +27,7 @@ const Shores = (props: SpecificLocationProps): React.ReactElement => {
             playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
         handleAction: handleAction(actionId),
         triggerTooltip: triggerTooltip,
-        tooltipInfo: [actionId, playerAction.description, playerAction.task]
+        tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
     }));
 
     return (

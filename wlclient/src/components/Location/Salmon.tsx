@@ -13,24 +13,24 @@ const Salmon = (props: SpecificLocationProps): React.ReactElement => {
         : "";
 
     const actions: Record<string, PlayerAction> = {
-        [Actions.specificActions.SALMON.EXPLORE]: new DynamicPlayerAction("Salmon Street is a residential district. It was built around an Oxygen Stream located here.", 
+        [Actions.specificActions.SALMON.EXPLORE]: new DynamicPlayerAction("Explore", "Salmon Street is a residential district. It was built around an Oxygen Stream located here.", 
             "Use 5 minutes of Oxygen.", "578px", "362px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
             (): void => { return; },),
-        [Actions.specificActions.SALMON.CONFRONT]: new PlayerAction("The children are chasing each other with the long and pointy stick. Tell them what is right.", 
+        [Actions.specificActions.SALMON.CONFRONT]: new PlayerAction("Confront", "The children are chasing each other with the long and pointy stick. Tell them what is right.", 
             "Have any member of your team perform Project MTW.", "142px", "542px",
             (playerState) => playerState.quests[questIds.ARGUMENT]?.status === 'incomplete'),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
+        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store Oxygen", "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
             "No task required.", "870px", "488px",
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction("Withdraw all Oxygen from your Oxygen Pump.", 
+        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction("Withdraw Oxygen", "Withdraw all Oxygen from your Oxygen Pump.", 
             "No task required.", "870px", "543px",
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
+        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "18px", "96px"),
-        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("The Oxygen Stream at Salmon Street is curiously linked with the one located at Catfish Crescent. Both need to be activated at roughly the same time, before you can receive 40 minutes of Oxygen." + coolDownMessage, 
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Get Oxygen", "The Oxygen Stream at Salmon Street is curiously linked with the one located at Catfish Crescent. Both need to be activated at roughly the same time, before you can receive 40 minutes of Oxygen." + coolDownMessage, 
             "Recite Red Cross Promise.", "827px", "127px",
             (playerState) => playerState.streamCooldownExpiry[playerState.locationId] ? new Date(playerState.streamCooldownExpiry[playerState.locationId]) : new Date(0),
             0,
@@ -41,6 +41,7 @@ const Salmon = (props: SpecificLocationProps): React.ReactElement => {
     const actionProps = Object.entries(actions)
         .filter(([, playerAction]) => !(playerAction instanceof DynamicPlayerAction))
         .map(([actionId, playerAction]) => ({
+            display: playerAction.display,
             action: actionId,
             x: playerAction.x,
             y: playerAction.y,
@@ -54,7 +55,7 @@ const Salmon = (props: SpecificLocationProps): React.ReactElement => {
                 playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
             handleAction: handleAction(actionId),
             triggerTooltip: triggerTooltip,
-            tooltipInfo: [actionId, playerAction.description, playerAction.task]
+            tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
     }));
     
     const dynamicActionProps = Object.entries(actions)
@@ -63,6 +64,7 @@ const Salmon = (props: SpecificLocationProps): React.ReactElement => {
             const dynamicPlayerAction = playerAction as DynamicPlayerAction;
             return {
                 actionProps: {
+                    display: playerAction.display,
                     action: actionId,
                     x: dynamicPlayerAction.x,
                     y: dynamicPlayerAction.y,
@@ -76,7 +78,7 @@ const Salmon = (props: SpecificLocationProps): React.ReactElement => {
                         dynamicPlayerAction.getEnabled ? dynamicPlayerAction.getEnabled(playerState) : true,
                     handleAction: handleAction(actionId),
                     triggerTooltip: triggerTooltip,
-                    tooltipInfo: [actionId, dynamicPlayerAction.description, dynamicPlayerAction.task]
+                    tooltipInfo: [playerAction.display, dynamicPlayerAction.description, dynamicPlayerAction.task]
                 },
                 timeToCompare: dynamicPlayerAction.timeToCompare(playerState),
                 howRecentToTrigger: dynamicPlayerAction.howRecentToTrigger,
@@ -87,7 +89,7 @@ const Salmon = (props: SpecificLocationProps): React.ReactElement => {
     
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator('corals.png')} />
+            <img src={imgDirectoryGenerator('salmon.png')} />
             {actionProps.map((info: ActionProps, index) => {
                 return <Action key={index} {...info} />;
             })}

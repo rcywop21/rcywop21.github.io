@@ -98,6 +98,7 @@ const Game = (props: GameProps): React.ReactElement => {
                 triggerTooltip={triggerTooltip}
             />
             <LocationComponent 
+                globalState={globalState}
                 playerState={playerState} 
                 handleAction={handleSpecificAction} 
                 handleTravel={handleTravel}

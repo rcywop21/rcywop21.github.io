@@ -1,7 +1,6 @@
 import React from 'react';
 import Action from './Action';
 import { ActionProps } from './Action';
-import { PlayerState } from 'wlcommon';
 
 export interface DynamicActionProps {
     actionProps: ActionProps;
