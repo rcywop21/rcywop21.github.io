@@ -1,6 +1,7 @@
 import { existsSync } from 'fs';
 import { FileHandle, open } from 'fs/promises';
-import { CrimsonAlarm, GameState, PlayerState, questIds, TeamId } from 'wlcommon';
+import { GameState, PlayerState, questIds, TeamId } from 'wlcommon';
+import logger from './logger';
 import { makeIssueQuestTransform } from './questRewards';
 import { applyTransform, gameState, makeGlobalGameState } from './stateMgr';
 
@@ -28,7 +29,9 @@ const makeStartingPlayerState = (id: TeamId): PlayerState => ({
 });
 
 export const setupFreshGameState = (): void => {
+    logger.log('info', 'Setting up fresh game state...');
     gameState.global = makeGlobalGameState();
+    gameState.players = [];
 
     for (let i = 0; i <= 10; ++i) {
         gameState.players.push(makeStartingPlayerState(i as TeamId));
@@ -51,6 +54,7 @@ export const saveGameState = async (): Promise<void> => {
 }
 
 export const loadGameState = async (): Promise<void> => {
+    logger.log('info', 'Loading game state from disk...');
     let fileHandle: FileHandle;
     try {
         fileHandle = await open(SAVE_FILE, 'r');

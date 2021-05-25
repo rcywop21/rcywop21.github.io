@@ -8,7 +8,7 @@ import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
 import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './questRewards';
 import { Reply, SocketHandler } from './socketHandlers';
-import setupGameState from './startup';
+import setupGameState, { saveGameState, setupFreshGameState } from './startup';
 import { applyTransform, gameState, makeGlobalGameState, makePlayerStatTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
 
 const commands = {
@@ -196,12 +196,15 @@ const commands = {
                 throw 'Unknown option. Should be set | change | clear.'
         }
     },
-    reset: (_: string[], reply: Reply) => {
-        gameState.global = makeGlobalGameState();
-        gameState.players = [];
-        setupGameState();
+    reset: (_: unknown, reply: Reply) => {
+        setupFreshGameState();
         reply('cmdok', 'Game reset.');
+    },
+    save: (_: unknown, reply: Reply) => {
+        saveGameState();
+        reply('cmdok', 'Game saved.');
     }
+
 };
 
 export const onAdminHandler: SocketHandler<string[]> = async (

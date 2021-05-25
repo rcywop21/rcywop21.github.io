@@ -42,6 +42,6 @@ io.on('connection', (socket) => {
 });
 
 setInterval(onTick, 500);
-setInterval(onBackup, 3000);
+setInterval(onBackup, 30000);
 
 listen();
