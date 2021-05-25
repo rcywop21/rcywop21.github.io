@@ -35,7 +35,7 @@ jobs:
         run: |
           cd wlcommon
           npm install
-          npm run build
+          CI=false npm run build
           ../getwlcommon.sh
           
       - name: Setup wlclient
