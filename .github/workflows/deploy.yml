@@ -15,7 +15,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  deploy-client:
+  deploy:
     runs-on: ubuntu-latest
     env:
       REACT_APP_BACKEND: ${{ secrets.BACKEND_HOST }}
@@ -30,9 +30,23 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Install and build
+          
+      - name: Setup wlcommon
         run: |
+          cd wlcommon
+          npm install
+          npm run build
+          ../getwlcommon.sh
+
+      - name: Setup wlserver
+        run: |
+          cd ../wlserver
+          npm install
+          npm run build
+          
+      - name: Setup wlclient
+        run: |
+          cd ../wlclient
           npm install
           npm run build
         
