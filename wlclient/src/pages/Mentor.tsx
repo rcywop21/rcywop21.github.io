@@ -46,7 +46,7 @@ const Mentor = (props: MentorProps): React.ReactElement => {
     return (
         <div>
             <Login
-                mode="player"
+                mode="mentor"
                 updateLoggedIn={updateLoggedIn}
                 updateGlobalState={setGlobalState}
                 updatePlayerState={setPlayerState}
