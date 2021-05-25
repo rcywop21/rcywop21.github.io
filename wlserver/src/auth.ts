@@ -1,11 +1,4 @@
-import { FileHandle, open } from 'fs/promises';
-
-export type ClientType = 'player' | 'mentor' | 'admin';
-
-export const asValidClientType = (x: string): ClientType | null => {
-    switch (x) {
-        case 'player':
-            return 'player';
+import { FileHandle, open } from 'fs/promises'; export type ClientType = 'player' | 'mentor' | 'admin'; export const asValidClientType = (x: string): ClientType | null => { switch (x) { case 'player': return 'player';
         case 'mentor':
             return 'mentor';
         case 'admin':
