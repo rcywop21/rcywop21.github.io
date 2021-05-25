@@ -1,4 +1,6 @@
 import React from 'react';
+import DynamicAction from './DynamicAction';
+import { DynamicActionProps } from './DynamicAction';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Actions } from 'wlcommon';
@@ -61,13 +63,26 @@ const Store = (props: SpecificLocationProps): React.ReactElement => {
         }
         actionProps.push(currActionProps);
     }
+    
+    const testDynamicActionProps: DynamicActionProps = {
+        actionProps: actionProps.filter((ap) => ap.action === Actions.specificActions.STORE.BUY_MAP)[0],
+        timeToCompare: playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
+        howRecentToTrigger: 300000,
+        triggerEffectsIfRecent: (setIsVisible, setIsEnabled): void => {
+            setIsEnabled(false);
+        },
+        triggerEffectsIfNotRecent: (setIsVisible, setIsEnabled): void => {
+            return;
+        }
+    }
 
     return (
         <React.Fragment>
             <img src={imgDirectoryGenerator('store.png')} />
-            {actionProps.map((info: ActionProps) => {
+            <DynamicAction {...testDynamicActionProps} />
+            {/*actionProps.map((info: ActionProps) => {
                 return <Action key="" {...info} />;
-            })}
+            })*/}
         </React.Fragment>
     );
 };

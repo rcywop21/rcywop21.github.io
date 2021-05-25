@@ -1,5 +1,3 @@
-/*eslint-disable*/
-
 import React from 'react';
 import { tooltipTypes, TooltipType } from '../Popups/Tooltip';
 import './Action.css';
