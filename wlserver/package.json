@@ -27,7 +27,8 @@
     },
     "scripts": {
         "start": "nodemon -r dotenv/config index.ts",
-        "build": "tsc --project ./",
-        "format": "prettier --write . && yarn run eslint --fix ."
+        "build": "tsc --project ./ && cp -r .env env/ build/",
+        "format": "prettier --write . && yarn run eslint --fix .",
+        "serve": "pm2 start build/index.js --name \"wlserver\""
     }
 }
