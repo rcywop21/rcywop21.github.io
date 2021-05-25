@@ -1,13 +1,14 @@
 import winston from 'winston';
 import * as Transport from 'winston-transport';
 import expressWinston from 'express-winston';
+import { NODE_ENV } from './config';
 
 const transports: Transport[] = [
     new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
     new winston.transports.File({ filename: 'logs/combined.log' }),
 ];
 
-if (process.env.NODE_ENV !== 'production') {
+if (NODE_ENV !== 'production') {
     transports.push(
         new winston.transports.Console({ format: winston.format.simple() })
     );

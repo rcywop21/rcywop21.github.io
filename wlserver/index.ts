@@ -11,6 +11,7 @@ import { onAdminHandler } from './src/admin';
 import logger from './src/logger';
 import setupGameState from './src/startup';
 import onTick from './src/tick';
+import onBackup from './src/backup';
 
 setupGameState();
 
@@ -41,5 +42,6 @@ io.on('connection', (socket) => {
 });
 
 setInterval(onTick, 500);
+setInterval(onBackup, 30000);
 
 listen();
