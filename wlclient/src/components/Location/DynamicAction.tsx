@@ -44,6 +44,7 @@ const DynamicAction = (props: DynamicActionProps): React.ReactElement => {
     
     actionProps.isVisible = isVisible && initialIsVisible;
     actionProps.isEnabled = isEnabled && initialIsEnabled;
+
     return <Action {...actionProps}/>;
 }
 

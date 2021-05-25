@@ -120,7 +120,11 @@ const Game = (props: GameProps): React.ReactElement => {
                 notifications={playerNotifs} 
                 quests={playerState.quests} 
             />
-            <Journal />
+            <Journal 
+                isMentor={isMentor}
+                playerState={playerState}
+                globalState={globalState}
+            />
         </div>
     );
 };
