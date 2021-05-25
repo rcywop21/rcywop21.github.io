@@ -3,11 +3,12 @@ import JournalMenu from './JournalMenu';
 import QuestJournal from './QuestJournal';
 import Notes from './Notes';
 import Oxygen from './Oxygen';
-import { PlayerState } from 'wlcommon';
+import { PlayerState, GlobalState } from 'wlcommon';
 import './Journal.css';
 
 export interface JournalProps {
     playerState: PlayerState;
+    globalState: GlobalState;
     isMentor?: boolean;
 }
 
@@ -18,7 +19,7 @@ export enum JournalPages {
 }
 
 const Journal = (props: JournalProps): React.ReactElement => {
-    const { playerState, isMentor } = props;
+    const { playerState, globalState, isMentor } = props;
     
     const [page, setPage] = React.useState<JournalPages>(JournalPages.QUEST_JOURNAL);
     
@@ -27,9 +28,9 @@ const Journal = (props: JournalProps): React.ReactElement => {
     }
     
     const pageElements: Map<JournalPages, React.ReactElement> = new Map([
-        [JournalPages.QUEST_JOURNAL, <QuestJournal key="" questData={playerState.quests} />],
-        [JournalPages.NOTES, <Notes key="" playerState="" />],
-        [JournalPages.OXYGEN, <Oxygen key="" playerState="" />]
+        [JournalPages.QUEST_JOURNAL, <QuestJournal key="qj" questData={playerState.quests} />],
+        [JournalPages.NOTES, <Notes key="n" playerState="" />],
+        [JournalPages.OXYGEN, <Oxygen key="o" playerState={playerState} globalState={globalState}/>]
     ]);
     const pageElement: React.ReactElement = pageElements.get(page)!;
     

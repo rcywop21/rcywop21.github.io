@@ -33,7 +33,7 @@ const QuestJournalInfo = (props: QuestJournalInfoProps): React.ReactElement => {
     
     return (
         <div>
-            <h3 className="subtitle">{title}</h3>
+            <h3 className="subtitle subtitleColor">{title}</h3>
             <p>{description}</p>
             <p>{orderInstructionText}</p>
             <ul>

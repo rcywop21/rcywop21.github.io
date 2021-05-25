@@ -18,7 +18,6 @@
 }
 
 .journal .subtitle {
-    color: #E1614B;
     padding: 0;
     margin: 0;
 }
@@ -26,4 +25,10 @@
 .journal .helptext {
     padding: 0 0 10px 0;
     margin: 0;
+    font-size: 15px;
+    color: antiquewhite;
+}
+
+.journal .subtitleColor {
+    color: #E1614B;
 }

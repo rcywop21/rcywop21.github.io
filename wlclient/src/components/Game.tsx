@@ -122,6 +122,7 @@ const Game = (props: GameProps): React.ReactElement => {
             <Journal 
                 isMentor={isMentor}
                 playerState={playerState}
+                globalState={globalState}
             />
         </div>
     );

@@ -9,8 +9,8 @@ const Notes = (props: NotesProps): React.ReactElement => {
     
     return (
         <div>
-            <h2>NOTES</h2>
-            <p>bleh</p>
+            <h2 className="journalTitle">NOTES</h2>
+            <p>{`This doesn't do anything (yet).`}</p>
         </div>
     );
 }
