@@ -19,6 +19,7 @@ const makeStartingPlayerState = (id: TeamId): PlayerState => ({
     unlockedShrine: false,
     unlockedWoods: false,
     pausedOxygen: null,
+    challengeMode: null,
 });
 
 const setupGameState = (): void => {
