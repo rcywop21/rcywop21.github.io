@@ -13,15 +13,15 @@ const Bubble = (props: SpecificLocationProps): React.ReactElement => {
         : "";
 
     const actions: Record<string, PlayerAction> = {
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
+        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store Oxygen", "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
             "No task required.", "870px", "488px",
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction("Withdraw all Oxygen from your Oxygen Pump.", 
+        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction("Withdraw Oxygen", "Withdraw all Oxygen from your Oxygen Pump.", 
             "No task required.", "870px", "543px",
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
+        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "434px", "524px"),
-        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Each of you has to show a different item from the following: Pencil case, phone application and items you bring on a holiday." + coolDownMessage, 
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Get Oxygen", "Each of you has to show a different item from the following: Pencil case, phone application and items you bring on a holiday." + coolDownMessage, 
             "Recite Red Cross Promise.", "55px", "239px",
             (playerState) => playerState.streamCooldownExpiry[playerState.locationId] ? new Date(playerState.streamCooldownExpiry[playerState.locationId]) : new Date(0),
             0,
@@ -33,6 +33,7 @@ const Bubble = (props: SpecificLocationProps): React.ReactElement => {
     const actionProps = Object.entries(actions)
         .filter(([, playerAction]) => !(playerAction instanceof DynamicPlayerAction))
         .map(([actionId, playerAction]) => ({
+            display: playerAction.display,
             action: actionId,
             x: playerAction.x,
             y: playerAction.y,
@@ -46,7 +47,7 @@ const Bubble = (props: SpecificLocationProps): React.ReactElement => {
                 playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
             handleAction: handleAction(actionId),
             triggerTooltip: triggerTooltip,
-            tooltipInfo: [actionId, playerAction.description, playerAction.task]
+            tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
     }));
     
     const dynamicActionProps = Object.entries(actions)
@@ -55,6 +56,7 @@ const Bubble = (props: SpecificLocationProps): React.ReactElement => {
             const dynamicPlayerAction = playerAction as DynamicPlayerAction;
             return {
                 actionProps: {
+                    display: playerAction.display,
                     action: actionId,
                     x: dynamicPlayerAction.x,
                     y: dynamicPlayerAction.y,
@@ -68,7 +70,7 @@ const Bubble = (props: SpecificLocationProps): React.ReactElement => {
                         dynamicPlayerAction.getEnabled ? dynamicPlayerAction.getEnabled(playerState) : true,
                     handleAction: handleAction(actionId),
                     triggerTooltip: triggerTooltip,
-                    tooltipInfo: [actionId, dynamicPlayerAction.description, dynamicPlayerAction.task]
+                    tooltipInfo: [playerAction.display, dynamicPlayerAction.description, dynamicPlayerAction.task]
                 },
                 timeToCompare: dynamicPlayerAction.timeToCompare(playerState),
                 howRecentToTrigger: dynamicPlayerAction.howRecentToTrigger,
@@ -79,7 +81,7 @@ const Bubble = (props: SpecificLocationProps): React.ReactElement => {
     
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator('corals.png')} />
+            <img src={imgDirectoryGenerator('bubble.png')} />
             {actionProps.map((info: ActionProps, index) => {
                 return <Action key={index} {...info} />;
             })}

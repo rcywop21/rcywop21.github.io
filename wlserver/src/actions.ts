@@ -1,9 +1,7 @@
 import {
-    Actions,
+   Actions,
     Locations,
     Util,
-    QuestId,
-    quests,
     questIds,
     itemDetails,
     Action,
@@ -16,7 +14,7 @@ import {
     makeRemoveOxygenTransform,
     updateStreamCooldownTransform,
 } from './oxygen';
-import { makePostCompletionTransform } from './questRewards';
+import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './questRewards';
 import {
     composite,
     makeAddMessageTransform,
@@ -29,74 +27,6 @@ const actionList = {
     oxygen: Object.values(Actions.ALL_OXYGEN),
 };
 
-export const makeIssueQuestTransform = (questId: QuestId): Transform => (
-    state
-) => {
-    if (state.playerState.quests[questId]) return;
-    const questDetails = quests[questId];
-    if (questDetails === undefined) throw `Unknown quest ID ${questId}`;
-    return composite(
-        makeAddMessageTransform(
-            `You have received a new quest - ${quests[questId].name}. Check your Quest Log for more information.`
-        ),
-        makePlayerStatTransform('quests', {
-            ...state.playerState.quests,
-            [questId]: {
-                id: questId,
-                status: 'incomplete',
-                stages: new Array(questDetails.stages.length).fill(false),
-            },
-        })
-    )(state);
-};
-
-export const makeAdvanceQuestTransform = (
-    questId: QuestId,
-    stage: number,
-    admin = false
-): Transform => (state) => {
-    // quest validation
-    if (!state.playerState.quests[questId]) {
-        if (admin)
-            throw `Player does not have quest with quest ID ${questId} active.`;
-        else return state;
-    }
-
-    const questState = { ...state.playerState.quests[questId] };
-    questState.stages = [...questState.stages];
-
-    if (questState.stages[stage]) return state;
-
-    // stage validation
-    if (
-        quests[questId].stageOrder === 'inOrder' &&
-        stage > 0 &&
-        !questState.stages[stage - 1]
-    ) {
-        if (admin)
-            throw `Player has not completed stage ${
-                stage - 1
-            } required for 'inOrder' quest with ID ${questId}.`;
-        else return state;
-    }
-
-    // set stage true
-    questState.stages[stage] = true;
-
-    if (questState.stages.every((x) => x)) questState.status = 'completed';
-
-    let result = makePlayerStatTransform('quests', {
-        ...state.playerState.quests,
-        [questId]: questState,
-    })(state);
-
-    // quest is completed
-    if (questState.status === 'completed') {
-        result = makePostCompletionTransform(questId)(result);
-    }
-
-    return result;
-};
 
 const applyAction: Transform = (state) => {
     if (!state.playerState.stagedAction) throw 'No action staged.';
@@ -133,7 +63,7 @@ const applyLocationActions: Record<
                 ),
                 makePlayerStatTransform(
                     'oxygenUntil',
-                    new Date(now + (doChallengeMode ? 600000 : 1200000)),
+                    new Date(now + (doChallengeMode ? 240000 : 1200000)),
                 ),
                 makePlayerStatTransform(
                     'locationId',
@@ -142,6 +72,7 @@ const applyLocationActions: Record<
             )(state); 
             if (doChallengeMode) {
                 result = makePlayerStatTransform('challengeMode', new Date(now + 1800000))(result);
+                result = makeAddMessageTransform("You are now in Challenge Mode. Reminder: In Challenge Mode, you will only receive 1/5 the normal amount of Oxygen from diving and from Oxygen Streams. Bring the Unicorn's Hair to the Shrine and survive for 30 minutes without resurfacing to complete your quest!")(result);
             }
             return result;
         }
@@ -217,6 +148,7 @@ const applyLocationActions: Record<
     },
     [Locations.locationIds.STATUE]: {
         [Actions.specificActions.STATUE.EXPLORE]: composite(
+            makeAdvanceQuestTransform(questIds.ARTEFACTS_4, 0),
             makeAdvanceQuestTransform(questIds.FINCHES, 1),
             makeAddMessageTransform(
                 'You find a mysterious engraving at the base of the statue. It seems to be written in some sort of ancient language...'
@@ -245,7 +177,7 @@ const applyLocationActions: Record<
                 `Player ${state.playerState.id} has accessed the Oxygen Stream at ${Locations.locationIds.STATUE}.`
             );
             return composite(
-                makeAddOxygenTransform(oxygenToAdd),
+                makeAddOxygenTransform(oxygenToAdd / 250),
                 updateStreamCooldownTransform
             )({
                 ...state,
@@ -260,10 +192,15 @@ const applyLocationActions: Record<
         },
     },
     [Locations.locationIds.LIBRARY]: {
-        [Actions.specificActions.LIBRARY.EXPLORE]: composite(
-            makeIssueQuestTransform(questIds.ARTEFACTS_1),
-            makeRemoveOxygenTransform(300)
-        ),
+        [Actions.specificActions.LIBRARY.EXPLORE]: (state) => { 
+            let result = composite(
+                makeIssueQuestTransform(questIds.ARTEFACTS_1),
+                makeRemoveOxygenTransform(300)
+            )(state);
+            if (result.playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty)
+                result = makeAdvanceQuestTransform(questIds.ARTEFACTS_1, 0)(result)
+            return result;
+        },
         [Actions.specificActions.LIBRARY.STUDY_CRIMSON]: (state) => {
             if (!state.playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty)
                 throw 'Requirements not met.';
@@ -394,6 +331,7 @@ const applyLocationActions: Record<
         [Actions.specificActions.KELP.CLIMB_DOWN]: composite(
             makeAdvanceQuestTransform(questIds.SHRINE_1, 0),
             makePlayerStatTransform('locationId', locationIds.SHRINE),
+            makePlayerStatTransform('unlockedWoods', true),
             makePlayerStatTransform('unlockedShrine', true),
         ),
         [Actions.specificActions.KELP.HARVEST]: (state) => {
@@ -401,8 +339,11 @@ const applyLocationActions: Record<
                 makeAdvanceQuestTransform(questIds.CLOAK_3, 0),
                 makeAddItemTransform(itemDetails.BLINKSEED.id, 1)
             )(state);
-            if (result.playerState.inventory[itemDetails.BLINKSEED.id]?.qty >= 3)
-                result = makeAdvanceQuestTransform(questIds.CLOAK_3, 1)(state);
+            console.log(result.playerState.inventory[itemDetails.BLINKSEED.id]);
+            if (result.playerState.inventory[itemDetails.BLINKSEED.id]?.qty >= 3) {
+                console.log('advancing quest');
+                result = makeAdvanceQuestTransform(questIds.CLOAK_3, 1)(result);
+            }
             return result;
         }
     },
@@ -414,14 +355,19 @@ const applyLocationActions: Record<
         [Actions.specificActions.SHRINE.COLLECT_HAIR]: makeAdvanceQuestTransform(questIds.SHRINE_2, 5)
     },
     [Locations.locationIds.UMBRAL]: {
-        [Actions.specificActions.UMBRAL.EXPLORE]: makeIssueQuestTransform(questIds.CLOAK_1),
+        [Actions.specificActions.UMBRAL.EXPLORE]: (state) => { 
+            let result = makeIssueQuestTransform(questIds.CLOAK_1)(state);
+            if (state.playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty)
+                result = makeAdvanceQuestTransform(questIds.CLOAK_1, 0)(result);
+            return result;
+        },
         [Actions.specificActions.UMBRAL.GIVE_PAN]: (state) => {
             if (state.playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty)
                 return makeAdvanceQuestTransform(questIds.CLOAK_1, 1)(state);
             throw 'Requirements not met.';
         },
         [Actions.specificActions.UMBRAL.GIVE_ROCK]: composite(
-            makeAdvanceQuestTransform(questIds.CLOAK_1, 1),
+            makeAdvanceQuestTransform(questIds.CLOAK_2, 1),
             makeRemoveItemTransform(itemDetails.BLACK_ROCK.id, 1)
         )
     },
@@ -432,10 +378,14 @@ const applyLocationActions: Record<
         )
     },
     [Locations.locationIds.ALCOVE]: {
-        [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: composite(
-            makeAdvanceQuestTransform(questIds.CHAPTER_2, 1),
-            makeAddItemTransform(itemDetails.PEARL.id, 1)
-        )
+        [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: (state) => { 
+            const result = composite(
+                makeAdvanceQuestTransform(questIds.CHAPTER_2, 1),
+                makeAddItemTransform(itemDetails.PEARL.id, 1)
+            )(state);
+            result.globalState.artefactsFound += 1;
+            return result;
+        }
     }
 };
 
@@ -449,7 +399,8 @@ const applyUnderwaterAction: Transform = (state) => {
                 makeAddMessageTransform('You have resurfaced and returned to Sleepy Shores.'),
                 makeAdvanceQuestTransform(questIds.SHRINE_2, 0),
                 makePlayerStatTransform('oxygenUntil', null),
-                makePlayerStatTransform('locationId', Locations.locationIds.SHORES)
+                makePlayerStatTransform('locationId', Locations.locationIds.SHORES),
+                makePlayerStatTransform('challengeMode', null)
             )(state);
 
         case Actions.ALL_UNDERWATER.STORE_OXYGEN: {

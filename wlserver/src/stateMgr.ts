@@ -4,6 +4,7 @@ import {
     Locations,
     PlayerState,
     QuestId,
+    questIds,
     QuestState,
     TeamId,
 } from 'wlcommon';
@@ -93,11 +94,15 @@ export const makeAddMessageTransform = (...newMsg: string[]): Transform => (
     messages: state.messages.concat(newMsg),
 });
 
+const exemptQuests = [
+    questIds.CHAPTER_2, questIds.CLOAK_1, questIds.ARTEFACTS_3, questIds.FINCHES_2, questIds.ARTEFACTS_1
+];
+
 export const killTransform: Transform = (state) => {
     const playerQuests: Record<QuestId, QuestState> = {};
     Object.entries(state.playerState.quests).forEach(
         ([questId, questState]) => {
-            if (questState.status === 'completed') {
+            if (questState.status === 'completed' || exemptQuests.includes(parseInt(questId))) {
                 playerQuests[questId] = questState;
             } else {
                 playerQuests[questId] = {

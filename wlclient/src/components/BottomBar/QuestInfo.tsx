@@ -27,7 +27,7 @@ const QuestInfo = (props: QuestInfoProps): React.ReactElement => {
     return (
         <div className="questInfo">
             <h4 className="questName">{questName}</h4>
-            { questSteps.map((info) => <p key="" className="questStep">{info}</p>) }
+            { questSteps.map((info, index) => <p key={index} className="questStep">{info}</p>) }
         </div>
     );
 };
