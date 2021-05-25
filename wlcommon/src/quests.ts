@@ -36,7 +36,6 @@ export const questIds = {
     PYRITE: 51,
     CLOAK_2: 52,
     CLOAK_3: 53,
-    CLOAK_4: 54,
 };
 
 const questList: Quest[] = [
@@ -254,6 +253,7 @@ const questList: Quest[] = [
             "Perform the 'Give Chmyrrkyth' action at the Umbral Ruins",
         ],
         stageOrder: 'inOrder',
+        unlocks: questIds.CLOAK_3,
     },
     {
         id: questIds.CLOAK_3,
@@ -270,18 +270,6 @@ const questList: Quest[] = [
             'Travel back to the Umbral Plains.',
         ],
         stageOrder: 'inOrder',
-        unlocks: questIds.CLOAK_4,
-    },
-    {
-        id: questIds.CLOAK_3,
-        name: 'The Man in the Cloak, The End',
-        when: 'You received this by completing The Man in the Cloak, Part 3.',
-        description: [
-            '‘You return to Alyusi, but it seems that he has disappeared. You search around the ruins and call his name, but nobody responds.’',
-            '‘You glance at the blinkseed, and you can’t help but think that it looks, smells, and feels exactly like common seaweed...’',
-        ].join('\n\n'),
-        stages: ['There is nothing you can do.'],
-        stageOrder: 'anyOrder',
     },
 ];
 

@@ -1,4 +1,4 @@
-import { questIds, TeamId } from 'wlcommon';
+import { Locations, questIds, TeamId } from 'wlcommon';
 import { notifyGameState, notifyPlayerState } from './connections';
 import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';

@@ -1,14 +1,14 @@
 import { Server, Socket as BaseSocket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { Actions, Locations, TeamId } from 'wlcommon';
+import { Actions, Locations, questIds, TeamId } from 'wlcommon';
 import applyAction from './actions';
 import {
     getCredentials,
     notifyPlayerState,
-    notifyGameState,
 } from './connections';
 import logger from './logger';
-import { applyTransform, gameState, pauseTransform, resumeTransform, setAction } from './stateMgr';
+import { makeAdvanceQuestTransform } from './questRewards';
+import { applyTransform, gameState, makeAddMessageTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
 
 export type Socket = BaseSocket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -51,6 +51,7 @@ export const onRejectionHandler: SocketHandler<undefined> = async (
     if (!stagedAction) return reply('error', 'No action to reject.');
     setAction(credentials.groupNum, null);
     notifyPlayerState(credentials.groupNum);
+    applyTransform(makeAddMessageTransform('Your action was rejected by your mentor.'), credentials.groupNum);
 };
 
 export const onAcceptHandler: SocketHandler<undefined> = async (
@@ -67,8 +68,9 @@ export const onAcceptHandler: SocketHandler<undefined> = async (
     try {
         applyTransform(applyAction, credentials.groupNum as TeamId);
     } catch (e) {
-        reply('error', e);
         setAction(credentials.groupNum, null);
+        notifyPlayerState(credentials.groupNum);
+        applyTransform(makeAddMessageTransform('Error: ' + e), credentials.groupNum);
         return;
     }
 
@@ -77,8 +79,6 @@ export const onAcceptHandler: SocketHandler<undefined> = async (
         `Group ${credentials.groupNum}'s action of ${stagedAction} was accepted.`
     );
     reply('ok', 'Action accepted successfully.');
-    notifyPlayerState(credentials.groupNum);
-    notifyGameState();
 };
 
 export const onTravelHandler: SocketHandler<string> = async (
@@ -114,6 +114,11 @@ export const onTravelHandler: SocketHandler<string> = async (
         return reply('error', 'Cannot travel to that location.');
 
     gameState.players[credentials.groupNum].locationId = payload;
+
+    if (playerState.quests[questIds.CLOAK_3]?.status === 'incomplete' && destination.id === Locations.locationIds.UMBRAL) {
+        applyTransform(makeAdvanceQuestTransform(questIds.CLOAK_3, 2), credentials.groupNum);
+    }
+
     logger.log(
         'info',
         `Group ${credentials.groupNum} has travelled to ${payload}.`

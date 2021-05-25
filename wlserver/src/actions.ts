@@ -339,8 +339,11 @@ const applyLocationActions: Record<
                 makeAdvanceQuestTransform(questIds.CLOAK_3, 0),
                 makeAddItemTransform(itemDetails.BLINKSEED.id, 1)
             )(state);
-            if (result.playerState.inventory[itemDetails.BLINKSEED.id]?.qty >= 3)
-                result = makeAdvanceQuestTransform(questIds.CLOAK_3, 1)(state);
+            console.log(result.playerState.inventory[itemDetails.BLINKSEED.id]);
+            if (result.playerState.inventory[itemDetails.BLINKSEED.id]?.qty >= 3) {
+                console.log('advancing quest');
+                result = makeAdvanceQuestTransform(questIds.CLOAK_3, 1)(result);
+            }
             return result;
         }
     },
@@ -352,14 +355,19 @@ const applyLocationActions: Record<
         [Actions.specificActions.SHRINE.COLLECT_HAIR]: makeAdvanceQuestTransform(questIds.SHRINE_2, 5)
     },
     [Locations.locationIds.UMBRAL]: {
-        [Actions.specificActions.UMBRAL.EXPLORE]: makeIssueQuestTransform(questIds.CLOAK_1),
+        [Actions.specificActions.UMBRAL.EXPLORE]: (state) => { 
+            let result = makeIssueQuestTransform(questIds.CLOAK_1)(state);
+            if (state.playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty)
+                result = makeAdvanceQuestTransform(questIds.CLOAK_1, 0)(result);
+            return result;
+        },
         [Actions.specificActions.UMBRAL.GIVE_PAN]: (state) => {
             if (state.playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty)
                 return makeAdvanceQuestTransform(questIds.CLOAK_1, 1)(state);
             throw 'Requirements not met.';
         },
         [Actions.specificActions.UMBRAL.GIVE_ROCK]: composite(
-            makeAdvanceQuestTransform(questIds.CLOAK_1, 1),
+            makeAdvanceQuestTransform(questIds.CLOAK_2, 1),
             makeRemoveItemTransform(itemDetails.BLACK_ROCK.id, 1)
         )
     },

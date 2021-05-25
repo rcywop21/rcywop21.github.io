@@ -44,6 +44,10 @@ export const makeAdvanceQuestTransform = (
     }
 
     const questState = { ...state.playerState.quests[questId] };
+    
+    if (questState.status === 'completed')
+        return state;
+
     questState.stages = [...questState.stages];
 
     if (questState.stages[stage]) return state;
@@ -96,7 +100,10 @@ const transforms: Record<QuestId, Transform> = {
         makeAdvanceQuestTransform(questIds.ARTEFACTS_3, 1),
         makeAddItemTransform(itemDetails.STAFF.id, 1)
     ),
-    [questIds.PYRITE]: makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1),
+    [questIds.PYRITE]: composite(
+        makeAdvanceQuestTransform(questIds.CLOAK_1, 0),
+        makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1)
+    ),
     [questIds.SHRINE_2]: (state) => { 
         const result = makeAddItemTransform(itemDetails.UNICORN_TEAR.id, 1)(state);
         result.globalState.artefactsFound += 1;
@@ -105,6 +112,10 @@ const transforms: Record<QuestId, Transform> = {
     [questIds.ARTEFACTS_4]: composite(
         makePlayerStatTransform('locationId', Locations.locationIds.ALCOVE),
         makePlayerStatTransform('unlockedAlcove', true),
+    ),
+    [questIds.CLOAK_1]: (state) => (state.playerState.inventory[itemDetails.BLACK_ROCK.id]?.qty ? makeAdvanceQuestTransform(questIds.CLOAK_2, 0) : identityTransform)(state),
+    [questIds.CLOAK_3]: makeAddMessageTransform(
+        "You return to the Umbral Ruins, but it seems that Alyusi has disappeared. Without returning you your Oxygen! You call his name out loud, but nobody came.\n\nYou glance at the blinkseed, and you can't help but think it looks, smells and feels exactly like common seaweed..."
     )
 };
 
