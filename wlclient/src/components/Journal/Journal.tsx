@@ -22,6 +22,10 @@ const Journal = (props: JournalProps): React.ReactElement => {
     
     const [page, setPage] = React.useState<JournalPages>(JournalPages.QUEST_JOURNAL);
     
+    function handlePageSwitch(page: JournalPages) {
+        return () => { setPage(page); };
+    }
+    
     const pageElements: Map<JournalPages, React.ReactElement> = new Map([
         [JournalPages.QUEST_JOURNAL, <QuestJournal key="" questData={playerState.quests} />],
         [JournalPages.NOTES, <Notes key="" playerState="" />],
@@ -31,7 +35,7 @@ const Journal = (props: JournalProps): React.ReactElement => {
     
     return (
         <div className="journal">
-            <JournalMenu />
+            <JournalMenu handlePageSwitch={handlePageSwitch}/>
             {pageElement}
         </div>
     );

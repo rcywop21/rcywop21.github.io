@@ -1,15 +1,29 @@
 import React from 'react';
+import { JournalPages } from './Journal';
 import './Journal.css';
+import './JournalMenu.css';
 
-const JournalMenu = (): React.ReactElement => {
+export interface JournalMenuProps {
+    handlePageSwitch: (jp: JournalPages) => () => void;
+}
+
+const JournalMenu = (props: JournalMenuProps): React.ReactElement => {
+    const { handlePageSwitch } = props;
     
     return (
-        <div>
-            <button>Quest Journal</button>
+        <div className="journalMenu">
+            <span><b>&emsp;Journal Pages:&emsp;</b></span>
+            <button onClick={handlePageSwitch(JournalPages.QUEST_JOURNAL)}>
+                Quest Journal
+            </button>
             <span>&emsp;</span>
-            <button>Notes</button>
+            <button onClick={handlePageSwitch(JournalPages.NOTES)}>
+                Notes
+            </button>
             <span>&emsp;</span>
-            <button>Oxygen</button>
+            <button onClick={handlePageSwitch(JournalPages.OXYGEN)}>
+                Oxygen
+            </button>
         </div>
     );
 }
