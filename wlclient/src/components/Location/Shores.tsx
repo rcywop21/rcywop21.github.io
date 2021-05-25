@@ -10,29 +10,30 @@ const actions: Record<string, PlayerAction> = {
 }
 
 const Shores = (props: SpecificLocationProps): React.ReactElement => {
-    const { handleAction, triggerTooltip } = props;
+    const { playerState, handleAction, triggerTooltip, isMentor } = props;
     
-    const actionProps: ActionProps[] = [];
-    for (const key in actions) {
-        const playerAction = actions[key];
-        const currActionProps: ActionProps = {
-            action: key,
-            x: playerAction.x,
-            y: playerAction.y,
-            isVisible: playerAction.isVisible,
-            isEnabled: playerAction.isEnabled,
-            handleAction: handleAction(key),
-            triggerTooltip: triggerTooltip,
-            tooltipInfo: [key, playerAction.description, playerAction.task]
-        }
-        actionProps.push(currActionProps);
-    }
+    const actionProps = Object.entries(actions).map(([actionId, playerAction]) => ({
+        action: actionId,
+        x: playerAction.x,
+        y: playerAction.y,
+        isVisible: isMentor ? 
+            true :
+            playerAction.getVisibility ? 
+                playerAction.getVisibility(playerState) : 
+                true,
+        isEnabled: playerAction.getVisibility ? 
+            playerAction.getVisibility(playerState) : true &&
+            playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
+        handleAction: handleAction(actionId),
+        triggerTooltip: triggerTooltip,
+        tooltipInfo: [actionId, playerAction.description, playerAction.task]
+    }));
 
     return (
         <React.Fragment>
             <img src={imgDirectoryGenerator('shores.png')} />
-            {actionProps.map((info: ActionProps) => {
-                return <Action key="" {...info} />;
+            {actionProps.map((info: ActionProps, index) => {
+                return <Action key={index} {...info} />;
             })}
         </React.Fragment>
     );

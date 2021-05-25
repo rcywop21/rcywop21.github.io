@@ -35,16 +35,19 @@ export interface SpecificLocationProps {
     playerState: PlayerState;
     handleAction: (a: string) => () => void;
     triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
+    isMentor?: boolean;
 }
 
 export function getSpecificLocationComponent(playerState: PlayerState,
     handleAction: (a: string) => () => void, 
-    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void): React.ReactElement {
+    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void,
+    isMentor?: boolean): React.ReactElement {
         
     const specificLocationComponentProps = {
         playerState: playerState,
         handleAction: handleAction,
-        triggerTooltip: triggerTooltip
+        triggerTooltip: triggerTooltip,
+        isMentor: isMentor
     };
             
     const SPECIFIC_LOCATION_COMPONENT_MAP: Map<Locations.LocationId, React.ReactElement> = new Map([
@@ -140,8 +143,8 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
         action: "Travel",
         x: "870px",
         y: "433px",
-        isVisible: isTravelVisible,
-        isEnabled: true,
+        isVisible: isMentor ? true : isTravelVisible,
+        isEnabled: isMentor ? isTravelVisible : true,
         handleAction: () => {
             if (!isMentor) {
                 setIsTravelPopupVisible(true);
@@ -160,7 +163,8 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
             >
                 {location.name}
             </p>
-            { getSpecificLocationComponent(playerState, handleAction, triggerTooltip) }
+            { getSpecificLocationComponent(playerState, 
+                handleAction, triggerTooltip, isMentor) }
             <Action {...travelActionProps} />
             <TravelPopup
                 playerState={playerState}

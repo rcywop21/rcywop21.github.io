@@ -1,51 +1,52 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { Actions } from 'wlcommon';
+import { Actions, itemDetails, questIds } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.SHRINE.GIVE_HAIR]: new PlayerAction("The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn's Tear.", 
-        "Give 1 x Unicorn's Hair.", "434px", "449px"),
+        "Give 1 x Unicorn's Hair.", "434px", "449px", undefined,
+        (playerState) => playerState.inventory[itemDetails.UNICORN_HAIR.id] !== undefined),
     [Actions.specificActions.SHRINE.COLLECT_HAIR]: new PlayerAction("Collect the Unicorn Tear from the Shrine.", 
-        "Receive 1 x Unicorn Tear.", "434px", "449px"),
+        "Receive 1 x Unicorn Tear.", "434px", "495px",
+        (playerState) => playerState.quests[questIds.SHRINE_2]?.stages[4],
+        (playerState) => playerState.inventory[itemDetails.UNICORN_TEAR.id] == undefined),
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
-        "No task required.", "870px", "488px"),
+        "No task required.", "870px", "488px",
+        (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
     [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction("Withdraw all Oxygen from your Oxygen Pump.", 
-        "No task required.", "870px", "543px"),
+        "No task required.", "870px", "543px",
+        (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
     [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
         "No task required.", "52px", "123px")
 }
 
 const Shrine = (props: SpecificLocationProps): React.ReactElement => {
-    const { playerState, handleAction, triggerTooltip } = props;
+    const { playerState, handleAction, triggerTooltip, isMentor } = props;
 
-    if (playerState.storedOxygen == null) {
-        actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
-        actions[Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN].isVisible = false;
-    }
-    
-    const actionProps: ActionProps[] = [];
-    for (const key in actions) {
-        const playerAction = actions[key];
-        const currActionProps: ActionProps = {
-            action: key,
-            x: playerAction.x,
-            y: playerAction.y,
-            isVisible: playerAction.isVisible,
-            isEnabled: playerAction.isEnabled,
-            handleAction: handleAction(key),
-            triggerTooltip: triggerTooltip,
-            tooltipInfo: [key, playerAction.description, playerAction.task]
-        }
-        actionProps.push(currActionProps);
-    }
+    const actionProps = Object.entries(actions).map(([actionId, playerAction]) => ({
+        action: actionId,
+        x: playerAction.x,
+        y: playerAction.y,
+        isVisible: isMentor ? 
+            true :
+            playerAction.getVisibility ? 
+                playerAction.getVisibility(playerState) : 
+                true,
+        isEnabled: playerAction.getVisibility ? 
+            playerAction.getVisibility(playerState) : true &&
+            playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
+        handleAction: handleAction(actionId),
+        triggerTooltip: triggerTooltip,
+        tooltipInfo: [actionId, playerAction.description, playerAction.task]
+    }));
 
     return (
         <React.Fragment>
             <img src={imgDirectoryGenerator('shrine.png')} />
-            {actionProps.map((info: ActionProps) => {
-                return <Action key="" {...info} />;
+            {actionProps.map((info: ActionProps, level) => {
+                return <Action key={level} {...info} />;
             })}
         </React.Fragment>
     );
