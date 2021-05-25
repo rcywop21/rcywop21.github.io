@@ -10,7 +10,7 @@ const actions: Record<string, PlayerAction> = {
 }
 
 const Woods = (props: SpecificLocationProps): React.ReactElement => {
-    const { handleAction, triggerTooltip } = props;
+    const { handleAction, triggerTooltip, isMentor } = props;
 
     const actionProps: ActionProps[] = [];
     for (const key in actions) {
@@ -19,8 +19,10 @@ const Woods = (props: SpecificLocationProps): React.ReactElement => {
             action: key,
             x: playerAction.x,
             y: playerAction.y,
-            isVisible: playerAction.isVisible,
-            isEnabled: playerAction.isEnabled,
+            isVisible: isMentor ? true : playerAction.isVisible,
+            isEnabled: isMentor ? 
+                playerAction.isVisible && playerAction.isEnabled : 
+                playerAction.isEnabled,
             handleAction: handleAction(key),
             triggerTooltip: triggerTooltip,
             tooltipInfo: [key, playerAction.description, playerAction.task]

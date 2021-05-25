@@ -18,7 +18,7 @@ const actions: Record<string, PlayerAction> = {
 }
 
 const Anchovy = (props: SpecificLocationProps): React.ReactElement => {
-    const { playerState, handleAction, triggerTooltip } = props;
+    const { playerState, handleAction, triggerTooltip, isMentor } = props;
 
     if (playerState.storedOxygen == null) {
         actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
@@ -32,8 +32,10 @@ const Anchovy = (props: SpecificLocationProps): React.ReactElement => {
             action: key,
             x: playerAction.x,
             y: playerAction.y,
-            isVisible: playerAction.isVisible,
-            isEnabled: playerAction.isEnabled,
+            isVisible: isMentor ? true : playerAction.isVisible,
+            isEnabled: isMentor ? 
+                playerAction.isVisible && playerAction.isEnabled : 
+                playerAction.isEnabled,
             handleAction: handleAction(key),
             triggerTooltip: triggerTooltip,
             tooltipInfo: [key, playerAction.description, playerAction.task]

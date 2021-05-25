@@ -8,7 +8,7 @@ const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.SHRINE.GIVE_HAIR]: new PlayerAction("The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn's Tear.", 
         "Give 1 x Unicorn's Hair.", "434px", "449px"),
     [Actions.specificActions.SHRINE.COLLECT_HAIR]: new PlayerAction("Collect the Unicorn Tear from the Shrine.", 
-        "Receive 1 x Unicorn Tear.", "434px", "449px"),
+        "Receive 1 x Unicorn Tear.", "434px", "495px"),
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
         "No task required.", "870px", "488px"),
     [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction("Withdraw all Oxygen from your Oxygen Pump.", 
@@ -18,7 +18,7 @@ const actions: Record<string, PlayerAction> = {
 }
 
 const Shrine = (props: SpecificLocationProps): React.ReactElement => {
-    const { playerState, handleAction, triggerTooltip } = props;
+    const { playerState, handleAction, triggerTooltip, isMentor } = props;
 
     if (playerState.storedOxygen == null) {
         actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
@@ -32,8 +32,10 @@ const Shrine = (props: SpecificLocationProps): React.ReactElement => {
             action: key,
             x: playerAction.x,
             y: playerAction.y,
-            isVisible: playerAction.isVisible,
-            isEnabled: playerAction.isEnabled,
+            isVisible: isMentor ? true : playerAction.isVisible,
+            isEnabled: isMentor ? 
+                playerAction.isVisible && playerAction.isEnabled : 
+                playerAction.isEnabled,
             handleAction: handleAction(key),
             triggerTooltip: triggerTooltip,
             tooltipInfo: [key, playerAction.description, playerAction.task]
