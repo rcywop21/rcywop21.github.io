@@ -245,7 +245,7 @@ const applyLocationActions: Record<
                 `Player ${state.playerState.id} has accessed the Oxygen Stream at ${Locations.locationIds.STATUE}.`
             );
             return composite(
-                makeAddOxygenTransform(oxygenToAdd),
+                makeAddOxygenTransform(oxygenToAdd / 250),
                 updateStreamCooldownTransform
             )({
                 ...state,
