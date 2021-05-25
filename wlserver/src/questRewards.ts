@@ -24,7 +24,11 @@ const transforms: Record<QuestId, Transform> = {
         1
     ),
     [questIds.PYRITE]: makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1),
-    [questIds.SHRINE_2]: makeAddItemTransform(itemDetails.UNICORN_TEAR.id, 1),
+    [questIds.SHRINE_2]: (state) => { 
+        const result = makeAddItemTransform(itemDetails.UNICORN_TEAR.id, 1)(state);
+        result.globalState.artefactsFound += 1;
+        return result;
+    },
 };
 
 const postUnlock: Record<QuestId, Transform> = {

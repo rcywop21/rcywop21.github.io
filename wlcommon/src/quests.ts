@@ -172,10 +172,9 @@ const questList: Quest[] = [
         description:
             'You have obtained the necessary items and you are now able to retrieve the Pearl of Asclepius. Good luck!',
         stages: [
-            'Travel to the Statue of Triton.',
-            "Perform the 'Explore' action to unlock access to the Hidden Alcove.",
-            'Travel to the Hidden Alcove.',
+            "Perform the 'Explore' action at the Statue of Triton.",
         ],
+        reward: ['Access to the Hidden Alcove'],
         stageOrder: 'inOrder',
     },
     {
@@ -198,7 +197,7 @@ const questList: Quest[] = [
             'The shrinekeeper seems surprised at your arrival. He says that it is very rare for the shrine to have visitors.',
             "After you tell him about the purpose of your journey, the shrinekeeper tells you that you can perform a ritual to receive a Unicorn Tear.",
             "First, you will have to return to the surface to obtain a Unicorn's Hair. After getting the Unicorn's Hair, you will enter Challenge Mode. You must then return to the undersea, give the Unicorn's Hair to the Shrine, and then survive for 30 minutes in Challenge Mode.",
-            'When in Challenge Mode, you will only get HALF the normal amount of Oxygen from diving and Oxygen Streams. Oxygen Pumps will also not work in Challenge Mode.'
+            'When in Challenge Mode, you will only get 1/5 of the normal amount of Oxygen from diving and Oxygen Streams. Oxygen Pumps will also not work in Challenge Mode.'
         ].join('\n\n'),
         stages: [
             "Perform the 'Resurface' action at the Shallows to travel to Sleepy Shores. WARNING: You will lose all your Oxygen when you do this action.",

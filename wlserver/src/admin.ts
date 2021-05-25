@@ -11,7 +11,7 @@ import {
 import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
 import { Reply, SocketHandler } from './socketHandlers';
-import { applyTransform, gameState, pauseTransform, resumeTransform, setAction } from './stateMgr';
+import { applyTransform, gameState, makePlayerStatTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
 
 const commands = {
     state: (payload: string[], reply: Reply): void => {
@@ -161,6 +161,42 @@ const commands = {
     },
     time: (_: string[], reply: Reply) => {
         reply('cmdok', new Date());
+    },
+    challenge: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        const mode = payload.shift();
+        const playerState = gameState.players[playerId];
+        if (playerState.pausedOxygen)
+            throw 'Cannot do this while paused.';
+        switch (mode) {
+            case 'set': {
+                const seconds = parseInt(payload.shift());
+                if (Number.isNaN(seconds) || seconds <= 0)
+                    throw 'Invalid argument.'
+                const deadline = new Date(Date.now() + seconds * 1000);
+                applyTransform(makePlayerStatTransform('challengeMode', deadline), playerId);
+                reply('cmdok', `Set challenge mode to ${deadline}.`)
+                return;
+            }
+            case 'change': {
+                const delta = parseInt(payload.shift());
+                if (Number.isNaN(delta))
+                    throw 'Invalid argument.';
+                if (playerState.challengeMode === null)
+                    throw 'Player is not in Challenge Mode.';
+                const deadline = new Date(playerState.challengeMode.valueOf() + delta * 1000);
+                applyTransform(makePlayerStatTransform('challengeMode', deadline), playerId);
+                reply('cmdok', `Set challenge mode to ${deadline}.`)
+                return;
+            }
+            case 'clear': {
+                applyTransform(makePlayerStatTransform('challengeMode', null), playerId);
+                reply('cmdok', 'Challenge mode cleared.');
+                return;
+            }
+            default:
+                throw 'Unknown option. Should be set | change | clear.'
+        }
     }
 };
 

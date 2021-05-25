@@ -12,7 +12,7 @@ export const makeAddOxygenTransform = (
     if (oxygenUntil === null)
         return state;
 
-    const ms = seconds * (challengeMode ? 500 : 1000);
+    const ms = seconds * (challengeMode ? 200 : 1000);
     const duration = Util.formatDuration(ms);
     logger.log(
         'info',

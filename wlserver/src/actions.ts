@@ -133,7 +133,7 @@ const applyLocationActions: Record<
                 ),
                 makePlayerStatTransform(
                     'oxygenUntil',
-                    new Date(now + (doChallengeMode ? 600000 : 1200000)),
+                    new Date(now + (doChallengeMode ? 240000 : 1200000)),
                 ),
                 makePlayerStatTransform(
                     'locationId',
@@ -142,6 +142,7 @@ const applyLocationActions: Record<
             )(state); 
             if (doChallengeMode) {
                 result = makePlayerStatTransform('challengeMode', new Date(now + 1800000))(result);
+                result = makeAddMessageTransform('You are in Challenge Mode. Reminder: in Challenge Mode, you will only receive 1/5 the normal amount of Oxygen from diving and from Oxygen Streams. Survive for 30 minutes without resurfacing to complete your quest!')(result);
             }
             return result;
         }
@@ -216,14 +217,25 @@ const applyLocationActions: Record<
         ),
     },
     [Locations.locationIds.STATUE]: {
-        [Actions.specificActions.STATUE.EXPLORE]: composite(
-            makeAdvanceQuestTransform(questIds.FINCHES, 1),
-            makeAddMessageTransform(
-                'You find a mysterious engraving at the base of the statue. It seems to be written in some sort of ancient language...'
-            ),
-            makePlayerStatTransform('foundEngraving', true),
-            makeRemoveOxygenTransform(300)
-        ),
+        [Actions.specificActions.STATUE.EXPLORE]: (state) => { 
+            let result = composite(
+                makeAdvanceQuestTransform(questIds.FINCHES, 1),
+                makeAddMessageTransform(
+                    'You find a mysterious engraving at the base of the statue. It seems to be written in some sort of ancient language...'
+                ),
+                makePlayerStatTransform('foundEngraving', true),
+                makeRemoveOxygenTransform(300)
+            )(state);
+            
+            if (result.playerState.quests[questIds.ARTEFACTS_4]) {
+                result = composite(
+                    makePlayerStatTransform('locationId', Locations.locationIds.ALCOVE),
+                    makePlayerStatTransform('unlockedAlcove', true)
+                )(result)
+            }
+
+            return result;
+        },
         [Actions.specificActions.STATUE.DECODE_ENGRAVING]: (state) => {
             if (
                 state.playerState.foundEngraving &&
@@ -394,6 +406,7 @@ const applyLocationActions: Record<
         [Actions.specificActions.KELP.CLIMB_DOWN]: composite(
             makeAdvanceQuestTransform(questIds.SHRINE_1, 0),
             makePlayerStatTransform('locationId', locationIds.SHRINE),
+            makePlayerStatTransform('unlockedWoods', true),
             makePlayerStatTransform('unlockedShrine', true),
         ),
         [Actions.specificActions.KELP.HARVEST]: (state) => {
@@ -449,7 +462,8 @@ const applyUnderwaterAction: Transform = (state) => {
                 makeAddMessageTransform('You have resurfaced and returned to Sleepy Shores.'),
                 makeAdvanceQuestTransform(questIds.SHRINE_2, 0),
                 makePlayerStatTransform('oxygenUntil', null),
-                makePlayerStatTransform('locationId', Locations.locationIds.SHORES)
+                makePlayerStatTransform('locationId', Locations.locationIds.SHORES),
+                makePlayerStatTransform('challengeMode', null)
             )(state);
 
         case Actions.ALL_UNDERWATER.STORE_OXYGEN: {
