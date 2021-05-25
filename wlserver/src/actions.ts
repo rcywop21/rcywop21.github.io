@@ -122,24 +122,29 @@ const applyLocationActions: Record<
     Record<Action, Transform>
 > = {
     [Locations.locationIds.SHORES]: {
-        [Actions.specificActions.SHORES.DIVE]: (state) => composite(
-            makeAdvanceQuestTransform(questIds.CHAPTER_1, 0),
-            makeAdvanceQuestTransform(questIds.SHRINE_2, 2),
-            makeAddMessageTransform(
-                'You dive into the deep blue sea... and arrive at the Shallows!'
-            ),
-            makePlayerStatTransform(
-                'oxygenUntil',
-                new Date(Date.now() + (state.playerState.challengeMode ? 20 * 60 * 1000 : 10 * 60 * 1000)),
-            ),
-            makePlayerStatTransform(
-                'locationId',
-                Locations.locationIds.SHALLOWS
-            ),
-            makePlayerStatTransform(
-                'challengeMode', true
-            )
-        )(state),
+        [Actions.specificActions.SHORES.DIVE]: (state) => { 
+            const doChallengeMode = state.playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty;
+            const now = Date.now();
+            let result = composite(
+                makeAdvanceQuestTransform(questIds.CHAPTER_1, 0),
+                makeAdvanceQuestTransform(questIds.SHRINE_2, 2),
+                makeAddMessageTransform(
+                    'You dive into the deep blue sea... and arrive at the Shallows!'
+                ),
+                makePlayerStatTransform(
+                    'oxygenUntil',
+                    new Date(now + (doChallengeMode ? 600000 : 1200000)),
+                ),
+                makePlayerStatTransform(
+                    'locationId',
+                    Locations.locationIds.SHALLOWS
+                ),
+            )(state); 
+            if (doChallengeMode) {
+                result = makePlayerStatTransform('challengeMode', new Date(now + 1800000))(result);
+            }
+            return result;
+        }
     },
     [Locations.locationIds.CORALS]: {
         [Actions.specificActions.CORALS.EXPLORE]: composite(
@@ -448,47 +453,40 @@ const applyUnderwaterAction: Transform = (state) => {
             )(state);
 
         case Actions.ALL_UNDERWATER.STORE_OXYGEN: {
-            const { oxygenUntil, storedOxygen } = state.playerState;
-            if (storedOxygen === null)
-                throw "You cannot perform this action as you don't have an oxygen tank.";
+            const { oxygenUntil, challengeMode, storedOxygen } = state.playerState;
+            if (oxygenUntil === null || storedOxygen === null)
+                throw 'Requirements not met.';
+            if (challengeMode)
+                throw 'Cannot do this in Challenge Mode.';
 
             const oxygenToStore = Math.max(
                 0,
-                oxygenUntil.valueOf() - Date.now() - 2 * 60 * 1000
+                oxygenUntil.valueOf() - Date.now() - 90 * 1000
             );
-            return makeAddMessageTransform(
-                `You have transferred ${Util.formatDuration(
+
+            return composite(
+                makeAddMessageTransform(`You have transferred ${Util.formatDuration(
                     oxygenToStore
-                )} of Oxygen to storage.`
-            )({
-                ...state,
-                playerState: {
-                    ...state.playerState,
-                    oxygenUntil: new Date(
-                        oxygenUntil.valueOf() - oxygenToStore
-                    ),
-                    storedOxygen: storedOxygen + oxygenToStore,
-                },
-            });
+                )} of Oxygen to storage.`),
+                makePlayerStatTransform('storedOxygen', storedOxygen + oxygenToStore),
+                makeAddOxygenTransform(-oxygenToStore, false)
+            )(state);
         }
 
         case Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN: {
-            const { oxygenUntil, storedOxygen } = state.playerState;
+            const { challengeMode, storedOxygen } = state.playerState;
             if (storedOxygen === null)
                 throw "You cannot perform this action as you don't have an oxygen tank.";
+            if (challengeMode)
+                throw 'Cannot do this in Challenge Mode.';
 
-            return makeAddMessageTransform(
-                `You have withdrawn ${Util.formatDuration(
+            return composite(
+                makeAddMessageTransform(`You have withdrawn ${Util.formatDuration(
                     storedOxygen
-                )} of Oxygen from storage.`
-            )({
-                ...state,
-                playerState: {
-                    ...state.playerState,
-                    oxygenUntil: new Date(oxygenUntil.valueOf() + storedOxygen),
-                    storedOxygen: 0,
-                },
-            });
+                )} of Oxygen from storage.`),
+                makePlayerStatTransform('storedOxygen', 0),
+                makeAddOxygenTransform(storedOxygen, true)
+            )(state);
         }
     }
 

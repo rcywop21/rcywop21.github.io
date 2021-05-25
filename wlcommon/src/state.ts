@@ -35,10 +35,32 @@ export interface CrimsonAlarm {
     weight: number; // weight for this alarm
 }
 
-export interface PlayerState {
+interface SurfaceState {
+    oxygenUntil: null;
+    pausedOxygen: -1 | null;
+    challengeMode: null;
+    challengePausedTime: null;
+}
+
+interface PausedState {
+    oxygenUntil: null;
+    pausedOxygen: number;
+    challengeMode: null;
+    challengePausedTime: number | null;
+}
+
+interface UnpausedState {
+    oxygenUntil: Date;
+    pausedOxygen: null;
+    challengeMode: Date | null;
+    challengePausedTime: null;
+}
+
+type TimerStates = SurfaceState | PausedState | UnpausedState;
+
+interface BasePlayerState {
     id: TeamId;
-    locationId: string;
-    oxygenUntil: Date | null;
+    locationId: LocationId;
     quests: Record<QuestId, QuestState>;
     inventory: Record<ItemId, ItemRecord>;
     streamCooldownExpiry: Record<LocationId, Date>;
@@ -53,9 +75,9 @@ export interface PlayerState {
     unlockedAlcove?: boolean;
     unlockedShrine?: boolean;
     unlockedWoods?: boolean;
-    pausedOxygen: number | null; // number (millisec) if paused, null otherwise
-    challengeMode?: boolean;
 }
+
+export type PlayerState = BasePlayerState & TimerStates;
 
 export interface Message {
     time: Date;

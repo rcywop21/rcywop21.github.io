@@ -1,37 +1,43 @@
 import { Locations, Util } from 'wlcommon';
 import logger from './logger';
-import { makeAddMessageTransform, Transform } from './stateMgr';
+import { makeAddMessageTransform, makePlayerStatTransform, Transform } from './stateMgr';
 
 export const makeAddOxygenTransform = (
     seconds: number,
     verbose = true
 ): Transform => (state) => {
-    const { oxygenUntil, challengeMode } = state.playerState;
-    if (oxygenUntil === null) return state;
+    const { oxygenUntil, challengeMode, pausedOxygen } = state.playerState;
+    if (pausedOxygen !== null || pausedOxygen === -1)
+        throw 'You cannot perform this action while paused.';
+    if (oxygenUntil === null)
+        return state;
+
     const ms = seconds * (challengeMode ? 500 : 1000);
     const duration = Util.formatDuration(ms);
-    const messages = verbose
-        ? [`You have received ${duration} of Oxygen.`]
-        : [];
     logger.log(
         'info',
         `Player ${state.playerState.id} has received ${duration} of Oxygen.`
     );
-    return makeAddMessageTransform(...messages)({
-        ...state,
-        playerState: {
-            ...state.playerState,
-            oxygenUntil: new Date(oxygenUntil.valueOf() + ms),
-        },
-    });
+
+    let result = makePlayerStatTransform('oxygenUntil', new Date(oxygenUntil.valueOf() + ms))(state)
+    if (verbose)
+        result = makeAddMessageTransform(`You have received ${duration} of Oxygen.`)(result);
+
+    return result;
 };
 
 export const makeRemoveOxygenTransform = (
     seconds: number,
     verbose = true
 ): Transform => (state) => {
-    const oxygenUntil = state.playerState.oxygenUntil.valueOf();
-    if (oxygenUntil === null) throw 'Cannot remove oxygen when not underwater.';
+    const oxygenUntil = state.playerState.oxygenUntil?.valueOf();
+    const pausedOxygen = state.playerState.pausedOxygen;
+
+    if (pausedOxygen !== null || pausedOxygen === -1)
+        throw 'You cannot perform this action while paused.';
+    if (oxygenUntil === null)
+        throw 'Cannot remove oxygen when not underwater.';
+
     const requiredOxygenUntil = seconds * 1000 + Date.now();
 
     if (oxygenUntil <= requiredOxygenUntil) {
@@ -45,20 +51,17 @@ export const makeRemoveOxygenTransform = (
 
     const ms = seconds * 1000;
     const duration = Util.formatDuration(ms);
-    const messages = verbose ? [`You have used ${duration} of Oxygen.`] : [];
 
     logger.log(
         'info',
         `Player ${state.playerState.id} has used ${duration} of Oxygen.`
     );
 
-    return makeAddMessageTransform(...messages)({
-        ...state,
-        playerState: {
-            ...state.playerState,
-            oxygenUntil: new Date(oxygenUntil - seconds * 1000),
-        },
-    });
+    let result = makePlayerStatTransform('oxygenUntil', new Date(oxygenUntil - ms))(state);
+    if (verbose)
+        result = makeAddMessageTransform(`You have used ${duration} of Oxygen.`)(result);
+
+    return result;
 };
 
 export const updateStreamCooldownTransform: Transform = (state) => {

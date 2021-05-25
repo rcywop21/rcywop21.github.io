@@ -17,15 +17,23 @@
     text-align: left;
 }
 
+.recentNotif {
+    color: #E1614B;
+}
+
+.oldNotif {
+    color: black;
+}
+
 .innerNotifBox {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     position: absolute;
-    bottom: 0px;
+    bottom: 7px;
     left: 0px;
-    height: 157px;
+    height: 150px;
     width: 731px;
     overflow: auto;
 }

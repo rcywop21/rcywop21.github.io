@@ -1,6 +1,7 @@
 import React from 'react';
 import InventoryItem from './InventoryItem';
 import Timer from './Timer';
+import { TooltipType } from '../Popups/Tooltip';
 import { ItemId, ItemRecord } from 'wlcommon';
 import './TopBar.css';
 
@@ -8,10 +9,11 @@ export interface TopBarProps {
     inventory: Record<ItemId, ItemRecord>;
     oxygenUntil: Date | null;
     crimsonUntil: Date;
+    triggerTooltip: (t?:TooltipType, d?:string[]) => () => void;
 }
 
 const TopBar = (props: TopBarProps): React.ReactElement => {
-    const { inventory, oxygenUntil } = props;
+    const { inventory, oxygenUntil, triggerTooltip } = props;
     const quantifiedInventory: ItemId[] = [];
     Object.values(inventory).forEach((record: ItemRecord): void => {
         for (let i = 0; i < record.qty; i++) {
@@ -22,7 +24,15 @@ const TopBar = (props: TopBarProps): React.ReactElement => {
     return (
         <div className="topBar">
             <div className="inventory">
-                { quantifiedInventory.map((item: ItemId) => { return (<InventoryItem key={item} name={item} />)}) }
+                { quantifiedInventory.map((item: ItemId) => { 
+                    return (
+                        <InventoryItem 
+                            key={item} 
+                            name={item}
+                            triggerTooltip={triggerTooltip}
+                        />
+                    )
+                }) }
             </div>
             <div className="timers">
                 {oxygenUntil && <Timer name="oxygen" until={oxygenUntil} />}
