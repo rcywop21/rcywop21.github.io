@@ -40,13 +40,13 @@ jobs:
 
       - name: Setup wlserver
         run: |
-          cd ../wlserver
+          cd wlserver
           npm install
           npm run build
           
       - name: Setup wlclient
         run: |
-          cd ../wlclient
+          cd wlclient
           npm install
           npm run build
         
@@ -54,4 +54,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.3
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: build # The folder the action should deploy.
+          folder: wlclient/build # The folder the action should deploy.
