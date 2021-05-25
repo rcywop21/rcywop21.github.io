@@ -1,7 +1,7 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { Actions } from 'wlcommon';
+import { Actions, questIds } from 'wlcommon';
 import { PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
@@ -28,7 +28,7 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
         actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
         actions[Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN].isVisible = false;
     }
-    if (!playerState.quests[21]) {
+    if (!playerState.quests[questIds.FINCHES]) {
         actions[Actions.specificActions.CORALS.LEARN_LANG].isVisible = false;
     }
     
