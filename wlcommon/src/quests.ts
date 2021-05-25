@@ -85,8 +85,8 @@ const questList: Quest[] = [
             'The Memorial Corals houses many exhibits, detailing the history of the Undersea civilization. One such exhibit describes a language used by the Undersea a few centuries ago. You have a hunch that knowing this language could help you on your quest.',
         stages: [
             "Perform the 'Learn Language' action to learn the language.",
-            'Search for an object written in the ancient language.',
-            "Perform the 'Decode' action on that object to decode it.",
+            'Search for an engraving written in the ancient language.',
+            "Perform the 'Decode Engraving' action.",
         ],
         unlocks: questIds.FINCHES_2,
         stageOrder: 'inOrder',

@@ -1,5 +1,4 @@
-import { itemDetails, QuestId, questIds, quests } from 'wlcommon';
-import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './actions';
+import { itemDetails, Locations, QuestId, questIds, quests } from 'wlcommon';
 import { makeAddItemTransform } from './inventory';
 import { makeAddOxygenTransform } from './oxygen';
 import {
@@ -11,6 +10,75 @@ import {
     TransformState,
 } from './stateMgr';
 
+export const makeIssueQuestTransform = (questId: QuestId): Transform => (
+    state
+) => {
+    if (state.playerState.quests[questId]) return;
+    const questDetails = quests[questId];
+    if (questDetails === undefined) throw `Unknown quest ID ${questId}`;
+    return composite(
+        makeAddMessageTransform(
+            `You have received a new quest - ${quests[questId].name}. Check your Quest Log for more information.`
+        ),
+        makePlayerStatTransform('quests', {
+            ...state.playerState.quests,
+            [questId]: {
+                id: questId,
+                status: 'incomplete',
+                stages: new Array(questDetails.stages.length).fill(false),
+            },
+        })
+    )(state);
+};
+
+export const makeAdvanceQuestTransform = (
+    questId: QuestId,
+    stage: number,
+    admin = false
+): Transform => (state) => {
+    // quest validation
+    if (!state.playerState.quests[questId]) {
+        if (admin)
+            throw `Player does not have quest with quest ID ${questId} active.`;
+        else return state;
+    }
+
+    const questState = { ...state.playerState.quests[questId] };
+    questState.stages = [...questState.stages];
+
+    if (questState.stages[stage]) return state;
+
+    // stage validation
+    if (
+        quests[questId].stageOrder === 'inOrder' &&
+        stage > 0 &&
+        !questState.stages[stage - 1]
+    ) {
+        if (admin)
+            throw `Player has not completed stage ${
+                stage - 1
+            } required for 'inOrder' quest with ID ${questId}.`;
+        else return state;
+    }
+
+    // set stage true
+    questState.stages[stage] = true;
+
+    if (questState.stages.every((x) => x)) questState.status = 'completed';
+
+    let result = makePlayerStatTransform('quests', {
+        ...state.playerState.quests,
+        [questId]: questState,
+    })(state);
+
+    // quest is completed
+    if (questState.status === 'completed') {
+        result = makePostCompletionTransform(questId)(result);
+    }
+
+    return result;
+};
+
 const transforms: Record<QuestId, Transform> = {
     [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60, false),
     [questIds.FINCHES_2]: composite(
@@ -19,9 +87,14 @@ const transforms: Record<QuestId, Transform> = {
         ),
         makePlayerStatTransform('knowsCrimson', true)
     ),
-    [questIds.LIBRARIAN_PASS]: makeAddItemTransform(
-        itemDetails.LIBRARY_PASS.id,
-        1
+    [questIds.LIBRARIAN_PASS]: composite(
+        makeAdvanceQuestTransform(questIds.ARTEFACTS_1, 0),
+        makeAdvanceQuestTransform(questIds.FINCHES_2, 0),
+        makeAddItemTransform(itemDetails.LIBRARY_PASS.id, 1)
+    ),
+    [questIds.ARGUMENT]: composite(
+        makeAdvanceQuestTransform(questIds.ARTEFACTS_3, 1),
+        makeAddItemTransform(itemDetails.STAFF.id, 1)
     ),
     [questIds.PYRITE]: makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1),
     [questIds.SHRINE_2]: (state) => { 
@@ -29,6 +102,10 @@ const transforms: Record<QuestId, Transform> = {
         result.globalState.artefactsFound += 1;
         return result;
     },
+    [questIds.ARTEFACTS_4]: composite(
+        makePlayerStatTransform('locationId', Locations.locationIds.ALCOVE),
+        makePlayerStatTransform('unlockedAlcove', true),
+    )
 };
 
 const postUnlock: Record<QuestId, Transform> = {
@@ -37,6 +114,7 @@ const postUnlock: Record<QuestId, Transform> = {
             ? makeAdvanceQuestTransform(questIds.ARTEFACTS_2, 0)
             : identityTransform)(state),
     [questIds.CLOAK_1]: (state) => (state.playerState.inventory[itemDetails.BLACK_ROCK.id]?.qty ? makeAdvanceQuestTransform(questIds.CLOAK_2, 0) : identityTransform)(state),
+    [questIds.FINCHES]: (state) => (state.playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty ? makeAdvanceQuestTransform(questIds.FINCHES_2, 0) : identityTransform)(state),
     [questIds.SHRINE_2]: (state) => makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(state)
 };
 

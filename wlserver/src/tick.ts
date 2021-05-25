@@ -1,8 +1,8 @@
 import { questIds, TeamId } from 'wlcommon';
-import { makeAdvanceQuestTransform } from './actions';
 import { notifyGameState, notifyPlayerState } from './connections';
 import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
+import { makeAdvanceQuestTransform } from './questRewards';
 import { applyTransform, composite, gameState, killTransform, makeAddMessageTransform, makePlayerStatTransform } from './stateMgr';
 
 const linkedStreamsTransform = composite(

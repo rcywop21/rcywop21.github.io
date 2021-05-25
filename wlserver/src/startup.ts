@@ -1,5 +1,5 @@
 import { PlayerState, questIds, TeamId } from 'wlcommon';
-import { makeIssueQuestTransform } from './actions';
+import { makeIssueQuestTransform } from './questRewards';
 import { applyTransform, gameState } from './stateMgr';
 
 const makeStartingPlayerState = (id: TeamId): PlayerState => ({

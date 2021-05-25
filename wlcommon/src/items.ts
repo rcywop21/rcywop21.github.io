@@ -53,6 +53,12 @@ export const itemDetails = {
         description:
             "It's a tourist pass to the Statue of Triton! With this ticket, you get close-up access to more parts of the Statue.",
     },
+    STAFF: {
+        id: 'Staff',
+        name: 'Ancient Staff',
+        description:
+            "You suspect it may be the oldest thing you've ever seen... Yet, it is somehow still in very good condition.",
+    },
     BLINKSEED: {
         id: 'Blinkseed',
         name: 'Blinkseed Blades',

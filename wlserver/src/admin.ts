@@ -1,15 +1,12 @@
 import { Locations, QuestId, TeamId } from 'wlcommon';
-import applyAction, {
-    makeAdvanceQuestTransform,
-    makeIssueQuestTransform,
-} from './actions';
+import applyAction  from './actions';
 import {
     getCredentials,
-    notifyGameState,
     notifyPlayerState,
 } from './connections';
 import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
+import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './questRewards';
 import { Reply, SocketHandler } from './socketHandlers';
 import { applyTransform, gameState, makePlayerStatTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
 
