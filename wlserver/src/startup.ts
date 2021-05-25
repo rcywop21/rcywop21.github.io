@@ -1,4 +1,4 @@
-import { GlobalState, PlayerState, questIds, TeamId } from 'wlcommon';
+import { PlayerState, questIds, TeamId } from 'wlcommon';
 import { makeIssueQuestTransform } from './actions';
 import { applyTransform, gameState } from './stateMgr';
 
@@ -20,6 +20,7 @@ const makeStartingPlayerState = (id: TeamId): PlayerState => ({
     unlockedWoods: false,
     pausedOxygen: null,
     challengeMode: null,
+    challengePausedTime: null,
 });
 
 const setupGameState = (): void => {
