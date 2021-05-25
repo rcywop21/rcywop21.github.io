@@ -24,8 +24,21 @@ const Barnacle = (props: SpecificLocationProps): React.ReactElement => {
         actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
         actions[Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN].isVisible = false;
     }
-    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 300000 ) {
-        actions[Actions.specificActions.BARNACLE.EXPLORE].isEnabled = false;
+    
+    const UPDATE_INTERVAL = 1000 / 10;
+    const [timeLeft, setTimeLeft] = React.useState(
+        playerState.oxygenUntil? new Date(playerState.oxygenUntil).valueOf() - Date.now() : 0
+    );
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(playerState.oxygenUntil? new Date(playerState.oxygenUntil).valueOf() - Date.now() : 0);
+        }, UPDATE_INTERVAL);
+        return () => clearInterval(timer);
+    }, [setTimeLeft, UPDATE_INTERVAL, playerState.oxygenUntil]);
+
+    if (timeLeft < 300000 ) {
+        actions[Actions.specificActions.UMBRAL.EXPLORE].isEnabled = false;
     }
     
     const actionProps: ActionProps[] = [];

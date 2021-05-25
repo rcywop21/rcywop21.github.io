@@ -32,7 +32,20 @@ const Umbral = (props: SpecificLocationProps): React.ReactElement => {
     if (!playerState.inventory['BlackRock']?.qty) {
         actions[Actions.specificActions.UMBRAL.GIVE_ROCK].isEnabled = false;
     }
-    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 300000 ) {
+
+    const UPDATE_INTERVAL = 1000 / 10;
+    const [timeLeft, setTimeLeft] = React.useState(
+        playerState.oxygenUntil? new Date(playerState.oxygenUntil).valueOf() - Date.now() : 0
+    );
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(playerState.oxygenUntil? new Date(playerState.oxygenUntil).valueOf() - Date.now() : 0);
+        }, UPDATE_INTERVAL);
+        return () => clearInterval(timer);
+    }, [setTimeLeft, UPDATE_INTERVAL, playerState.oxygenUntil]);
+
+    if (timeLeft < 300000 ) {
         actions[Actions.specificActions.UMBRAL.EXPLORE].isEnabled = false;
     }
     

@@ -43,21 +43,38 @@ const Store = (props: SpecificLocationProps): React.ReactElement => {
     if (playerState.inventory['Pump']?.qty) {
         actions[Actions.specificActions.STORE.BUY_PUMP].isVisible = false;
     }
-    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 300000 ) {
+
+    const UPDATE_INTERVAL = 1000 / 10;
+    const [timeLeft, setTimeLeft] = React.useState(
+        playerState.oxygenUntil? new Date(playerState.oxygenUntil).valueOf() - Date.now() : 0
+    );
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(playerState.oxygenUntil? new Date(playerState.oxygenUntil).valueOf() - Date.now() : 0);
+        }, UPDATE_INTERVAL);
+        return () => clearInterval(timer);
+    }, [setTimeLeft, UPDATE_INTERVAL, playerState.oxygenUntil]);
+
+    if (timeLeft < 300000 ) {
+        actions[Actions.specificActions.UMBRAL.EXPLORE].isEnabled = false;
+    }
+
+    if (timeLeft < 300000 ) {
         actions[Actions.specificActions.STORE.BUY_MAP].isEnabled = false;
         actions[Actions.specificActions.STORE.BUY_GUIDE].isEnabled = false;
     }
-    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 600000 ) {
+    if (timeLeft < 600000 ) {
         actions[Actions.specificActions.STORE.BUY_DOLL].isEnabled = false;
     }
-    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 1200000 ) {
+    if (timeLeft < 1200000 ) {
         actions[Actions.specificActions.STORE.BUY_DISCOVERS].isEnabled = false;
     }
-    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 1800000 ) {
+    if (timeLeft < 1800000 ) {
         actions[Actions.specificActions.STORE.BUY_PUMP].isEnabled = false;
         actions[Actions.specificActions.STORE.BUY_BLACK_ROCK].isEnabled = false;
     }
-    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 2400000 ) {
+    if (timeLeft < 2400000 ) {
         actions[Actions.specificActions.STORE.BUY_BUBBLE_PASS].isEnabled = false;
     }
 
