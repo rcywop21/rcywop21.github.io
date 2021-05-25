@@ -162,13 +162,12 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
     
     return (
         <div className="location">
-            <p 
+            <div
                 className="currLocationTitle"
                 onMouseEnter={triggerTooltip(tooltipTypes.LOCATION, [playerState.locationId])}
                 onMouseLeave={triggerTooltip()}
-            >
-                {location.name}
-            </p>
+            ><span> {location.name} </span>
+            </div>
             { getSpecificLocationComponent(globalState,
                 playerState, handleAction, triggerTooltip, isMentor) }
             <Action {...travelActionProps} />

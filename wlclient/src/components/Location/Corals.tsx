@@ -57,7 +57,7 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
                 playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
             handleAction: handleAction(actionId),
             triggerTooltip: triggerTooltip,
-            tooltipInfo: [actionId, playerAction.description, playerAction.task]
+            tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
     }));
     
     const dynamicActionProps = Object.entries(actions)
@@ -80,7 +80,7 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
                         dynamicPlayerAction.getEnabled ? dynamicPlayerAction.getEnabled(playerState) : true,
                     handleAction: handleAction(actionId),
                     triggerTooltip: triggerTooltip,
-                    tooltipInfo: [actionId, dynamicPlayerAction.description, dynamicPlayerAction.task]
+                    tooltipInfo: [playerAction.display, dynamicPlayerAction.description, dynamicPlayerAction.task]
                 },
                 timeToCompare: dynamicPlayerAction.timeToCompare(playerState),
                 howRecentToTrigger: dynamicPlayerAction.howRecentToTrigger,

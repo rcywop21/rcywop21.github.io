@@ -36,7 +36,7 @@ const Alcove = (props: SpecificLocationProps): React.ReactElement => {
             playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
         handleAction: handleAction(actionId),
         triggerTooltip: triggerTooltip,
-        tooltipInfo: [actionId, playerAction.description, playerAction.task]
+        tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
     }));
 
     return (

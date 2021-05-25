@@ -12,7 +12,7 @@ const Statue = (props: SpecificLocationProps): React.ReactElement => {
         ? " You may reuse this service again at " + new Date(playerState.streamCooldownExpiry[playerState.locationId]).toLocaleTimeString()
         : "";
 
-    const lastUsedMessage = globalState // && globalState?.tritonOxygen.lastExtract
+    const lastUsedMessage = globalState?.tritonOxygen.lastExtract
         ? " This Oxygen stream was last used on " + new Date(globalState?.tritonOxygen.lastExtract).toLocaleTimeString()
         : " No group has used this Oxygen stream yet! Be the first!";
     const actions: Record<string, PlayerAction> = {
@@ -25,7 +25,7 @@ const Statue = (props: SpecificLocationProps): React.ReactElement => {
         [Actions.specificActions.STATUE.DECODE_ENGRAVING]: new PlayerAction("Decode Engraving", "You have found an engraving written in the ancient language. Decode it to learn what it says.", 
             "Decode 'Vwwh Ujaekgf'", "250px", "553px",
             (playerState) => playerState.knowsLanguage),
-        [Actions.specificActions.STATUE.CAST_COOLING_AURA]: new PlayerAction("Cast Aura", "The Crimson's body temperature is kept low as part of its slumber. Prevent it from getting too high!",
+        [Actions.specificActions.STATUE.CAST_COOLING_AURA]: new PlayerAction("Cast Cool Aura", "The Crimson's body temperature is kept low as part of its slumber. Prevent it from getting too high!",
             "Water Parade.", "414px", "324px",
             (playerState) => playerState.knowsCrimson),
         [Actions.specificActions.STATUE.STRENGTHEN_BEFUDDLEMENT]: new PlayerAction("Befuddle Harder", "A Befuddlement Spell keeps the Crimson from waking up. However, it may weaken over time, and you will have to strengthen it.",
@@ -71,7 +71,7 @@ const Statue = (props: SpecificLocationProps): React.ReactElement => {
                 playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
             handleAction: handleAction(actionId),
             triggerTooltip: triggerTooltip,
-            tooltipInfo: [actionId, playerAction.description, playerAction.task]
+            tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
     }));
     
     const dynamicActionProps = Object.entries(actions)
@@ -94,7 +94,7 @@ const Statue = (props: SpecificLocationProps): React.ReactElement => {
                         dynamicPlayerAction.getEnabled ? dynamicPlayerAction.getEnabled(playerState) : true,
                     handleAction: handleAction(actionId),
                     triggerTooltip: triggerTooltip,
-                    tooltipInfo: [actionId, dynamicPlayerAction.description, dynamicPlayerAction.task]
+                    tooltipInfo: [playerAction.display, dynamicPlayerAction.description, dynamicPlayerAction.task]
                 },
                 timeToCompare: dynamicPlayerAction.timeToCompare(playerState),
                 howRecentToTrigger: dynamicPlayerAction.howRecentToTrigger,

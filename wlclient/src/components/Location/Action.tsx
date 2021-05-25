@@ -15,7 +15,7 @@ export interface ActionProps {
 }
 
 export const Action = (props: ActionProps): React.ReactElement => {
-    const { display, action, x, y, isVisible, isEnabled, handleAction, triggerTooltip, tooltipInfo } = props;
+    const { display, x, y, isVisible, isEnabled, handleAction, triggerTooltip, tooltipInfo } = props;
     
     const position = {
         top: y,

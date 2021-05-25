@@ -55,7 +55,6 @@ const Login = (props: LoginProps): React.ReactElement => {
             setErrorMessage(payload as string);
         } else {
             updateLoggedIn(true);
-            console.log(mode);
             if (mode !== 'admin') {
                 const {
                     updatePlayerState,
