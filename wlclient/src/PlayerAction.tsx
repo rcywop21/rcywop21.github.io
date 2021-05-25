@@ -22,3 +22,30 @@ export class PlayerAction {
         this.getEnabled = enabled;
     }
 }
+
+export class DynamicPlayerAction extends PlayerAction {
+    timeToCompare: (ps: PlayerState) => Date;
+    howRecentToTrigger: number;
+    triggerEffectsIfRecent: (v: ((b: boolean) => void), e: ((b: boolean) => void)) => void;
+    triggerEffectsIfNotRecent: (v: ((b: boolean) => void), e: ((b: boolean) => void)) => void;
+    
+    constructor(
+            description: string,
+            task: string,
+            x: string,
+            y: string,
+            timeToCompare: (ps: PlayerState) => Date,
+            howRecentToTrigger: number,
+            triggerEffectsIfRecent: (v: ((b: boolean) => void), e: ((b: boolean) => void)) => void,
+            triggerEffectsIfNotRecent: (v: ((b: boolean) => void), e: ((b: boolean) => void)) => void,
+            visibility?: StatePredicate,
+            enabled?: StatePredicate
+    ) {
+        super(description, task, x, y, visibility, enabled);
+        this.timeToCompare = timeToCompare;
+        this.howRecentToTrigger = howRecentToTrigger;
+        this.triggerEffectsIfRecent = triggerEffectsIfRecent;
+        this.triggerEffectsIfNotRecent = triggerEffectsIfNotRecent;
+    }
+}
+        
