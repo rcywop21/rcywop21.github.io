@@ -36,18 +36,6 @@ const actions: Record<string, PlayerAction> = {
 
 const Store = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor } = props;
-    
-    const testDynamicActionProps: DynamicActionProps = {
-        actionProps: actionProps.filter((ap) => ap.action === Actions.specificActions.STORE.BUY_MAP)[0],
-        timeToCompare: playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
-        howRecentToTrigger: 300000,
-        triggerEffectsIfRecent: (setIsVisible, setIsEnabled): void => {
-            setIsEnabled(false);
-        },
-        triggerEffectsIfNotRecent: (setIsVisible, setIsEnabled): void => {
-            return;
-        }
-    }
 
     const actionProps = Object.entries(actions).map(([actionId, playerAction]) => ({
         action: actionId,
@@ -65,6 +53,18 @@ const Store = (props: SpecificLocationProps): React.ReactElement => {
         triggerTooltip: triggerTooltip,
         tooltipInfo: [actionId, playerAction.description, playerAction.task]
     }));
+    
+    const testDynamicActionProps: DynamicActionProps = {
+        actionProps: actionProps.filter((ap) => ap.action === Actions.specificActions.STORE.BUY_MAP)[0],
+        timeToCompare: playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
+        howRecentToTrigger: 300000,
+        triggerEffectsIfRecent: (setIsVisible, setIsEnabled): void => {
+            setIsEnabled(false);
+        },
+        triggerEffectsIfNotRecent: (setIsVisible, setIsEnabled): void => {
+            return;
+        }
+    }
 
     return (
         <React.Fragment>
