@@ -1,4 +1,5 @@
 import React from 'react';
+import Notification from './Notification';
 import { Message } from 'wlcommon';
 import './Notifications.css';
 
@@ -16,14 +17,14 @@ const Notifications = (props: NotificationsProps): React.ReactElement => {
     
     return (
         <div className="notifications">
-            <h2 className="notifTitle">NOTIFICATIONS {notifications.length}</h2>
+            <h2 className="notifTitle">NOTIFICATIONS</h2>
             <div className="innerNotifBox">
                 {notifications.map((message: Message) => {
-                    return (<p 
-                        className="notif" 
-                        key={message.time.toString()}>
-                        {notifToDisplayString(message)}
-                    </p>);
+                    return (<Notification
+                        key={message.time.toString()}
+                        time={new Date(message.time)}
+                        message={notifToDisplayString(message)}
+                    />);
                 })}
             </div>
         </div>

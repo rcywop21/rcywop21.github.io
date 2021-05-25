@@ -3,7 +3,10 @@ import TopBar from './TopBar/TopBar';
 import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
-import OnActionPopup from './OnActionPopup';
+import OnActionPopup from './Popups/OnActionPopup';
+import { OnActionPopupProps, OnActionPopupMentorProps } from './Popups/OnActionPopup';
+import { TooltipType } from './Popups/Tooltip';
+import Tooltip from './Popups/Tooltip';
 import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
 import './Game.css';
 import { SocketContext } from '../socket/socket';
@@ -12,6 +15,12 @@ export interface GameProps {
     globalState: GlobalState;
     playerState: PlayerState;
     teamId: number;
+    isMentor?: boolean;
+    gameMentorProps?: GameMentorProps;
+}
+
+export interface GameMentorProps {
+    onActionPopupMentorProps: OnActionPopupMentorProps;
 }
 
 /*
@@ -34,8 +43,13 @@ export interface GameProps {
 */
 
 const Game = (props: GameProps): React.ReactElement => {
-    const { globalState, playerState, teamId } = props;
+    const { globalState, playerState, teamId, isMentor, gameMentorProps } = props;
 
+    const [isTooltipVisible, setIsTooltipVisible] = React.useState<boolean>(false);
+    const [tooltipType, setTooltipType] = React.useState<TooltipType>(null);
+    const [tooltipData, setTooltipData] = React.useState<string[]>([""]);
+    const [isTooltipRightSide, setIsTooltipRightSide] = React.useState<boolean>(true);
+    
     const socket = React.useContext(SocketContext);
 
     function handleSpecificAction(action: string) {
@@ -43,29 +57,63 @@ const Game = (props: GameProps): React.ReactElement => {
     }
 
     function handleAction(action: string) {
-        socket?.emit('action', action);
+        if (!isMentor) {
+            socket?.emit('action', action);
+        }
     }
 
     function handleTravel(location: Locations.LocationId) {
         return () => socket?.emit('travel', location);
     }
     
+    function triggerTooltip(type: TooltipType = null, data = [""], isRightSide = true) {
+        return () => {
+            setIsTooltipVisible(type ? true : false);
+            if (type) {
+                setTooltipType(type);
+                setTooltipData(data);
+                setIsTooltipRightSide(isRightSide);
+            }
+        };
+    }
+    
     const playerNotifs: Message[] = globalState.messages
         .filter(message => message.visibility === "all" || message.visibility === teamId);
     
+    const onActionPopupProps: OnActionPopupProps = {
+        action: playerState.stagedAction,
+        isMentor: isMentor,
+    };
+    
+    if (isMentor && gameMentorProps) {
+        onActionPopupProps.mentorProps = gameMentorProps.onActionPopupMentorProps;
+    }
+    
     return (
-        <div className="game">
+        <div className={`game ${isMentor ? "smallTopGap" : "bigTopGap"}`}>
             <TopBar 
                 inventory={playerState.inventory} 
                 oxygenUntil={playerState.oxygenUntil} 
-                crimsonUntil={new Date()} 
+                crimsonUntil={new Date()}
+                triggerTooltip={triggerTooltip}
             />
             <LocationComponent 
                 playerState={playerState} 
                 handleAction={handleSpecificAction} 
-                handleTravel={handleTravel} 
+                handleTravel={handleTravel}
+                triggerTooltip={triggerTooltip}
+                isMentor={isMentor}
             />
-            <OnActionPopup action={playerState.stagedAction} />
+            <OnActionPopup 
+                action={playerState.pausedOxygen ? "pause" : null} 
+                isMentor={isMentor} />
+            <OnActionPopup {...onActionPopupProps} />
+            <Tooltip 
+                isVisible={isTooltipVisible}
+                tooltipType={tooltipType}
+                data={tooltipData}
+                isRightSide={isTooltipRightSide}
+            />
             <BottomBar
                 key={playerNotifs.length}
                 notifications={playerNotifs} 
