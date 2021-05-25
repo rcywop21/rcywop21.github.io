@@ -45,6 +45,30 @@ const Statue = (props: SpecificLocationProps): React.ReactElement => {
         actions[Actions.specificActions.STATUE.PURIFY_CORRUPTION].isVisible = false;
     }
 
+    const UPDATE_INTERVAL = 1000 / 10;
+    const [timeLeft, setTimeLeft] = React.useState(
+        playerState.oxygenUntil
+            ? new Date(playerState.oxygenUntil).valueOf() - Date.now()
+            : playerState.pausedOxygen
+                ? playerState.pausedOxygen
+                : 0
+    );
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(playerState.oxygenUntil 
+                ? new Date(playerState.oxygenUntil).valueOf() - Date.now()
+                : playerState.pausedOxygen
+                    ? playerState.pausedOxygen
+                    : 0);
+        }, UPDATE_INTERVAL);
+        return () => clearInterval(timer);
+    }, [setTimeLeft, UPDATE_INTERVAL, playerState.oxygenUntil, playerState.pausedOxygen]);
+
+    if (timeLeft < 300000 ) {
+        actions[Actions.specificActions.STATUE.EXPLORE].isEnabled = false;
+    }
+
     const actionProps: ActionProps[] = [];
     for (const key in actions) {
         const playerAction = actions[key];

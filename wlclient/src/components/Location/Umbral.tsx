@@ -7,8 +7,8 @@ import { PlayerAction } from '../../PlayerAction';
 const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.UMBRAL.EXPLORE]: new PlayerAction("This is a shady, run-down area. Apparently it used to be a residential district, but the Oxygen Stream here vanished one day, suddenly. You shudder as you walk around the area.", 
         "Use 5 minutes of Oxygen.", "656px", "402px"),
-    [Actions.specificActions.UMBRAL.GIVE_PAN]: new PlayerAction("Give Alyusi the Pyrite Pan.", 
-        "Give 1 x Pyrite Pan.", "579px", "197px"),
+    [Actions.specificActions.UMBRAL.GIVE_PAN]: new PlayerAction("Show Alyusi the Pyrite Pan.", 
+        "Show Pyrite Pan.", "579px", "197px"),
     [Actions.specificActions.UMBRAL.GIVE_ROCK]: new PlayerAction("Give Alyusi the Chmyrrkyth.", 
         "Give 1 x Mysterious Black Rock.", "749px", "177px"),
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
@@ -31,6 +31,30 @@ const Umbral = (props: SpecificLocationProps): React.ReactElement => {
     }
     if (!playerState.inventory['BlackRock']?.qty) {
         actions[Actions.specificActions.UMBRAL.GIVE_ROCK].isEnabled = false;
+    }
+
+    const UPDATE_INTERVAL = 1000 / 10;
+    const [timeLeft, setTimeLeft] = React.useState(
+        playerState.oxygenUntil
+            ? new Date(playerState.oxygenUntil).valueOf() - Date.now()
+            : playerState.pausedOxygen
+                ? playerState.pausedOxygen
+                : 0
+    );
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(playerState.oxygenUntil 
+                ? new Date(playerState.oxygenUntil).valueOf() - Date.now()
+                : playerState.pausedOxygen
+                    ? playerState.pausedOxygen
+                    : 0);
+        }, UPDATE_INTERVAL);
+        return () => clearInterval(timer);
+    }, [setTimeLeft, UPDATE_INTERVAL, playerState.oxygenUntil, playerState.pausedOxygen]);
+
+    if (timeLeft < 300000 ) {
+        actions[Actions.specificActions.UMBRAL.EXPLORE].isEnabled = false;
     }
     
     const actionProps: ActionProps[] = [];

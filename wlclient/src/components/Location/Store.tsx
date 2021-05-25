@@ -43,7 +43,45 @@ const Store = (props: SpecificLocationProps): React.ReactElement => {
     if (playerState.inventory['Pump']?.qty) {
         actions[Actions.specificActions.STORE.BUY_PUMP].isVisible = false;
     }
-    
+
+    const UPDATE_INTERVAL = 1000 / 10;
+    const [timeLeft, setTimeLeft] = React.useState(
+        playerState.oxygenUntil
+            ? new Date(playerState.oxygenUntil).valueOf() - Date.now()
+            : playerState.pausedOxygen
+                ? playerState.pausedOxygen
+                : 0
+    );
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(playerState.oxygenUntil 
+                ? new Date(playerState.oxygenUntil).valueOf() - Date.now()
+                : playerState.pausedOxygen
+                    ? playerState.pausedOxygen
+                    : 0);
+        }, UPDATE_INTERVAL);
+        return () => clearInterval(timer);
+    }, [setTimeLeft, UPDATE_INTERVAL, playerState.oxygenUntil, playerState.pausedOxygen]);
+
+    if (timeLeft < 300000 ) {
+        actions[Actions.specificActions.STORE.BUY_MAP].isEnabled = false;
+        actions[Actions.specificActions.STORE.BUY_GUIDE].isEnabled = false;
+    }
+    if (timeLeft < 600000 ) {
+        actions[Actions.specificActions.STORE.BUY_DOLL].isEnabled = false;
+    }
+    if (timeLeft < 1200000 ) {
+        actions[Actions.specificActions.STORE.BUY_DISCOVERS].isEnabled = false;
+    }
+    if (timeLeft < 1800000 ) {
+        actions[Actions.specificActions.STORE.BUY_PUMP].isEnabled = false;
+        actions[Actions.specificActions.STORE.BUY_BLACK_ROCK].isEnabled = false;
+    }
+    if (timeLeft < 2400000 ) {
+        actions[Actions.specificActions.STORE.BUY_BUBBLE_PASS].isEnabled = false;
+    }
+
     const actionProps: ActionProps[] = [];
     for (const key in actions) {
         const playerAction = actions[key];

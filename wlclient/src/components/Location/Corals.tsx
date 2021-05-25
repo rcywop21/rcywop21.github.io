@@ -40,6 +40,45 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
         tooltipInfo: [actionId, playerAction.description, playerAction.task]
     }));
     
+    /*
+    const UPDATE_INTERVAL = 1000 / 10;
+    const [timeLeft, setTimeLeft] = React.useState(
+        playerState.oxygenUntil
+            ? new Date(playerState.oxygenUntil).valueOf() - Date.now()
+            : playerState.pausedOxygen
+                ? playerState.pausedOxygen
+                : 0
+    );
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(playerState.oxygenUntil 
+                ? new Date(playerState.oxygenUntil).valueOf() - Date.now()
+                : playerState.pausedOxygen
+                    ? playerState.pausedOxygen
+                    : 0);
+        }, UPDATE_INTERVAL);
+        return () => clearInterval(timer);
+    }, [setTimeLeft, UPDATE_INTERVAL, playerState.oxygenUntil, playerState.pausedOxygen]);
+
+    if (timeLeft < 300000 ) {
+        actions[Actions.specificActions.CORALS.EXPLORE].isEnabled = false;
+    }
+
+    const actionProps: ActionProps[] = [];
+    for (const key in actions) {
+        const playerAction = actions[key];
+        const currActionProps: ActionProps = {
+            action: key,
+            x: playerAction.x,
+            y: playerAction.y,
+            isVisible: playerAction.isVisible,
+            isEnabled: playerAction.isEnabled,
+            handleAction: handleAction(key)
+        }
+        actionProps.push(currActionProps);
+    }
+    */
     return (
         <React.Fragment>
             <img src={imgDirectoryGenerator('corals.png')} />
