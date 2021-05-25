@@ -54,7 +54,7 @@ export interface PlayerState {
     unlockedShrine?: boolean;
     unlockedWoods?: boolean;
     pausedOxygen: number | null; // number (millisec) if paused, null otherwise
-    challengeMode?: boolean;
+    challengeMode: Date | null; // null if not activated, Date if deadline
 }
 
 export interface Message {

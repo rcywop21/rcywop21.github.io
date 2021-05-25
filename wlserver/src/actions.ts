@@ -122,24 +122,29 @@ const applyLocationActions: Record<
     Record<Action, Transform>
 > = {
     [Locations.locationIds.SHORES]: {
-        [Actions.specificActions.SHORES.DIVE]: (state) => composite(
-            makeAdvanceQuestTransform(questIds.CHAPTER_1, 0),
-            makeAdvanceQuestTransform(questIds.SHRINE_2, 2),
-            makeAddMessageTransform(
-                'You dive into the deep blue sea... and arrive at the Shallows!'
-            ),
-            makePlayerStatTransform(
-                'oxygenUntil',
-                new Date(Date.now() + (state.playerState.challengeMode ? 20 * 60 * 1000 : 10 * 60 * 1000)),
-            ),
-            makePlayerStatTransform(
-                'locationId',
-                Locations.locationIds.SHALLOWS
-            ),
-            makePlayerStatTransform(
-                'challengeMode', true
-            )
-        )(state),
+        [Actions.specificActions.SHORES.DIVE]: (state) => { 
+            const doChallengeMode = state.playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty;
+            const now = Date.now();
+            let result = composite(
+                makeAdvanceQuestTransform(questIds.CHAPTER_1, 0),
+                makeAdvanceQuestTransform(questIds.SHRINE_2, 2),
+                makeAddMessageTransform(
+                    'You dive into the deep blue sea... and arrive at the Shallows!'
+                ),
+                makePlayerStatTransform(
+                    'oxygenUntil',
+                    new Date(now + (doChallengeMode ? 600000 : 1200000)),
+                ),
+                makePlayerStatTransform(
+                    'locationId',
+                    Locations.locationIds.SHALLOWS
+                ),
+            )(state); 
+            if (doChallengeMode) {
+                result = makePlayerStatTransform('challengeMode', new Date(now + 1800000))(result);
+            }
+            return result;
+        }
     },
     [Locations.locationIds.CORALS]: {
         [Actions.specificActions.CORALS.EXPLORE]: composite(
