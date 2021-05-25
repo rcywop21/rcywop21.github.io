@@ -37,12 +37,6 @@ jobs:
           npm install
           npm run build
           ../getwlcommon.sh
-
-      - name: Setup wlserver
-        run: |
-          cd wlserver
-          npm install
-          npm run build
           
       - name: Setup wlclient
         run: |
