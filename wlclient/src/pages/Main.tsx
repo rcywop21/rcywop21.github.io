@@ -34,7 +34,7 @@ const Main = (props: MainProps): React.ReactElement => {
         });
     }, [socket]);
 
-    if (playerState && globalState && teamId) {
+    if (playerState && globalState && teamId !== undefined) {
         return (
             <div>
                 <Game globalState={globalState} playerState={playerState} teamId={teamId}/>
@@ -45,7 +45,7 @@ const Main = (props: MainProps): React.ReactElement => {
     return (
         <div>
             <Login
-                mode="mentor"
+                mode="player"
                 updateLoggedIn={updateLoggedIn}
                 updateGlobalState={setGlobalState}
                 updatePlayerState={setPlayerState}
