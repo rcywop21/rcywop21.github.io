@@ -3,6 +3,7 @@ import { tooltipTypes, TooltipType } from '../Popups/Tooltip';
 import './Action.css';
 
 export interface ActionProps {
+    display: string;
     action: string;
     x: string;
     y: string;
@@ -14,7 +15,7 @@ export interface ActionProps {
 }
 
 export const Action = (props: ActionProps): React.ReactElement => {
-    const { action, x, y, isVisible, isEnabled, handleAction, triggerTooltip, tooltipInfo } = props;
+    const { display, action, x, y, isVisible, isEnabled, handleAction, triggerTooltip, tooltipInfo } = props;
     
     const position = {
         top: y,
@@ -32,7 +33,7 @@ export const Action = (props: ActionProps): React.ReactElement => {
             onMouseEnter={triggerTooltip(tooltipTypes.ACTION, tooltipInfo ? tooltipInfo : ["derp", "", ""], isTooltipRightSide)}
             onMouseLeave={triggerTooltip()}
         >
-            <p>{action}</p>
+            <p>{display}</p>
         </div>
     );
 };

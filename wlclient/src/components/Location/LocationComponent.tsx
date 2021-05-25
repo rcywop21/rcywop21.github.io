@@ -2,7 +2,7 @@ import React from 'react';
 import { Action, ActionProps } from './Action';
 import TravelPopup from './TravelPopup';
 import { TooltipType, tooltipTypes } from '../Popups/Tooltip';
-import { Locations, PlayerState } from 'wlcommon';
+import { GlobalState, Locations, PlayerState } from 'wlcommon';
 import './LocationComponent.css';
 
 import Shallows from './Shallows';
@@ -24,6 +24,7 @@ import Shrine from './Shrine';
 import Alcove from './Alcove';
 
 export interface LocationProps {
+    globalState: GlobalState;
     playerState: PlayerState;
     handleAction: (a: string) => () => void;
     handleTravel: (a: Locations.LocationId) => () => void;
@@ -32,18 +33,22 @@ export interface LocationProps {
 }
 
 export interface SpecificLocationProps {
+    globalState?: GlobalState;
     playerState: PlayerState;
     handleAction: (a: string) => () => void;
     triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
     isMentor?: boolean;
 }
 
-export function getSpecificLocationComponent(playerState: PlayerState,
+export function getSpecificLocationComponent(
+    globalState: GlobalState,
+    playerState: PlayerState,
     handleAction: (a: string) => () => void, 
     triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void,
     isMentor?: boolean): React.ReactElement {
         
     const specificLocationComponentProps = {
+        globalState: globalState,
         playerState: playerState,
         handleAction: handleAction,
         triggerTooltip: triggerTooltip,
@@ -53,71 +58,71 @@ export function getSpecificLocationComponent(playerState: PlayerState,
     const SPECIFIC_LOCATION_COMPONENT_MAP: Map<Locations.LocationId, React.ReactElement> = new Map([
         [
             Locations.locationIds.SHALLOWS, 
-            <Shallows key="" {...specificLocationComponentProps} />
+            <Shallows key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.SHORES, 
-            <Shores key="" {...specificLocationComponentProps} />
+            <Shores key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.CORALS, 
-            <Corals key="" {...specificLocationComponentProps} />
+            <Corals key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.STORE, 
-            <Store key="" {...specificLocationComponentProps} />
+            <Store key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.WOODS, 
-            <Woods key="" {...specificLocationComponentProps} />
+            <Woods key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.STATUE, 
-            <Statue key="" {...specificLocationComponentProps} />
+            <Statue key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.LIBRARY, 
-            <Library key="" {...specificLocationComponentProps} />
+            <Library key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.ANCHOVY, 
-            <Anchovy key="" {...specificLocationComponentProps} />
+            <Anchovy key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.BARNACLE, 
-            <Barnacle key="" {...specificLocationComponentProps} />
+            <Barnacle key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.SALMON, 
-            <Salmon key="" {...specificLocationComponentProps} />
+            <Salmon key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.KELP, 
-            <Kelp key="" {...specificLocationComponentProps} />
+            <Kelp key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.UMBRAL, 
-            <Umbral key="" {...specificLocationComponentProps} />
+            <Umbral key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.TUNA, 
-            <Tuna key="" {...specificLocationComponentProps} />
+            <Tuna key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.CATFISH, 
-            <Catfish key="" {...specificLocationComponentProps} />
+            <Catfish key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.BUBBLE, 
-            <Bubble key="" {...specificLocationComponentProps} />
+            <Bubble key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.SHRINE, 
-            <Shrine key="" {...specificLocationComponentProps} />
+            <Shrine key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
         [
             Locations.locationIds.ALCOVE, 
-            <Alcove key="" {...specificLocationComponentProps} />
+            <Alcove key={Math.random.toString()} {...specificLocationComponentProps} />
         ],
     ]);
     
@@ -133,13 +138,14 @@ export function imgDirectoryGenerator(imgFileName: string): string {
 }
 
 const LocationComponent = (props: LocationProps): React.ReactElement => {
-    const { playerState, handleAction, handleTravel, triggerTooltip, isMentor } = props;
+    const { globalState, playerState, handleAction, handleTravel, triggerTooltip, isMentor } = props;
     
     const location: Locations.Location = Locations.locationsMapping[playerState.locationId];
     
     const isTravelVisible = playerState.locationId != Locations.locationIds.SHORES || playerState.unlockedWoods == true;
     const [isTravelPopupVisible, setIsTravelPopupVisible] = React.useState(false);  
     const travelActionProps: ActionProps = {
+        display: "Travel",
         action: "Travel",
         x: "870px",
         y: "433px",
@@ -163,8 +169,8 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
             >
                 {location.name}
             </p>
-            { getSpecificLocationComponent(playerState, 
-                handleAction, triggerTooltip, isMentor) }
+            { getSpecificLocationComponent(globalState,
+                playerState, handleAction, triggerTooltip, isMentor) }
             <Action {...travelActionProps} />
             <TravelPopup
                 playerState={playerState}
