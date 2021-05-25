@@ -6,8 +6,10 @@ const JournalMenu = (): React.ReactElement => {
     return (
         <div>
             <button>Quest Journal</button>
-            <button>B</button>
-            <button>C</button>
+            <span>&emsp;</span>
+            <button>Notes</button>
+            <span>&emsp;</span>
+            <button>Oxygen</button>
         </div>
     );
 }

@@ -16,13 +16,36 @@ const QuestJournalInfo = (props: QuestJournalInfoProps): React.ReactElement => {
     const stages = fullQuestInfo.stages;
     const stageInfo = data.stages;
     
+    let currStage = 999;
+    let orderInstructionText = "Complete the following in any order:";
+    
+    if (fullQuestInfo.stageOrder === "inOrder") {
+        currStage = stageInfo.indexOf(false);
+        orderInstructionText = "Complete the following in the following order:"
+    }
+    
+    function determineStageStyle(index: number): string {
+        if (stageInfo[index]) {
+            return "stageComplete";
+        }
+        return index > currStage ? "stageFuture" : "stageIncomplete";
+    }
+    
     return (
         <div>
             <h3 className="subtitle">{title}</h3>
             <p>{description}</p>
-            <ol>
-                { stages.map((stage, index) => <li key={index}>{stage}</li>) }
-            </ol>
+            <p>{orderInstructionText}</p>
+            <ul>
+                { stages.map((stage, index) => { return (
+                    <li 
+                        key="" 
+                        className={determineStageStyle(index)}
+                    >
+                        {stage}
+                    </li>); 
+                }) }
+            </ul>
         </div>
     );
 }

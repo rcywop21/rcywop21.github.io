@@ -47,8 +47,8 @@ const DynamicAction = (props: DynamicActionProps): React.ReactElement => {
         }
     }, [isRecent, timeToCompare]);
     
-    actionProps.isVisible = isVisible;
-    actionProps.isEnabled = isEnabled;
+    actionProps.isVisible = isVisible && actionProps.isVisible;
+    actionProps.isEnabled = isEnabled && actionProps.isEnabled;
                 
     
     return <Action {...actionProps}/>;

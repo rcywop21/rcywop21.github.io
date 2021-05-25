@@ -1,0 +1,12 @@
+.stageComplete {
+    color: #13945D;
+    text-decoration: line-through;
+}
+
+.stageIncomplete {
+    color: #FF836E;
+}
+
+.stageFuture {
+    color: #777777;
+}
