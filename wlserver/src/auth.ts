@@ -1,4 +1,12 @@
-import { FileHandle, open } from 'fs/promises'; export type ClientType = 'player' | 'mentor' | 'admin'; export const asValidClientType = (x: string): ClientType | null => { switch (x) { case 'player': return 'player';
+import { FileHandle, open } from 'fs/promises';
+import { AUTH_DETAILS, NODE_ENV } from './config';
+
+export type ClientType = 'player' | 'mentor' | 'admin';
+
+export const asValidClientType = (x: string): ClientType | null => { 
+    switch (x) { 
+        case 'player': 
+            return 'player';
         case 'mentor':
             return 'mentor';
         case 'admin':
@@ -7,8 +15,6 @@ import { FileHandle, open } from 'fs/promises'; export type ClientType = 'player
             return null;
     }
 };
-
-const AUTH_DETAILS = process.env.AUTH_DETAILS;
 
 interface AuthEntry {
     id: number;
@@ -20,7 +26,7 @@ async function auth(mode: ClientType, id: number, pass: string): Promise<true> {
     this use case does not require a rigorous authentication process*/
 
     // development environment
-    if (process.env.NODE_ENV !== 'production') {
+    if (NODE_ENV !== 'production') {
         if (id < 0 || id > 9)
             throw `Group name should be a number between 0 to 9`;
         if (pass !== '0000') throw `Incorrect Password`;

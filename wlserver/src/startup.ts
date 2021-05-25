@@ -4,8 +4,7 @@ import { GameState, PlayerState, questIds, TeamId } from 'wlcommon';
 import logger from './logger';
 import { makeIssueQuestTransform } from './questRewards';
 import { applyTransform, gameState, makeGlobalGameState } from './stateMgr';
-
-const SAVE_FILE = process.env.SAVE_FILE || 'save.json';
+import { SAVE_FILE } from './config';
 
 const makeStartingPlayerState = (id: TeamId): PlayerState => ({
     id,
