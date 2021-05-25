@@ -45,7 +45,7 @@ interface SurfaceState {
 interface PausedState {
     oxygenUntil: null;
     pausedOxygen: number;
-    challengeMode: Date | null;
+    challengeMode: null;
     challengePausedTime: number | null;
 }
 
