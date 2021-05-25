@@ -43,7 +43,24 @@ const Store = (props: SpecificLocationProps): React.ReactElement => {
     if (playerState.inventory['Pump']?.qty) {
         actions[Actions.specificActions.STORE.BUY_PUMP].isVisible = false;
     }
-    
+    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 300000 ) {
+        actions[Actions.specificActions.STORE.BUY_MAP].isEnabled = false;
+        actions[Actions.specificActions.STORE.BUY_GUIDE].isEnabled = false;
+    }
+    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 600000 ) {
+        actions[Actions.specificActions.STORE.BUY_DOLL].isEnabled = false;
+    }
+    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 1200000 ) {
+        actions[Actions.specificActions.STORE.BUY_DISCOVERS].isEnabled = false;
+    }
+    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 1800000 ) {
+        actions[Actions.specificActions.STORE.BUY_PUMP].isEnabled = false;
+        actions[Actions.specificActions.STORE.BUY_BLACK_ROCK].isEnabled = false;
+    }
+    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 2400000 ) {
+        actions[Actions.specificActions.STORE.BUY_BUBBLE_PASS].isEnabled = false;
+    }
+
     const actionProps: ActionProps[] = [];
     for (const key in actions) {
         const playerAction = actions[key];

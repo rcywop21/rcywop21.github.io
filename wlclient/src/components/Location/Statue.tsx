@@ -44,6 +44,9 @@ const Statue = (props: SpecificLocationProps): React.ReactElement => {
         actions[Actions.specificActions.STATUE.POWER_CONTAINMENT].isVisible = false;
         actions[Actions.specificActions.STATUE.PURIFY_CORRUPTION].isVisible = false;
     }
+    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 300000 ) {
+        actions[Actions.specificActions.STATUE.EXPLORE].isEnabled = false;
+    }
 
     const actionProps: ActionProps[] = [];
     for (const key in actions) {

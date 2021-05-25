@@ -31,6 +31,9 @@ const Library = (props: SpecificLocationProps): React.ReactElement => {
     if (!playerState.knowsLanguage) {
         actions[Actions.specificActions.LIBRARY.DECODE_ARTEFACT].isEnabled = false;
     }
+    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 300000 ) {
+        actions[Actions.specificActions.LIBRARY.EXPLORE].isEnabled = false;
+    }
 
     const actionProps: ActionProps[] = [];
     for (const key in actions) {

@@ -32,6 +32,10 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
         actions[Actions.specificActions.CORALS.LEARN_LANG].isVisible = false;
     }
     
+    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 300000 ) {
+        actions[Actions.specificActions.CORALS.EXPLORE].isEnabled = false;
+    }
+
     const actionProps: ActionProps[] = [];
     for (const key in actions) {
         const playerAction = actions[key];

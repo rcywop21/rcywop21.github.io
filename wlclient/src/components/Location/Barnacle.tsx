@@ -24,6 +24,9 @@ const Barnacle = (props: SpecificLocationProps): React.ReactElement => {
         actions[Actions.ALL_UNDERWATER.STORE_OXYGEN].isVisible = false;
         actions[Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN].isVisible = false;
     }
+    if (playerState.oxygenUntil && playerState.oxygenUntil?.valueOf() - Date.now() < 300000 ) {
+        actions[Actions.specificActions.BARNACLE.EXPLORE].isEnabled = false;
+    }
     
     const actionProps: ActionProps[] = [];
     for (const key in actions) {
