@@ -9,49 +9,49 @@ import { PlayerAction, DynamicPlayerAction } from '../../PlayerAction';
 const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.STORE.BUY_MAP]: new DynamicPlayerAction("This map will let you find your way to more locations in the Undersea.", 
         "Pay 5 minutes of Oxygen to receive 1 x Map.", "577px", "549px",
-        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
+        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
         300000,
         (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
-        (setIsVisible, setIsEnabled): void => { return; },
+        (): void => { return; },
         (playerState) => !playerState.inventory['Map']),
     [Actions.specificActions.STORE.BUY_GUIDE]: new DynamicPlayerAction("It's an introduction of all the Oxygen Streams in the Undersea.",
         "Pay 5 minutes of Oxygen to receive 1 x Guide to the Oxygen Streams of the Undersea.", "717px", "308px",
-        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
+        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
         300000,
         (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
-        (setIsVisible, setIsEnabled): void => { return; },
+        (): void => { return; },
         (playerState) => !playerState.inventory['OxygenGuide']),
     [Actions.specificActions.STORE.BUY_DOLL]: new DynamicPlayerAction("It's a doll of The Little Mermaid! How cute UWU.",
         "Pay 10 minutes of Oxygen to receive 1 x Mermaid Doll.", "451px", "221px",
-        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
+        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
         600000,
         (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
-        (setIsVisible, setIsEnabled): void => { return; }),
+        (): void => { return; }),
     [Actions.specificActions.STORE.BUY_DISCOVERS]: new DynamicPlayerAction("This ticket lets you go on the full tour of the Statue of Triton.", 
         "Pay 20 minutes of Oxygen to receive 1 x UnderseaDiscovers Ticket.", "278px", "140px",
-        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
+        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
         1200000,
         (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
-        (setIsVisible, setIsEnabled): void => { return; }),
+        (): void => { return; }),
     [Actions.specificActions.STORE.BUY_PUMP]: new DynamicPlayerAction("This pump allows you to store all your Oxygen before you resurface, so it doesn't go to waste.", 
         "Pay 30 minutes of Oxygen to receive 1 x Oxygen Pump.", "810px", "209px",
-        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
+        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
         1800000,
         (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
-        (setIsVisible, setIsEnabled): void => { return; },
+        (): void => { return; },
         (playerState) => !playerState.inventory['Pump']),
     [Actions.specificActions.STORE.BUY_BLACK_ROCK]: new DynamicPlayerAction("It's a strange looking black rock. There are odd markings on it. Nobody knows what its uses, or properties are...", 
         "Pay 30 minutes of Oxygen to receive 1 x Mysterious Black Rock.", "252px", "495px",
-        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
+        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
         1800000,
         (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
-        (setIsVisible, setIsEnabled): void => { return; },),
+        (): void => { return; },),
     [Actions.specificActions.STORE.BUY_BUBBLE_PASS]: new DynamicPlayerAction("This golden pass lets you access the Bubble Factory. It has no expiry date and can be used multiple times.", 
         "Pay 40 minutes of Oxygen to receive 1 x Bubble Pass.", "433px", "344px",
-        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil!) : new Date(0),
+        (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
         2400000,
         (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
-        (setIsVisible, setIsEnabled): void => { return; },),
+        (): void => { return; },),
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
         "No task required.", "870px", "488px",
         (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
@@ -66,7 +66,7 @@ const Store = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor } = props;
 
     const actionProps = Object.entries(actions)
-        .filter(([actionId, playerAction]) => !(playerAction instanceof DynamicPlayerAction))
+        .filter(([, playerAction]) => !(playerAction instanceof DynamicPlayerAction))
         .map(([actionId, playerAction]) => ({
             action: actionId,
             x: playerAction.x,
@@ -85,7 +85,7 @@ const Store = (props: SpecificLocationProps): React.ReactElement => {
         }));
         
     const dynamicActionProps = Object.entries(actions)
-        .filter(([actionId, playerAction]) => playerAction instanceof DynamicPlayerAction)
+        .filter(([, playerAction]) => playerAction instanceof DynamicPlayerAction)
         .map(([actionId, playerAction]) => {
             const dynamicPlayerAction = playerAction as DynamicPlayerAction;
             return {
