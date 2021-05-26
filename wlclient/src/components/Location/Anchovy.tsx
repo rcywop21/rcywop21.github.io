@@ -38,7 +38,7 @@ const Anchovy = (props: SpecificLocationProps): React.ReactElement => {
     
     return (
         <React.Fragment>
-            <img src={imgDirectoryGenerator('anchovy.png')} />
+            <img src={imgDirectoryGenerator('anchovy4.png')} />
             {actionProps.map((info: ActionProps, index) => {
                 return <Action key={index} {...info} />;
             })}
