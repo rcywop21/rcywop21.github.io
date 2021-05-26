@@ -1,7 +1,7 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { Actions, itemDetails, itemsById } from 'wlcommon';
+import { Actions, itemDetails } from 'wlcommon';
 import { makeActionProps, PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
