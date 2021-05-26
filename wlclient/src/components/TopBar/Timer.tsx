@@ -42,7 +42,9 @@ const Timer = (props: TimerProps): React.ReactElement => {
     return (
         <div className="timer">
             <img src={getImg(name)} />
-            <span>{Util.formatDuration(timeLeft)}</span>
+            <div className="timerText">
+                <span>{Util.formatDuration(timeLeft)}</span>
+            </div>
         </div>
     );
 };

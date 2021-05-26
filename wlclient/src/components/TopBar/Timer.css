@@ -1,6 +1,12 @@
 .timer {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: center;
-    width: 142px;
+    width: 244px;
+}
+
+.timerText {
+    min-width: 100px;
+    margin-left: 25px;
+    text-align: right;
 }
