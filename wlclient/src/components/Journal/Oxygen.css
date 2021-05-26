@@ -1,15 +1,45 @@
-.usedOxygen .text {
-    color: #FF836E;
+.oxygen-journal {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
 }
 
-.usedOxygen .subtitle {
-    color: #E1614B;
+.oxygen-journal > .oxygen-entry {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: calc(50% - 4rem);
 }
 
-.unusedOxygen .text {
+.oxygen-entry > h3 {
+    margin-bottom: 0;
+}
+
+.oxygen-entry > .task {
+    margin-top: 0.5rem;
+}
+
+.oxygen-entry > .cooldown {
+    margin-top: 0.5rem;
+    font-weight: bold;
+}
+
+.oxygen-entry > .addendum {
+    margin-top: 0.5rem;
+}
+
+.cooldown.on-cooldown {
+    color: #FF8363;
+}
+
+.cooldown.off-cooldown {
     color: #4AE0A0;
 }
 
-.unusedOxygen .subtitle {
-   color: #13945D;
+h3.on-cooldown {
+    color: #BB6666;
 }
+
+h3.off-cooldown {
+    color: #13945D;
+}
+

@@ -11,13 +11,18 @@ export interface AppProps {
     children?: React.ReactNode;
 }
 
+export interface LoginMode {
+    teamId: number;
+    mode: 'player' | 'admin' | 'mentor';
+}
+
 function App(): React.ReactElement {
-    const [loggedIn, setLoggedIn] = React.useState<boolean>(false);
+    const [loggedIn, setLoggedIn] = React.useState<LoginMode | undefined>(undefined);
 
     React.useEffect(
         () => () => {
             socket.disconnect();
-            setLoggedIn(false);
+            setLoggedIn(undefined);
         },
         []
     );
@@ -26,19 +31,19 @@ function App(): React.ReactElement {
         <Router>
             <SocketContext.Provider value={socket}>
                 <div className="App">
-                    <Header />
+                    <Header loginMode={loggedIn} />
                     <Switch>
                         <Route path="/mentor">
-                            <Mentor />
+                            <Mentor updateLoggedIn={setLoggedIn} />
                         </Route>
                         <Route path="/admin">
                             <Admin
-                                loggedIn={loggedIn}
+                                loggedIn={loggedIn !== undefined}
                                 updateLoggedIn={setLoggedIn}
                             />
                         </Route>
                         <Route path="/">
-                            <Main />
+                            <Main updateLoggedIn={setLoggedIn} />
                         </Route>
                     </Switch>
                 </div>

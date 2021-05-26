@@ -1,68 +1,74 @@
 import React from 'react';
 import { Locations, PlayerState, GlobalState } from 'wlcommon';
+import LinkedOxygenInfo from './LinkedOxygenInfo';
 import './Oxygen.css';
+import OxygenEntry, { ChallengeModeParameter } from './OxygenInfo';
+import TritonOxygenInfo from './TritonOxygenInfo';
 
 export interface OxygenProps {
     playerState: PlayerState;
     globalState: GlobalState;
 }
 
+const getChallengeModeParameter = (playerState: PlayerState, globalState: GlobalState): ChallengeModeParameter => {
+    if (!playerState.challengeMode)
+        return null;
+    if (!playerState.knowsCrimson)
+        return 'vague';
+    return Math.max(0.15, 0.125 + 0.025 * globalState.artefactsFound);
+}
+
 const Oxygen = (props: OxygenProps): React.ReactElement => {
     const { playerState, globalState } = props;
     
-    const usedOxygenStreams = playerState.streamCooldownExpiry ? 
-        Object.entries(playerState.streamCooldownExpiry)
-            .filter(([id, expiry]) => (new Date(expiry)).valueOf() > Date.now()) :
-        [];
-        
-    console.log(JSON.stringify(usedOxygenStreams));
+    const challengeModeParameter = getChallengeModeParameter(playerState, globalState);
     
-    const allLocationIdsWithOxygen = Object.values(Locations.locationIds)
-        .filter(id => Locations.locationsMapping[id].oxygenStream);
-    allLocationIdsWithOxygen.sort();
-        
-    function isStreamAvailable(id: Locations.LocationId): boolean {
-        return usedOxygenStreams.find(([locId, expiry]) => locId === id) ? false : true
-    }
-        
-    function determineStyle(id: Locations.LocationId) {
-        return isStreamAvailable(id) ? 
-            "unusedOxygen" : 
-            "usedOxygen";
-    }
-    
-    function generateText(id: Locations.LocationId) {
-        if (!isStreamAvailable(id)) {
-            const timeReady = new Date(playerState.streamCooldownExpiry[id]);
-            return `Unavailable - Ready for your use at ${timeReady.getHours()}:${timeReady.getMinutes()}`;
-        } else {
-            return "Available";
-        }
-    }
-    
-    const statueLastUsedTime = new Date(globalState.tritonOxygen.lastExtract);
-    const statueLastUsed = `${statueLastUsedTime.getHours()}:${statueLastUsedTime.getMinutes()}`;
-            
-        
     return (
-        <div>
+        <div className="oxygen-journal">
             <h2 className="journalTitle">OXYGEN INFO</h2>
-            <p className= "helptext">Here&apos;s information regarding the oxygen streams</p>
-            { allLocationIdsWithOxygen.map(id => {
-                return (
-                    <div key={id} className={determineStyle(id)}>
-                        <h3 className="subtitle">
-                            {Locations.locationsMapping[id].name}
-                        </h3>
-                        <p className="text">
-                            {generateText(id)}<br />
-                            {id === Locations.locationIds.STATUE ? 
-                                `Last used by someone (could be another group) at ${statueLastUsed}` : 
-                                ""}
-                        </p>
-                    </div>
-                ); 
-            }) }
+            <p className= "helptext">Here&apos;s information regarding the oxygen streams. Note that after using an Oxygen Stream, you must wait 10 minutes before you can use the <b>same</b> Oxygen Stream again.</p>
+            <OxygenEntry 
+                locationId={Locations.locationIds.CORALS} 
+                actionKey="corals"
+                cooldown={playerState.streamCooldownExpiry[Locations.locationIds.CORALS]}
+                challengeMode={challengeModeParameter}
+                oxygenInSeconds={1200}
+                />
+            <OxygenEntry 
+                locationId={Locations.locationIds.TUNA} 
+                actionKey="tuna"
+                cooldown={playerState.streamCooldownExpiry[Locations.locationIds.TUNA]}
+                challengeMode={challengeModeParameter}
+                oxygenInSeconds={1800}
+                />
+            <OxygenEntry 
+                locationId={Locations.locationIds.BUBBLE} 
+                actionKey="bubble"
+                cooldown={playerState.streamCooldownExpiry[Locations.locationIds.BUBBLE]}
+                enabled={!!playerState.hasBubblePass}
+                disabledDescription="You need a Bubble Pass to use this Oxygen Stream."
+                challengeMode={challengeModeParameter}
+                oxygenInSeconds={2400}
+                />
+            <LinkedOxygenInfo
+                actionKey="salmon"
+                playerState={playerState}
+                otherStreamState={globalState.linkedStreams.lastCatfish}
+                otherStreamLastId={globalState.linkedStreams.lastCatfishId}
+                challengeMode={challengeModeParameter}
+            />
+            <LinkedOxygenInfo
+                actionKey="catfish"
+                playerState={playerState}
+                otherStreamState={globalState.linkedStreams.lastSalmon}
+                otherStreamLastId={globalState.linkedStreams.lastSalmonId}
+                challengeMode={challengeModeParameter}
+            />
+            <TritonOxygenInfo
+                tritonOxygen={globalState.tritonOxygen}
+                cooldown={playerState.streamCooldownExpiry[Locations.locationIds.STATUE]}
+                challengeMode={challengeModeParameter}
+            />
         </div>
     );
 }
