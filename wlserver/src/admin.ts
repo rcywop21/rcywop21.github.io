@@ -1,15 +1,16 @@
-import { Locations, QuestId, TeamId } from 'wlcommon';
+import { itemDetails, ItemId, Locations, QuestId, TeamId } from 'wlcommon';
 import applyAction  from './actions';
 import {
     getCredentials,
     notifyPlayerState,
 } from './connections';
+import { makeAddItemTransform, makeRemoveItemTransform } from './inventory';
 import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
 import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './questRewards';
 import { Reply, SocketHandler } from './socketHandlers';
-import setupGameState, { saveGameState, setupFreshGameState } from './startup';
-import { applyTransform, gameState, makeGlobalGameState, makePlayerStatTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
+import { saveGameState, setupFreshGameState } from './startup';
+import { applyTransform, gameState, makePlayerStatTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
 
 const commands = {
     state: (payload: string[], reply: Reply): void => {
@@ -204,8 +205,33 @@ const commands = {
     save: (_: unknown, reply: Reply) => {
         saveGameState();
         reply('cmdok', 'Game saved.');
+    },
+    give: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        const itemId = payload.shift() as ItemId;
+        if (!itemDetails[itemId])
+            throw `Unknown item with id ${itemId}`;
+        const qty = parseInt(payload.shift() ?? '1');
+        if (Number.isNaN(qty))
+            throw `Illegal quantity ${qty}.`
+        applyTransform(makeAddItemTransform(itemId, qty), playerId);
+        reply('cmdok', 'Item awarded.');
+    },
+    take: (payload: string[], reply: Reply) => {
+        const playerId = getPlayerId(payload);
+        const itemId = payload.shift() as ItemId;
+        if (!itemDetails[itemId])
+            throw `Unknown item with id ${itemId}`;
+        const presentQty = gameState.players[playerId]?.inventory[itemId]?.qty
+        if (!presentQty)
+            throw `Player does not have item ${itemId}`;
+        const rawQty = payload.shift();
+        const qty = ((rawQty === undefined || rawQty === 'all') ? presentQty : parseInt(rawQty));
+        if (Number.isNaN(qty) || qty > presentQty)
+            throw `Illegal quantity ${qty}`;
+        applyTransform(makeRemoveItemTransform(itemId, qty), playerId);
+        reply('cmdok', 'Item awarded.');
     }
-
 };
 
 export const onAdminHandler: SocketHandler<string[]> = async (
