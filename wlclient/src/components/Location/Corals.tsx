@@ -3,11 +3,12 @@ import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { makeActionProps, makeDynamicActionProps, allPlayerActions } from '../../PlayerAction';
 import DynamicAction, { DynamicActionProps } from './DynamicAction';
+import { Locations } from 'wlcommon';
 
 const Corals = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor } = props;
 
-    const actions = allPlayerActions.corals;
+    const actions = allPlayerActions[Locations.locationIds.CORALS];
 
     const actionProps = makeActionProps(
         actions, isMentor, playerState, handleAction, triggerTooltip

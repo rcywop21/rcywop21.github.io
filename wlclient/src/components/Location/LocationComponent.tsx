@@ -23,7 +23,7 @@ import Bubble from './Bubble';
 import Shrine from './Shrine';
 import Alcove from './Alcove';
 
-export type ActionHandlerCreator = (a: string, b: string) => () => void;
+export type ActionHandlerCreator = (a: string) => () => void;
 export type TooltipTrigger = (t?: TooltipType, d?: string[], b?: boolean) => () => void;
 
 export interface LocationProps {

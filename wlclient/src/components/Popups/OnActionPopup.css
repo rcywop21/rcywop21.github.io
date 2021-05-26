@@ -1,11 +1,13 @@
 .onActionPopup {
-    position: absolute;
+    position: relative;
     left: 157px;
-    top: 120px;
+    top: 170px;
     width: 710px;
-    height: 366px;
+    height: 300px;
     background-color: #4d96c3;
     color: black;
+    display: flex;
+    flex-direction: column;
 }
 
 .onActionBackgroundShroud {
@@ -35,4 +37,16 @@
     color: black;
     margin: 10px;
     cursor: pointer;
+}
+
+.status {
+    margin: 10px;
+}
+
+.popupText {
+    position: relative;
+    width: 90%;
+    height: fit-content;
+    margin: 0 auto;
+    top: 20px;
 }
