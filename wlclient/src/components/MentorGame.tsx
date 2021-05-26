@@ -3,6 +3,7 @@ import Game from './Game';
 import { GameProps, GameMentorProps } from './Game';
 import { OnActionPopupMentorProps } from './Popups/OnActionPopup';
 import { SocketContext } from '../socket/socket';
+import './MentorGame.css';
 
 const MentorGame = (props: GameProps): React.ReactElement => {
     const { playerState } = props;
@@ -36,9 +37,9 @@ const MentorGame = (props: GameProps): React.ReactElement => {
     }
     
     return (
-        <div>
-            <div style={{height: "70px"}}></div>
-            <p style={{border: "2px solid green"}}>Mentor Powers!</p>
+        <div className="mentorGame">
+            <div className="mentorTopGap"></div>
+            <h3>~ Mentor Powers! ~</h3>
             <span><b>Pause</b> disables all player actions and pauses the oxygen timer. </span>
             <span>{playerState.pausedOxygen ? "Your team is currently paused. " : ""}</span>
             <span>&emsp;</span>
