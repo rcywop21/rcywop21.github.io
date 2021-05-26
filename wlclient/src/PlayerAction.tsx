@@ -59,11 +59,17 @@ export const makeActionProps = (actions: Record<string, PlayerAction>, isMentor:
         const isVisible = playerAction.getVisibility ? playerAction.getVisibility(playerState) : true;
 
         const isEnabled = isVisible && (playerAction.getEnabled ? playerAction.getEnabled(playerState) : true);
+        
+        const actionDescription = playerAction.optionalDescription
+            ? playerAction.description + playerAction.optionalDescription(playerState, globalState)
+            : playerAction.description;
+        
+        /*
         if (playerAction.optionalDescription
             && playerAction.description.substr(playerAction.description.length - 3) != "PM."
             && playerAction.description.substr(playerAction.description.length - 3) != "AM.") {
             playerAction.description += playerAction.optionalDescription(playerState, globalState);
-        }
+        }*/
         return {
             display: playerAction.display,
             action: actionId,
@@ -73,7 +79,7 @@ export const makeActionProps = (actions: Record<string, PlayerAction>, isMentor:
             isEnabled,
             handleAction: handleAction(actionId),
             triggerTooltip: triggerTooltip,
-            tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
+            tooltipInfo: [playerAction.display, actionDescription, playerAction.task]
         };
     });
 
@@ -84,12 +90,16 @@ export const makeDynamicActionProps = (actions: Record<string, PlayerAction>, is
 
         const isVisible = dynamicPlayerAction.getVisibility ? dynamicPlayerAction.getVisibility(playerState) : true;
         const isEnabled = isVisible && (dynamicPlayerAction.getEnabled ? dynamicPlayerAction.getEnabled(playerState) : true);
+        
+        const actionDescription = dynamicPlayerAction.optionalDescription
+            ? dynamicPlayerAction.description + dynamicPlayerAction.optionalDescription(playerState, globalState)
+            : dynamicPlayerAction.description;
 
-        if (dynamicPlayerAction.optionalDescription
+        /*if (dynamicPlayerAction.optionalDescription
             && dynamicPlayerAction.description.substr(dynamicPlayerAction.description.length - 3) != "PM."
             && dynamicPlayerAction.description.substr(dynamicPlayerAction.description.length - 3) != "AM.") {
             dynamicPlayerAction.description += dynamicPlayerAction.optionalDescription(playerState, globalState);
-        }
+        }*/
         return {
             actionProps: {
                 display: dynamicPlayerAction.display,
@@ -100,7 +110,7 @@ export const makeDynamicActionProps = (actions: Record<string, PlayerAction>, is
                 isEnabled,
                 handleAction: handleAction(actionId),
                 triggerTooltip: triggerTooltip,
-                tooltipInfo: [playerAction.display, dynamicPlayerAction.description, dynamicPlayerAction.task]
+                tooltipInfo: [dynamicPlayerAction.display, actionDescription, dynamicPlayerAction.task]
             },
             timeToCompare: dynamicPlayerAction.timeToCompare(playerState),
             howRecentToTrigger: dynamicPlayerAction.howRecentToTrigger,
