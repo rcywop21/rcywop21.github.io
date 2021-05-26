@@ -98,6 +98,7 @@ const Game = (props: GameProps): React.ReactElement => {
                 triggerTooltip={triggerTooltip}
             />
             <LocationComponent 
+                globalState={globalState}
                 playerState={playerState} 
                 handleAction={handleSpecificAction} 
                 handleTravel={handleTravel}
@@ -119,7 +120,11 @@ const Game = (props: GameProps): React.ReactElement => {
                 notifications={playerNotifs} 
                 quests={playerState.quests} 
             />
-            <Journal />
+            <Journal 
+                isMentor={isMentor}
+                playerState={playerState}
+                globalState={globalState}
+            />
         </div>
     );
 };

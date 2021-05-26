@@ -1,0 +1,15 @@
+.usedOxygen .text {
+    color: #FF836E;
+}
+
+.usedOxygen .subtitle {
+    color: #E1614B;
+}
+
+.unusedOxygen .text {
+    color: #4AE0A0;
+}
+
+.unusedOxygen .subtitle {
+   color: #13945D;
+}

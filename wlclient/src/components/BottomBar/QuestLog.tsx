@@ -18,8 +18,8 @@ const QuestLog = (props: QuestLogProps): React.ReactElement => {
         <div className="questLog">
             <h2 className="questTitle">QUESTS</h2>
             <div className="innerQuestBox">
-                {questStates.map((item: QuestState) => (
-                    <QuestInfo key="" questState={item} />
+                {questStates.map((item: QuestState, index) => (
+                    <QuestInfo key={index} questState={item} />
                 ))}
             </div>
         </div>

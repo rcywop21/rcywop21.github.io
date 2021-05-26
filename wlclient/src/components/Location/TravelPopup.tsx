@@ -68,7 +68,7 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
                             const display = { display: travellable ? "" : "none"}
                             return (
                                 <button className="travelButton" style={display}
-                                    key=""
+                                    key={locationId}
                                     onClick={handleTravelClosePopup(
                                         location.id
                                     )}

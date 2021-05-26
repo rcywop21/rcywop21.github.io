@@ -29,9 +29,9 @@ const MentorGame = (props: GameProps): React.ReactElement => {
     function onPause() {
         //Implement actual pause functionality
         if (playerState.pausedOxygen) {
-            socket?.emit("resume");
+            socket?.emit("pause", false);
         } else {
-            socket?.emit("pause");
+            socket?.emit("pause", true);
         }
     }
     
