@@ -59,16 +59,17 @@ export const makeActionProps = (actions: Record<string, PlayerAction>, isMentor:
     .filter(([, playerAction]) => !(playerAction instanceof DynamicPlayerAction))
     .map(([actionId, playerAction]) => {
 
-        const isVisible = isMentor || (playerAction.getVisibility ? playerAction.getVisibility(playerState) : true);
+        const isVisible = playerAction.getVisibility ? playerAction.getVisibility(playerState) : true;
 
         const isEnabled = isVisible && (playerAction.getEnabled ? playerAction.getEnabled(playerState) : true);
+
 
         return {
             display: playerAction.display,
             action: actionId,
             x: playerAction.x,
             y: playerAction.y,
-            isVisible,
+            isVisible: isVisible || !!isMentor,
             isEnabled,
             handleAction: handleAction(actionId),
             triggerTooltip: triggerTooltip,

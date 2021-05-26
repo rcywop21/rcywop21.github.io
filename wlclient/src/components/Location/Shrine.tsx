@@ -11,7 +11,7 @@ const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.SHRINE.COLLECT_HAIR]: new PlayerAction("Collect Tear", "Collect the Unicorn Tear from the Shrine.", 
         "Receive 1 x Unicorn Tear.", "434px", "495px",
         (playerState) => playerState.quests[questIds.SHRINE_2]?.stages[4],
-        (playerState) => playerState.inventory[itemDetails.UNICORN_TEAR.id] == undefined),
+        (playerState) => !(playerState.inventory[itemDetails.UNICORN_TEAR.id]?.qty)),
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store Oxygen", "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
         "No task required.", "870px", "488px",
         (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
@@ -28,7 +28,9 @@ const Shrine = (props: SpecificLocationProps): React.ReactElement => {
     const actionProps = makeActionProps(
         actions, isMentor, playerState, handleAction, triggerTooltip
     );
-    
+
+    console.log(actionProps);
+    console.log(playerState.quests[questIds.SHRINE_2]?.stages)
     return (
         <React.Fragment>
             <img src={imgDirectoryGenerator('shrine.png')} />
