@@ -55,8 +55,6 @@ const OxygenEntry = (props: OxygenEntryProps): React.ReactElement => {
 
     const challengeModeDescription = getChallengeModeDescription(challengeMode, oxygenInSeconds);
 
-    console.log(challengeMode);
-
     return (<div className="oxygen-entry">
         <h3 className={streamEnabled ? 'off-cooldown' : 'on-cooldown'}>{locationInfo.name}</h3>
         <div className="description">{dynamicPlayerAction.description}</div>
