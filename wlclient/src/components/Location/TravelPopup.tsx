@@ -11,6 +11,18 @@ export interface TravelPopupProps {
     triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
 }
 
+function checkHiddenLocationRequirement (location: Locations.Location, playerState: PlayerState): boolean {
+    if (location.id == Locations.locationIds.ALCOVE) {
+        return playerState.unlockedAlcove as boolean;
+    } else if (location.id == Locations.locationIds.SHRINE) {
+        return playerState.unlockedShrine as boolean;
+    } else if (location.id == Locations.locationIds.WOODS) {
+        return playerState.unlockedWoods as boolean;
+    } else {
+        return playerState.hasMap || !Locations.locationsMapping[location.id].needsMap;
+    }
+}
+
 
 const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
     const { playerState, isVisible, setVisible, handleTravel, triggerTooltip } = props;
@@ -28,22 +40,12 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
     function canTravel(location: Locations.Location) {
         if (location.id == playerState.locationId) {
             return false;
-        } else if (location.id == Locations.locationIds.ALCOVE) {
-            return playerState.unlockedAlcove;
-        } else if (location.id == Locations.locationIds.SHRINE) {
-            return playerState.unlockedShrine;
-        } else if (location.id == Locations.locationIds.WOODS) {
-            return playerState.unlockedWoods;
-        } else if (location.needsMap) {
-            if (location.id == Locations.locationIds.STORE) {
-                console.log(location);
-            }
-            return playerState.hasMap;
-        } else if (playerState.locationId != Locations.locationIds.SHORES && playerState.locationId != Locations.locationIds.WOODS) {
-            return location.id != Locations.locationIds.SHORES && location.id != Locations.locationIds.WOODS;
-        } else {
-            return true;
-        }
+        } 
+
+        const hiddenRequirement = checkHiddenLocationRequirement(location, playerState);
+        const regionRequirement = Locations.locationsMapping[playerState.locationId].undersea === Locations.locationsMapping[location.id].undersea;
+
+        return hiddenRequirement && regionRequirement;
     }
 
     return (
