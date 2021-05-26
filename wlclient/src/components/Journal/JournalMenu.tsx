@@ -6,10 +6,11 @@ import './JournalMenu.css';
 export interface JournalMenuProps {
     handlePageSwitch: (jp: JournalPages) => () => void;
     knowsOxygen?: boolean;
+    knowsChallengeMode?: boolean;
 }
 
 const JournalMenu = (props: JournalMenuProps): React.ReactElement => {
-    const { handlePageSwitch, knowsOxygen } = props;
+    const { handlePageSwitch, knowsOxygen, knowsChallengeMode } = props;
     
     return (
         <div className="journalMenu">
@@ -18,9 +19,13 @@ const JournalMenu = (props: JournalMenuProps): React.ReactElement => {
                 {JournalPages.QUEST_JOURNAL}
             </button>
             <span>&emsp;</span>
-            <button onClick={handlePageSwitch(JournalPages.NOTES)}>
-                {JournalPages.NOTES}
+            <button onClick={handlePageSwitch(JournalPages.ANNOUNCEMENTS)}>
+                {JournalPages.ANNOUNCEMENTS}
             </button>
+            <span>&emsp;</span>
+            {knowsChallengeMode && <button onClick={handlePageSwitch(JournalPages.CHALLENGE_MODE_INFO)}>
+                {JournalPages.CHALLENGE_MODE_INFO}
+            </button>}
             <span>&emsp;</span>
             {knowsOxygen && <button onClick={handlePageSwitch(JournalPages.OXYGEN)}>
                 {JournalPages.OXYGEN}
