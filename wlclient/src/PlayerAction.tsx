@@ -1,4 +1,5 @@
-import { PlayerState, Actions, questIds, itemDetails, GlobalState } from "wlcommon";
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { PlayerState, Actions, questIds, itemDetails, GlobalState, Locations } from "wlcommon";
 import { ActionProps } from "./components/Location/Action";
 import { DynamicActionProps } from "./components/Location/DynamicAction";
 import { ActionHandlerCreator, TooltipTrigger } from "./components/Location/LocationComponent";
@@ -70,7 +71,7 @@ export const makeActionProps = (actions: Record<string, PlayerAction>, isMentor:
             y: playerAction.y,
             isVisible: isVisible || !!isMentor,
             isEnabled,
-            handleAction: handleAction(actionId, playerAction.display),
+            handleAction: handleAction(actionId),
             triggerTooltip: triggerTooltip,
             tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
         };
@@ -91,13 +92,13 @@ export const makeDynamicActionProps = (actions: Record<string, PlayerAction>, is
         }
         return {
             actionProps: {
-                display: playerAction.display,
+                display: dynamicPlayerAction.display,
                 action: actionId,
                 x: dynamicPlayerAction.x,
                 y: dynamicPlayerAction.y,
                 isVisible: isVisible || !isMentor,
                 isEnabled,
-                handleAction: handleAction(actionId, playerAction.display),
+                handleAction: handleAction(actionId),
                 triggerTooltip: triggerTooltip,
                 tooltipInfo: [playerAction.display, dynamicPlayerAction.description, dynamicPlayerAction.task]
             },
@@ -120,7 +121,7 @@ const lastUsedMessage = (playerState: PlayerState, globalState: GlobalState) => 
 }
 
 export const allPlayerActions = {
-    alcove: {
+    [Locations.locationIds.ALCOVE]: {
         [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: new PlayerAction("Retrieve Pearl", "You know what you're here for.", 
             "Receive 1 x Pearl of Asclepius.", "409px", "399px", undefined, undefined,
             (playerState) => playerState.inventory[itemDetails.UNICORN_TEAR.id] == null),
@@ -133,7 +134,7 @@ export const allPlayerActions = {
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "729px", "101px")
     },
-    anchovy: {
+    [Locations.locationIds.ANCHOVY]: {
         [Actions.specificActions.ANCHOVY.EXPLORE]: new DynamicPlayerAction("Explore", "Anchovy Avenue is a residential district. The Chief Librarian of the Marine Library is said to live here.", 
             "Use 5 minutes of Oxygen.", "466px", "354px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
@@ -150,7 +151,7 @@ export const allPlayerActions = {
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "209px", "120px")
     },
-    barnacle: {
+    [Locations.locationIds.BARNACLE]: {
         [Actions.specificActions.BARNACLE.EXPLORE]: new DynamicPlayerAction("Explore", "Barnacle Residences is a residential district. The Pyrite Lady is said to live here.", 
             "Use 5 minutes of Oxygen.", "445px", "211px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0), 300000,
@@ -167,7 +168,7 @@ export const allPlayerActions = {
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "729px", "113px")
     },
-    bubble: {
+    [Locations.locationIds.BUBBLE]: {
         [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store Oxygen", "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
             "No task required.", "870px", "488px", undefined,
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
@@ -182,7 +183,7 @@ export const allPlayerActions = {
             0, (setIsVisible, setIsEnabled): void => { setIsEnabled(true);}, (setIsVisible, setIsEnabled): void => { setIsEnabled(false);}, 
             coolDownMessage, undefined, (playerState) => playerState.inventory[itemDetails.BUBBLE.id]?.qty > 0)
     },
-    catfish: {
+    [Locations.locationIds.CATFISH]: {
         [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store Oxygen", "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
             "No task required.", "870px", "488px", undefined,
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
@@ -197,7 +198,7 @@ export const allPlayerActions = {
             0, (setIsVisible, setIsEnabled): void => { setIsEnabled(true);}, (setIsVisible, setIsEnabled): void => { setIsEnabled(false);},
             coolDownMessage)
     },
-    corals: {
+    [Locations.locationIds.CORALS]: {
         [Actions.specificActions.CORALS.EXPLORE]: new DynamicPlayerAction("Explore",
             "The Memorial Corals is a location of historical importance. There are various exhibits in the park. You can spend some time to look around the exhibits.", 
             "Use 5 minutes of Oxygen.", "743px", "265px",
@@ -222,7 +223,7 @@ export const allPlayerActions = {
             0, (setIsVisible, setIsEnabled): void => { setIsEnabled(true);}, (setIsVisible, setIsEnabled): void => { setIsEnabled(false);},
             coolDownMessage)
     },
-    kelp: {
+    [Locations.locationIds.KELP]: {
         [Actions.specificActions.KELP.EXPLORE]: new DynamicPlayerAction("Explore", "The Kelp Plains is full of seaweed, and stretches for miles and miles, and is full of seaweed. Perhaps you can find what you're looking for here.", 
             "Use 5 minutes of Oxygen.", "73px", "347px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
@@ -242,7 +243,7 @@ export const allPlayerActions = {
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "122px", "117px")
     },
-    library: {
+    [Locations.locationIds.LIBRARY]: {
         [Actions.specificActions.LIBRARY.EXPLORE]: new DynamicPlayerAction("Explore", "Talk to the librarians about the Marine Library.", 
             "Use 5 minutes of Oxygen.", "432px", "385px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
@@ -268,7 +269,7 @@ export const allPlayerActions = {
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "33px", "171px")
     },
-    salmon: {
+    [Locations.locationIds.SALMON]: {
         [Actions.specificActions.SALMON.EXPLORE]: new DynamicPlayerAction("Explore", "Salmon Street is a residential district. It was built around an Oxygen Stream located here.", 
             "Use 5 minutes of Oxygen.", "578px", "362px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
@@ -290,7 +291,7 @@ export const allPlayerActions = {
             0, (setIsVisible, setIsEnabled): void => { setIsEnabled(true);}, (setIsVisible, setIsEnabled): void => { setIsEnabled(false);},
             coolDownMessage)
     },
-    shallows: {
+    [Locations.locationIds.SHALLOWS]: {
         [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store Oxygen", "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
             "No task required.", "870px", "488px", undefined,
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
@@ -300,11 +301,11 @@ export const allPlayerActions = {
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "45px", "120px")
     },
-    shores: {
+    [Locations.locationIds.SHORES]: {
         [Actions.specificActions.SHORES.DIVE]: new PlayerAction("Dive", "Dive into the deep, blue sea. After diving, you will enter the Shallows location inside the Undersea. You will start your dive with 20 minutes of Oxygen.", 
             "Create a shape resembling a diving board with all of your arms.", "445px", "309px")
     },
-    shrine: {
+    [Locations.locationIds.SHRINE]: {
         [Actions.specificActions.SHRINE.GIVE_HAIR]: new PlayerAction("Give Hair", "The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn's Tear.", 
             "Give 1 x Unicorn's Hair.", "434px", "449px", undefined, undefined,
             (playerState) => !!playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty),
@@ -321,7 +322,7 @@ export const allPlayerActions = {
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "52px", "123px")
     },
-    statue: {
+    [Locations.locationIds.STATUE]: {
         [Actions.specificActions.STATUE.EXPLORE]: new DynamicPlayerAction("Explore", "The Statue of Triton is a monument to Triton, famed hero of the Undersea. Walk around the statue to learn more about Triton.", 
             "Use 5 minutes of Oxygen.", "256px", "441px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
@@ -360,7 +361,7 @@ export const allPlayerActions = {
             0, (setIsVisible, setIsEnabled): void => { setIsEnabled(true);}, (setIsVisible, setIsEnabled): void => { setIsEnabled(false);},
             (playerState, globalState) => lastUsedMessage(playerState, globalState!))
     },
-    store: {
+    [Locations.locationIds.STORE]: {
         [Actions.specificActions.STORE.BUY_MAP]: new DynamicPlayerAction("Buy Map", "This map will let you find your way to more locations in the Undersea.", 
             "Pay 5 minutes of Oxygen to receive 1 x Map.", "577px", "549px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
@@ -404,7 +405,7 @@ export const allPlayerActions = {
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "99px", "251px")
     },
-    tuna: {
+    [Locations.locationIds.TUNA]: {
         [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store Oxygen", "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
             "No task required.", "870px", "488px", undefined,
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
@@ -419,7 +420,7 @@ export const allPlayerActions = {
             0, (setIsVisible, setIsEnabled): void => { setIsEnabled(true);}, (setIsVisible, setIsEnabled): void => { setIsEnabled(false);},
             coolDownMessage)
     },
-    umbral: {
+    [Locations.locationIds.UMBRAL]: {
         [Actions.specificActions.UMBRAL.EXPLORE]: new DynamicPlayerAction("Explore", "This is a shady, run-down area. Apparently it used to be a residential district, but the Oxygen Stream here vanished one day, suddenly. You shudder as you walk around the area.", 
             "Use 5 minutes of Oxygen.", "656px", "402px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
@@ -441,7 +442,7 @@ export const allPlayerActions = {
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "60px", "304px")
     },
-    woods: {
+    [Locations.locationIds.WOODS]: {
         [Actions.specificActions.WOODS.GET_HAIR]: new PlayerAction("Get Hair", "It is said that a herd of unicorns live in the Whispering Woods, and they only appear to the pure of heart. Fortunately, we only need to find the hair that they shed.", 
             "Share a point in time when you received help and support from others to receive 1 X Unicorn Hair.", "703px", "382px",
             undefined, (playerState) => !(playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty || playerState.inventory[itemDetails.UNICORN_TEAR.id]?.qty))

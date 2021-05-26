@@ -25,10 +25,10 @@ const TopBar = (props: TopBarProps): React.ReactElement => {
     return (
         <div className="topBar">
             <div className="inventory">
-                { quantifiedInventory.map((item: ItemId) => { 
+                { quantifiedInventory.map((item: ItemId, index) => { 
                     return (
                         <InventoryItem 
-                            key={item} 
+                            key={index} 
                             name={item}
                             triggerTooltip={triggerTooltip}
                         />

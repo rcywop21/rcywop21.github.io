@@ -49,18 +49,16 @@ const Game = (props: GameProps): React.ReactElement => {
     const [tooltipType, setTooltipType] = React.useState<TooltipType>(null);
     const [tooltipData, setTooltipData] = React.useState<string[]>([""]);
     const [isTooltipRightSide, setIsTooltipRightSide] = React.useState<boolean>(true);
-    const [stagedActionDisplayName, setStagedActionDisplayName] = React.useState<string>("bleh");
     
     const socket = React.useContext(SocketContext);
 
-    function handleSpecificAction(action: string, actionDisplayName: string) {
-        return () => handleAction(action, actionDisplayName);
+    function handleSpecificAction(action: string) {
+        return () => handleAction(action);
     }
 
-    function handleAction(action: string, actionDisplayName: string) {
+    function handleAction(action: string) {
         if (!isMentor) {
             socket?.emit('action', action);
-            setStagedActionDisplayName(actionDisplayName);
         }
     }
 
@@ -84,8 +82,8 @@ const Game = (props: GameProps): React.ReactElement => {
     
     const onActionPopupProps: OnActionPopupProps = {
         action: playerState.stagedAction,
-        isMentor: isMentor,
-        displayName: stagedActionDisplayName
+        playerState: playerState,
+        isMentor: isMentor
     };
     
     if (isMentor && gameMentorProps) {
@@ -110,8 +108,9 @@ const Game = (props: GameProps): React.ReactElement => {
                 isMentor={isMentor}
             />
             <OnActionPopup 
-                action={playerState.pausedOxygen ? "pause" : null} 
-                isMentor={isMentor} />
+                action={playerState.pausedOxygen ? "pause" : null}
+                isMentor={isMentor}
+                playerState={playerState}/>
             <OnActionPopup {...onActionPopupProps} />
             <Tooltip 
                 isVisible={isTooltipVisible}

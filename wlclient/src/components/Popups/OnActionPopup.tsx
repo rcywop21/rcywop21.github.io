@@ -1,13 +1,15 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react';
-import { Action } from 'wlcommon';
+import { Action, PlayerState } from 'wlcommon';
+import { allPlayerActions } from '../../PlayerAction';
 import './OnActionPopup.css';
 
 export interface OnActionPopupProps {
     action: Action | null;
+    playerState: PlayerState;
     priority?: boolean;
     isMentor?: boolean;
     mentorProps?: OnActionPopupMentorProps;
-    displayName?: string;
 }
 
 export interface OnActionPopupMentorProps {
@@ -16,24 +18,26 @@ export interface OnActionPopupMentorProps {
 }
 
 const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
-    const { action, priority, isMentor, mentorProps, displayName } = props;
+    const { action, playerState, priority, isMentor, mentorProps } = props;
     
     if (!action || (isMentor && action === "pause")) {
         return <React.Fragment></React.Fragment>;
     }
-    
-    const actionNameToShow = displayName ? displayName : action;
-    
     if (isMentor && mentorProps) {
         const { handleActionApprove, handleActionReject } = mentorProps;
         return (
             <React.Fragment>
                 <div className={`onActionPopup ${priority ? "priorityLayer" : "normalLayer"}`}>
-                    <h2>Performing Action...</h2>
-                    <p>Your group is currently performing an action: {actionNameToShow}</p>
-                    <p>Approve?</p>
-                    <button onClick={handleActionApprove}>Yes</button>
-                    <button onClick={handleActionReject}>No</button>
+                    <h2 className="status">Performing Action...</h2>
+                    <div className="popupText">
+                        <p>Your group is currently performing an action: {allPlayerActions[playerState.locationId][playerState.stagedAction!].display}</p>
+                        <p>Task Required: {allPlayerActions[playerState.locationId][playerState.stagedAction!].task}</p>
+                        <p>Approve?</p>
+                        <div>
+                            <button onClick={handleActionApprove}>Yes</button>
+                            <button onClick={handleActionReject}>No</button>
+                        </div>
+                    </div>
                 </div>
                 <div className="onActionBackgroundShroud"></div>
             </React.Fragment>
@@ -44,17 +48,22 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
     if (action === "pause") {
         popupText = (
             <React.Fragment>
-                <h2>Pause</h2>
-                <p>Your mentor has paused the exercise.</p>
-                <p>Please wait for your mentor to resume...</p>
+                <h2 className="status">Pause</h2>
+                <div className="popupText">
+                    <p>Your mentor has paused the exercise.</p>
+                    <p>Please wait for your mentor to resume...</p>
+                </div>
             </React.Fragment>
         );
     } else {
         popupText = (
             <React.Fragment>
-                <h2>Performing Action...</h2>
-                <p>You are currently performing an action: {actionNameToShow}</p>
-                <p>Please wait for mentor approval...</p>
+                <h2 className="status">Performing Action...</h2>
+                <div className="popupText">
+                    <p>You are currently performing an action: {allPlayerActions[playerState.locationId][playerState.stagedAction!].display}</p>
+                    <p>Task Required: {allPlayerActions[playerState.locationId][playerState.stagedAction!].task}</p>
+                    <p>Please wait for mentor approval...</p>
+                </div>
             </React.Fragment>
         );
     }
