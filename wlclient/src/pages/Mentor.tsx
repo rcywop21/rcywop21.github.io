@@ -18,9 +18,6 @@ const Mentor = (props: MentorProps): React.ReactElement => {
     const [globalState, setGlobalState] = React.useState<
         GlobalState | undefined
     >(undefined);
-    const [teamId, setTeamId] = React.useState<
-        number | undefined
-    >(undefined);
 
     const socket = React.useContext(SocketContext);
 
@@ -33,10 +30,10 @@ const Mentor = (props: MentorProps): React.ReactElement => {
         });
     }, [socket]);
 
-    if (playerState && globalState && teamId) {
+    if (playerState && globalState) {
         return (
             <div>
-                <MentorGame globalState={globalState} playerState={playerState} teamId={teamId}/>
+                <MentorGame globalState={globalState} playerState={playerState} teamId={playerState.id}/>
             </div>
         );
     }
@@ -48,7 +45,6 @@ const Mentor = (props: MentorProps): React.ReactElement => {
                 updateLoggedIn={updateLoggedIn}
                 updateGlobalState={setGlobalState}
                 updatePlayerState={setPlayerState}
-                updateTeamId={setTeamId}
             />
         </div>
     );

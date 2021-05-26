@@ -18,9 +18,6 @@ const Main = (props: MainProps): React.ReactElement => {
     const [globalState, setGlobalState] = React.useState<
         GlobalState | undefined
     >(undefined);
-    const [teamId, setTeamId] = React.useState<
-        number | undefined
-    >(undefined);
 
     const socket = React.useContext(SocketContext);
 
@@ -33,10 +30,10 @@ const Main = (props: MainProps): React.ReactElement => {
         });
     }, [socket]);
 
-    if (playerState && globalState && teamId !== undefined) {
+    if (playerState && globalState) {
         return (
             <div>
-                <Game globalState={globalState} playerState={playerState} teamId={teamId}/>
+                <Game globalState={globalState} playerState={playerState} teamId={playerState.id}/>
             </div>
         );
     }
@@ -48,7 +45,6 @@ const Main = (props: MainProps): React.ReactElement => {
                 updateLoggedIn={updateLoggedIn}
                 updateGlobalState={setGlobalState}
                 updatePlayerState={setPlayerState}
-                updateTeamId={setTeamId}
             />
         </div>
     );

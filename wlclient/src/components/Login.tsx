@@ -8,7 +8,6 @@ export interface NormalLoginProps {
     updateLoggedIn: (x: LoginMode | undefined) => void;
     updatePlayerState: (state: PlayerState) => void;
     updateGlobalState: (state: GlobalState) => void;
-    updateTeamId: (x: number) => void;
     mode: 'player' | 'mentor';
 }
 
@@ -70,7 +69,6 @@ const Login = (props: LoginProps): React.ReactElement => {
                 const {
                     updatePlayerState,
                     updateGlobalState,
-                    updateTeamId
                 } = props as NormalLoginProps;
                 const {
                     playerState,
@@ -78,9 +76,6 @@ const Login = (props: LoginProps): React.ReactElement => {
                 } = payload as AuthOkReplyPayload;
                 updatePlayerState(playerState);
                 updateGlobalState(globalState);
-                if (groupName) {
-                    updateTeamId(groupName);
-                }
             }
         }
     }
