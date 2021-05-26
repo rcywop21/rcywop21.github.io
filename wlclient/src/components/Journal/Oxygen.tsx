@@ -30,21 +30,21 @@ const Oxygen = (props: OxygenProps): React.ReactElement => {
             <OxygenEntry 
                 locationId={Locations.locationIds.CORALS} 
                 actionKey="corals"
-                cooldown={playerState.streamCooldownExpiry[Locations.locationIds.CORALS]}
+                cooldown={new Date(playerState.streamCooldownExpiry[Locations.locationIds.CORALS])}
                 challengeMode={challengeModeParameter}
                 oxygenInSeconds={1200}
                 />
             <OxygenEntry 
                 locationId={Locations.locationIds.TUNA} 
                 actionKey="tuna"
-                cooldown={playerState.streamCooldownExpiry[Locations.locationIds.TUNA]}
+                cooldown={new Date(playerState.streamCooldownExpiry[Locations.locationIds.TUNA])}
                 challengeMode={challengeModeParameter}
                 oxygenInSeconds={1800}
                 />
             <OxygenEntry 
                 locationId={Locations.locationIds.BUBBLE} 
                 actionKey="bubble"
-                cooldown={playerState.streamCooldownExpiry[Locations.locationIds.BUBBLE]}
+                cooldown={new Date(playerState.streamCooldownExpiry[Locations.locationIds.BUBBLE])}
                 enabled={!!playerState.hasBubblePass}
                 disabledDescription="You need a Bubble Pass to use this Oxygen Stream."
                 challengeMode={challengeModeParameter}
@@ -66,7 +66,7 @@ const Oxygen = (props: OxygenProps): React.ReactElement => {
             />
             <TritonOxygenInfo
                 tritonOxygen={globalState.tritonOxygen}
-                cooldown={playerState.streamCooldownExpiry[Locations.locationIds.STATUE]}
+                cooldown={new Date(playerState.streamCooldownExpiry[Locations.locationIds.STATUE])}
                 challengeMode={challengeModeParameter}
             />
         </div>
