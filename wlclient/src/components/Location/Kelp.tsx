@@ -12,7 +12,7 @@ const actions: Record<string, PlayerAction> = {
         300000,
         (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
         (): void => { return; },),
-    [Actions.specificActions.KELP.CLIMB_DOWN]: new PlayerAction("Climb Down", "You have found a small shrine tucked away in a valley. However, the journey there looks difficult.", 
+    [Actions.specificActions.KELP.CLIMB_DOWN]: new PlayerAction("Climb Down Valley", "You have found a small shrine tucked away in a valley. However, the journey there looks difficult.", 
         "Online Maze: https://www.mathsisfun.com/games/mazes.html. Complete one Hard maze.", "360px", "487px",
         (playerState) => playerState.quests[questIds.SHRINE_1]?.status === 'incomplete'),
     [Actions.specificActions.KELP.HARVEST]: new PlayerAction("Harvest", "Harvest some blinkseed here.", 
