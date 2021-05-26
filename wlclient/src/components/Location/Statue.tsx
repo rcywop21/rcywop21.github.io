@@ -1,7 +1,7 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { Actions } from 'wlcommon';
+import { Actions, questIds, quests } from 'wlcommon';
 import { DynamicPlayerAction, makeActionProps, makeDynamicActionProps, PlayerAction } from '../../PlayerAction';
 import DynamicAction, { DynamicActionProps } from './DynamicAction';
 
@@ -28,16 +28,20 @@ const Statue = (props: SpecificLocationProps): React.ReactElement => {
             (playerState) => playerState.knowsLanguage),
         [Actions.specificActions.STATUE.CAST_COOLING_AURA]: new PlayerAction("Cast Cool Aura", "The Crimson's body temperature is kept low as part of its slumber. Prevent it from getting too high!",
             "Water Parade.", "414px", "324px",
-            (playerState) => playerState.knowsCrimson),
+            (playerState) => playerState.knowsCrimson,
+            (playerState) => playerState.quests[questIds.CHAPTER_3]?.status === 'incomplete'),
         [Actions.specificActions.STATUE.STRENGTHEN_BEFUDDLEMENT]: new PlayerAction("Befuddle Harder", "A Befuddlement Spell keeps the Crimson from waking up. However, it may weaken over time, and you will have to strengthen it.",
             "Do 10 Jumping Jacks/Buddha Claps.", "125px", "122px",
-            (playerState) => playerState.knowsCrimson),
+            (playerState) => playerState.knowsCrimson,
+            (playerState) => playerState.quests[questIds.CHAPTER_3]?.status === 'incomplete'),
         [Actions.specificActions.STATUE.POWER_CONTAINMENT]: new PlayerAction("Contain Power", "The Containment Arrays attempt to isolate the Crimson so that it doesn't sense the artefacts and awaken. You will need to power it to keep the isolation secure.",
             "Everyone to present a different battery brand/type (including portable batteries).", "376px", "135px",
-            (playerState) => playerState.knowsCrimson),
+            (playerState) => playerState.knowsCrimson,
+            (playerState) => playerState.quests[questIds.CHAPTER_3]?.status === 'incomplete'),
         [Actions.specificActions.STATUE.PURIFY_CORRUPTION]: new PlayerAction("Purify Corruption", "As the Crimson begins to awaken, it will start to corrupt the surroundings. It draws even more power from this corruption. You will need to purify the corruption to keep the Crimson weak.",
             "Everyone to present a hand sanitiser of different brands.", "100px", "304px",
-            (playerState) => playerState.knowsCrimson),
+            (playerState) => playerState.knowsCrimson,
+            (playerState) => playerState.quests[questIds.CHAPTER_3]?.status === 'incomplete'),
         [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store Oxygen", "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
             "No task required.", "870px", "488px",
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
