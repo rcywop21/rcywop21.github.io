@@ -107,6 +107,10 @@ const transforms: Record<QuestId, Transform> = {
     [questIds.SHRINE_2]: (state) => { 
         let result = makeAddItemTransform(itemDetails.UNICORN_TEAR.id, 1)(state);
         result = makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(state);
+        result = makeAddMessageTransform({
+            text: `[Announcement] Team ${state.playerState.id} has found the Unicorn's Tear!`,
+            visibility: 'public'
+        })(state);
         result.globalState.artefactsFound += 1;
         return result;
     },
@@ -116,7 +120,7 @@ const transforms: Record<QuestId, Transform> = {
     ),
     [questIds.CLOAK_1]: (state) => (state.playerState.inventory[itemDetails.BLACK_ROCK.id]?.qty ? makeAdvanceQuestTransform(questIds.CLOAK_2, 0) : identityTransform)(state),
     [questIds.CLOAK_3]: makeAddMessageTransform(
-        "You return to the Umbral Ruins, but it seems that Alyusi has disappeared. Without returning you your Oxygen! You call his name out loud, but nobody came.\n\nYou glance at the blinkseed, and you can't help but think it looks, smells and feels exactly like common seaweed..."
+        "You return to the Umbral Ruins, but it seems that Alyusi has disappeared. Without returning your Oxygen! You call his name out loud, but nobody came.\n\nYou glance at the blinkseed, and you can't help but think it looks, smells and feels exactly like common seaweed..."
     )
 };
 

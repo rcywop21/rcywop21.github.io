@@ -11,10 +11,15 @@ import {
 import { notifyGameState, notifyNewMessages, notifyPlayerState } from './connections';
 import logger from './logger';
 
+export interface MessageSpec {
+    text: string;
+    visibility: 'private' | 'public';
+}
+
 export interface TransformState {
     playerState: PlayerState;
     globalState: GlobalState;
-    messages: string[];
+    messages: MessageSpec[];
 }
 
 export type Transform = (result: TransformState) => TransformState;
@@ -60,8 +65,8 @@ export const applyTransform = (
     messages.forEach((message) =>
         gameState.global.messages.push({
             time: new Date(),
-            visibility: playerId,
-            message,
+            visibility: message.visibility === 'public' ? 'all' : playerId,
+            message: message.text,
         })
     );
 
@@ -87,11 +92,19 @@ export const setAction = (playerId: TeamId, action: string | null): void => {
     }
 };
 
-export const makeAddMessageTransform = (...newMsg: string[]): Transform => (
+export const makeAddMessageTransform = (...newMsg: (string | MessageSpec)[]): Transform => (
     state
 ) => ({
     ...state,
-    messages: state.messages.concat(newMsg),
+    messages: state.messages.concat(newMsg.map((text) => {
+        if (typeof text === 'string')
+            return {
+                text,
+                visibility: 'private'
+            };
+        else
+            return text;
+    })),
 });
 
 const exemptQuests = [

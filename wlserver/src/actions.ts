@@ -72,7 +72,7 @@ const applyLocationActions: Record<
             )(state); 
             if (doChallengeMode) {
                 result = makePlayerStatTransform('challengeMode', new Date(now + 1800000))(result);
-                result = makeAddMessageTransform("You are now in Challenge Mode. Reminder: In Challenge Mode, you will only receive 1/5 the normal amount of Oxygen from diving and from Oxygen Streams. Bring the Unicorn's Hair to the Shrine and survive for 30 minutes without resurfacing to complete your quest!")(result);
+                result = makeAddMessageTransform("You are now in Challenge Mode. Reminder: In Challenge Mode, you will receive less Oxygen from Oxygen Streams and your pump is disabled. Bring the Unicorn's Hair to the Shrine and survive for 30 minutes without resurfacing to complete your quest!")(result);
             }
             return result;
         }
@@ -380,7 +380,11 @@ const applyLocationActions: Record<
         [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: (state) => { 
             const result = composite(
                 makeAdvanceQuestTransform(questIds.CHAPTER_2, 1),
-                makeAddItemTransform(itemDetails.PEARL.id, 1)
+                makeAddItemTransform(itemDetails.PEARL.id, 1),
+                makeAddMessageTransform({
+                    text: `[Announcement] Team ${state.playerState.id} has found the Pearl of Asclepius!`,
+                    visibility: 'public'
+                }),
             )(state);
             result.globalState.artefactsFound += 1;
             return result;

@@ -3,7 +3,7 @@ import { notifyGameState, notifyPlayerState } from './connections';
 import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
 import { makeAdvanceQuestTransform } from './questRewards';
-import { applyTransform, composite, gameState, killTransform, makeAddMessageTransform, makePlayerStatTransform } from './stateMgr';
+import { applyTransform, composite, gameState, killTransform, makeAddMessageTransform, makePlayerStatTransform, Transform } from './stateMgr';
 
 const linkedStreamsTransform = composite(
     makeAddMessageTransform('You have received 40 minutes of Oxygen from the linked Oxygen Streams.'),
@@ -12,11 +12,17 @@ const linkedStreamsTransform = composite(
 
 const linkedStreamsFailTransform = makeAddMessageTransform('The other end of the linked Oxygen Stream was not activated in time. You did not manage to get any Oxygen.');
 
-const finishChallengeModeTransform = composite(
-    makeAddMessageTransform('You have survived 30 minutes in Challenge Mode. Well done! Return to the Shrine of the Innocent to collect your reward.'),
+const finishChallengeModeTransform: Transform = (state) => composite(
+    makeAddMessageTransform(
+        'You have survived 30 minutes in Challenge Mode. Well done! Return to the Shrine of the Innocent to collect your reward.',
+        {
+            visibility: 'public',
+            text: `[Announcement] Team ${state.playerState.id} has completed Challenge Mode. (Difficulty: ${Math.max(15, 12.5 + 0.25 * state.globalState.artefactsFound).toFixed(1)}% Oxygen)`
+        }
+    ),
     makeAdvanceQuestTransform(questIds.SHRINE_2, 4),
     makePlayerStatTransform('challengeMode', null)
-)
+)(state)
 
 const onTick = (): void => {
     const currentTime = Date.now();
