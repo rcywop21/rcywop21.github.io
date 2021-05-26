@@ -22,7 +22,7 @@ const QuestJournal = (props: QuestJournalProps): React.ReactElement => {
             <p className="helptext">
                 This journal contains all information you have regarding quests.
             </p>
-            { listOfQuests.map((qs) => <QuestJournalInfo key="qs.id" data={qs} />) }
+            { listOfQuests.map((qs) => <QuestJournalInfo key={qs.id} data={qs} />) }
         </div>
     );
 }

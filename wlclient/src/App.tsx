@@ -14,9 +14,6 @@ export interface AppProps {
 function App(): React.ReactElement {
     const [loggedIn, setLoggedIn] = React.useState<boolean>(false);
 
-    const [chapter, setChapter] = React.useState<number | undefined>(undefined);
-    const [deadline, setDeadline] = React.useState<Date | null>(null);
-
     React.useEffect(
         () => () => {
             socket.disconnect();
@@ -29,13 +26,10 @@ function App(): React.ReactElement {
         <Router>
             <SocketContext.Provider value={socket}>
                 <div className="App">
-                    <Header chapter={chapter} deadline={deadline} />
+                    <Header />
                     <Switch>
                         <Route path="/mentor">
-                            <Mentor
-                                loggedIn={loggedIn}
-                                updateLoggedIn={setLoggedIn}
-                            />
+                            <Mentor />
                         </Route>
                         <Route path="/admin">
                             <Admin
@@ -44,10 +38,7 @@ function App(): React.ReactElement {
                             />
                         </Route>
                         <Route path="/">
-                            <Main
-                                loggedIn={loggedIn}
-                                updateLoggedIn={setLoggedIn}
-                            />
+                            <Main />
                         </Route>
                     </Switch>
                 </div>

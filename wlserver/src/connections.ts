@@ -24,6 +24,7 @@ export const ROOMS = {
         'group7',
         'group8',
         'group9',
+        'group10',
     ],
     MENTORS: [
         'mentor0',
@@ -36,6 +37,7 @@ export const ROOMS = {
         'mentor7',
         'mentor8',
         'mentor9',
+        'mentor10',
     ],
 };
 

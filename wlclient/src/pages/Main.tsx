@@ -4,14 +4,7 @@ import Game from '../components/Game';
 import { GlobalState, PlayerState } from 'wlcommon';
 import { SocketContext } from '../socket/socket';
 
-export interface MainProps {
-    loggedIn: boolean;
-    updateLoggedIn: (x: boolean) => void;
-}
-
-const Main = (props: MainProps): React.ReactElement => {
-    const { loggedIn, updateLoggedIn } = props;
-
+const Main = (): React.ReactElement => {
     const [playerState, setPlayerState] = React.useState<
         PlayerState | undefined
     >(undefined);
@@ -25,7 +18,6 @@ const Main = (props: MainProps): React.ReactElement => {
     const socket = React.useContext(SocketContext);
 
     React.useEffect(() => {
-        console.log(socket);
         socket?.on('player_update', (newGameState: PlayerState) => {
             setPlayerState(newGameState);
         });
@@ -46,7 +38,7 @@ const Main = (props: MainProps): React.ReactElement => {
         <div>
             <Login
                 mode="player"
-                updateLoggedIn={updateLoggedIn}
+                updateLoggedIn={() => undefined}
                 updateGlobalState={setGlobalState}
                 updatePlayerState={setPlayerState}
                 updateTeamId={setTeamId}

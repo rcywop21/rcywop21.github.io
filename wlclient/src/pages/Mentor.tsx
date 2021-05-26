@@ -5,14 +5,7 @@ import { GlobalState, PlayerState } from 'wlcommon';
 import { SocketContext } from '../socket/socket';
 
 
-export interface MentorProps {
-    loggedIn: boolean;
-    updateLoggedIn: (x: boolean) => void;
-}
-
-const Mentor = (props: MentorProps): React.ReactElement => {
-    const { loggedIn, updateLoggedIn } = props;
-
+const Mentor = (): React.ReactElement => {
     const [playerState, setPlayerState] = React.useState<
         PlayerState | undefined
     >(undefined);
@@ -47,7 +40,7 @@ const Mentor = (props: MentorProps): React.ReactElement => {
         <div>
             <Login
                 mode="mentor"
-                updateLoggedIn={updateLoggedIn}
+                updateLoggedIn={() => undefined}
                 updateGlobalState={setGlobalState}
                 updatePlayerState={setPlayerState}
                 updateTeamId={setTeamId}
