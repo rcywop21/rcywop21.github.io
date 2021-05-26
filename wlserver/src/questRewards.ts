@@ -105,7 +105,8 @@ const transforms: Record<QuestId, Transform> = {
         makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1)
     ),
     [questIds.SHRINE_2]: (state) => { 
-        const result = makeAddItemTransform(itemDetails.UNICORN_TEAR.id, 1)(state);
+        let result = makeAddItemTransform(itemDetails.UNICORN_TEAR.id, 1)(state);
+        result = makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(state);
         result.globalState.artefactsFound += 1;
         return result;
     },
