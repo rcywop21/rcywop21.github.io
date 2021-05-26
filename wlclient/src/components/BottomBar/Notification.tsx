@@ -29,10 +29,10 @@ const Notification = (props: NotificationProps): React.ReactElement => {
         }
     }, [time]);
 
-    const isRecentQuestNotif = isRecent && /quest/ig.test(message);
+    const isQuestNotif = /quest/ig.test(message);
     
     return (
-        <p className={`notif ${isRecent ? "recentNotif" : "oldNotif"} ${isRecentQuestNotif ? "questNotif" : ""}`}>
+        <p className={`notif ${isQuestNotif ? "questNotif" : isRecent ? "recentNotif" : "oldNotif"}`}>
             {message}
         </p>
     );
