@@ -22,7 +22,7 @@ export const itemDetails = {
         id: 'OxygenGuide',
         name: 'Guide to Oxygen Streams',
         description:
-            'It describes most of the Oxygen Streams in the Undersea as well as how to get Oxygen from them.',
+            'It describes most of the Oxygen Streams in the Undersea as well as how to get Oxygen from them. You have copied over the important information from the guide to your Journal.',
     },
     MERMAID_DOLL: {
         id: 'MermaidDoll',
@@ -90,6 +90,16 @@ export const itemDetails = {
         id: 'Pearl',
         name: "Pearl of Asclepius",
         description: 'An incredibly valuable artefact. Fashioned by the legendary healer Asclepius, a skilled healer can use this to heal someone of almost any kind of ailment.',
+    },
+    ELEPHANT: {
+        id: 'Elephant',
+        name: 'Elephant Figurine',
+        description: 'An exquisitely carved figurine of an elephant. It seems to be made of some white, polished mineral. It looks expensive and you probably need to shine it frequently.'
+    },
+    HERRING_CHARM: {
+        id: 'HerringCharm',
+        name: 'Herring Charm',
+        description: 'A fish-shaped amulet that is said to bless the bearer with wisdom. It is red in colour.'
     }
 };
 

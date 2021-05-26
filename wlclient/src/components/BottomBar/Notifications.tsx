@@ -7,13 +7,13 @@ export interface NotificationsProps {
     notifications: Message[];
 }
 
-const Notifications = (props: NotificationsProps): React.ReactElement => {
-    const { notifications } = props;
-    notifications.sort((n1, n2) => n1.time < n2.time ? 1 : -1)
-    
-    function notifToDisplayString(message: Message): string {
+export function notifToDisplayString(message: Message): string {
         return `[${(new Date(message.time)).toTimeString().slice(0, 5)}]  ${message.message}`;
     }
+
+const Notifications = (props: NotificationsProps): React.ReactElement => {
+    const { notifications } = props;
+    notifications.sort((n1, n2) => n1.time < n2.time ? 1 : -1);
     
     return (
         <div className="notifications">

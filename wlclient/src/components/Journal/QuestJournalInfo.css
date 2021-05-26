@@ -10,3 +10,25 @@
 .stageFuture {
     color: #AAAAAA;
 }
+
+.subtitle.complete {
+    color: #283;
+}
+
+.questjournalinfo {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.questjournalinfo > .description {
+    margin-top: 0;
+}
+
+.questjournalinfo > ol, ul {
+    margin: 0;
+}
+
+.questjournalinfo h4 {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}

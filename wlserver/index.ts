@@ -7,7 +7,7 @@ import {
     onRejectionHandler,
     onTravelHandler,
 } from './src/socketHandlers';
-import { onAdminHandler } from './src/admin';
+import { onAdminHandler, onAnnounceHandler } from './src/admin';
 import logger from './src/logger';
 import setupGameState from './src/startup';
 import onTick from './src/tick';
@@ -38,6 +38,9 @@ io.on('connection', (socket) => {
     );
     socket.on('pause', (payload, reply) =>
         onPauseHandler(socket, payload, reply, io)
+    );
+    socket.on('announce', (payload, reply) =>
+        onAnnounceHandler(socket, payload, reply, io)
     );
 });
 

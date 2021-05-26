@@ -80,9 +80,10 @@ export const makeDynamicActionProps = (actions: Record<string, PlayerAction>, is
     .filter(([, playerAction]) => (playerAction instanceof DynamicPlayerAction))
     .map(([actionId, playerAction]) => {
         const dynamicPlayerAction = playerAction as DynamicPlayerAction;
-        const isVisible = isMentor || (dynamicPlayerAction.getVisibility ? dynamicPlayerAction.getVisibility(playerState) : true);
 
+        const isVisible = dynamicPlayerAction.getVisibility ? dynamicPlayerAction.getVisibility(playerState) : true;
         const isEnabled = isVisible && (dynamicPlayerAction.getEnabled ? dynamicPlayerAction.getEnabled(playerState) : true);
+
         if (dynamicPlayerAction.optionalDescription
             && dynamicPlayerAction.description.substr(dynamicPlayerAction.description.length - 3) != "PM."
             && dynamicPlayerAction.description.substr(dynamicPlayerAction.description.length - 3) != "AM.") {
@@ -94,7 +95,7 @@ export const makeDynamicActionProps = (actions: Record<string, PlayerAction>, is
                 action: actionId,
                 x: dynamicPlayerAction.x,
                 y: dynamicPlayerAction.y,
-                isVisible,
+                isVisible: isVisible || !isMentor,
                 isEnabled,
                 handleAction: handleAction(actionId, playerAction.display),
                 triggerTooltip: triggerTooltip,

@@ -14,7 +14,15 @@ const INVENTORY_ITEMS_ASSET_MAP: Map<ItemId, string> = new Map([
     [itemDetails.MERMAID_DOLL.id, "doll.png"],
     [itemDetails.PUMP.id, "pump.png"],
     [itemDetails.BLACK_ROCK.id, "rock.png"],
-    [itemDetails.BUBBLE.id, "pass.png"]
+    [itemDetails.BUBBLE.id, "pass.png"],
+    [itemDetails.DISCOVERS.id, "ticket.png"],
+    [itemDetails.STAFF.id, "staff.png"],
+    [itemDetails.BLINKSEED.id, "blinkseed.png"],
+    [itemDetails.PYRITE_PAN.id, "pan.png"],
+    [itemDetails.LIBRARY_PASS.id, "library.png"],
+    [itemDetails.UNICORN_HAIR.id, "hair.png"],
+    [itemDetails.UNICORN_TEAR.id, "tear.png"],
+    [itemDetails.PEARL.id, "pearl.png"]
 ]);
 
 function getImg(item: ItemId): string {

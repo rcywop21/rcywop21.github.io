@@ -21,8 +21,18 @@
     color: #E1614B;
 }
 
+.questNotif {
+    color: #13945D;
+    font-weight: bold;
+}
+
 .oldNotif {
     color: black;
+}
+
+.announcement {
+    color: blue;
+    font-weight: bold;
 }
 
 .innerNotifBox {
