@@ -16,7 +16,7 @@ const actions: Record<string, PlayerAction> = {
         "Have any member share an incident when things did not go as planned for a training/ project and how did the plan get adapted.", "99px", "503px",
         (playerState) => playerState.quests[questIds.FINCHES_2]?.status === 'incomplete',
         (playerState) => playerState.inventory[itemDetails.LIBRARY_PASS.id] !== undefined),
-    [Actions.specificActions.LIBRARY.STUDY_ARTEFACT]: new PlayerAction("Study Artefact", "Learn more about the artefacts.", 
+    [Actions.specificActions.LIBRARY.STUDY_ARTEFACT]: new PlayerAction("Study Artefact Legends", "Learn more about the artefacts.", 
         "Create a new group cheer and do it to energise yourselves.", "630px", "202px",
         (playerState) => playerState.quests[questIds.ARTEFACTS_1]?.status === 'incomplete',
         (playerState) => playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty >= 0),
