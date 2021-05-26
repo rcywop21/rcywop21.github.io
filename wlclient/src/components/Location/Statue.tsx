@@ -1,7 +1,7 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { Actions, questIds, quests } from 'wlcommon';
+import { Actions, questIds } from 'wlcommon';
 import { DynamicPlayerAction, makeActionProps, makeDynamicActionProps, PlayerAction } from '../../PlayerAction';
 import DynamicAction, { DynamicActionProps } from './DynamicAction';
 
