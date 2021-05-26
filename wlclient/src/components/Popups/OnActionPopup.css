@@ -25,3 +25,14 @@
 .normalLayer {
     z-index: 299;
 }
+
+.onActionPopup button {
+    background-color: #b66;
+    border: 0px;
+    border-radius: 15px;
+    padding: 5px 15px;
+    font-size: 16px;
+    color: black;
+    margin: 10px;
+    cursor: pointer;
+}
