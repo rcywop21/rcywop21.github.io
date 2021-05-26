@@ -22,7 +22,7 @@ export const itemDetails = {
         id: 'OxygenGuide',
         name: 'Guide to Oxygen Streams',
         description:
-            'It describes most of the Oxygen Streams in the Undersea as well as how to get Oxygen from them.',
+            'It describes most of the Oxygen Streams in the Undersea as well as how to get Oxygen from them. You have copied over the important information from the guide to your Journal.',
     },
     MERMAID_DOLL: {
         id: 'MermaidDoll',
