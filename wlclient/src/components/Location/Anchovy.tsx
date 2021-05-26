@@ -3,11 +3,12 @@ import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { makeActionProps, makeDynamicActionProps, allPlayerActions } from '../../PlayerAction';
 import DynamicAction, { DynamicActionProps } from './DynamicAction';
+import { Locations } from 'wlcommon';
 
 const Anchovy = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor } = props;
 
-    const actions = allPlayerActions.anchovy;
+    const actions = allPlayerActions[Locations.locationIds.ANCHOVY];
     const actionProps = makeActionProps(
         actions, isMentor, playerState, handleAction, triggerTooltip
     );
