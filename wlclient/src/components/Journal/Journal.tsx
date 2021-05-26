@@ -13,7 +13,7 @@ export interface JournalProps {
 }
 
 export enum JournalPages {
-    QUEST_JOURNAL = "Quest Journal",
+    QUEST_JOURNAL = "Quest Log",
     NOTES = "Notes",
     OXYGEN = "Oxygen"
 }

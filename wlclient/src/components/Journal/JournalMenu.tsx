@@ -15,15 +15,15 @@ const JournalMenu = (props: JournalMenuProps): React.ReactElement => {
         <div className="journalMenu">
             <span><b>&emsp;Journal Pages:&emsp;</b></span>
             <button onClick={handlePageSwitch(JournalPages.QUEST_JOURNAL)}>
-                Quest Journal
+                {JournalPages.QUEST_JOURNAL}
             </button>
             <span>&emsp;</span>
             <button onClick={handlePageSwitch(JournalPages.NOTES)}>
-                Notes
+                {JournalPages.NOTES}
             </button>
             <span>&emsp;</span>
             {knowsOxygen && <button onClick={handlePageSwitch(JournalPages.OXYGEN)}>
-                Oxygen
+                {JournalPages.OXYGEN}
             </button>}
         </div>
     );
