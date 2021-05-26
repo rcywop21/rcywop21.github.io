@@ -17,11 +17,11 @@ const QuestJournalInfo = (props: QuestJournalInfoProps): React.ReactElement => {
     const stageInfo = data.stages;
     
     let currStage = 999;
-    let orderInstructionText = "Complete the following in any order:";
+    let orderInstructionText = "Complete these tasks in any order:";
     
     if (fullQuestInfo.stageOrder === "inOrder") {
         currStage = stageInfo.indexOf(false);
-        orderInstructionText = "Complete the following in the following order:"
+        orderInstructionText = "Complete these tasks in the following order:"
     }
     
     function determineStageStyle(index: number): string {
