@@ -177,8 +177,8 @@ export const allPlayerActions = {
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "434px", "524px"),
-        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Get Oxygen", "Each of you has to show a different item from the following: Pencil case, phone application and items you bring on a holiday.", 
-            "Recite Red Cross Promise.", "55px", "239px",
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Get Oxygen", "The Bubble Factory is one of the largest sources of Oxygen in the Undersea, giving a user 40 minutes of Oxygen. However, you will need a Bubble Pass to use it.", 
+            "Each of you has to show a different item from the following: Pencil case, phone application and items you bring on a holiday.", "55px", "239px",
             (playerState) => new Date(playerState.streamCooldownExpiry[playerState.locationId] ?? 0),
             0, (setIsVisible, setIsEnabled): void => { setIsEnabled(true);}, (setIsVisible, setIsEnabled): void => { setIsEnabled(false);}, 
             coolDownMessage, undefined, (playerState) => playerState.inventory[itemDetails.BUBBLE.id]?.qty > 0)

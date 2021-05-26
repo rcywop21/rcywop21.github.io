@@ -13,14 +13,15 @@ const QuestInfo = (props: QuestInfoProps): React.ReactElement => {
     const questName = questInfo.name;
     const questSteps: string[] = [];
     
+    const currProgress = questState.stages.indexOf(false);
+    
     if (questInfo.stageOrder === "inOrder") {
-        const currProgress = questState.stages.indexOf(false);
         questSteps.push(questInfo.stages[currProgress]);
     }
     
     if (questInfo.stageOrder === "anyOrder") {
-        for (let i = 0; i < questInfo.stages.length; i++) {
-            questSteps.push(`\u{2022} ${questInfo.stages[i]}`);
+        for (let i = currProgress; i < questInfo.stages.length; i++) {
+            !questState.stages[i] && questSteps.push(`\u{2022} ${questInfo.stages[i]}`);
         }
     }
 

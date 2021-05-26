@@ -33,8 +33,6 @@ const QuestJournalInfo = (props: QuestJournalInfoProps): React.ReactElement => {
 
     const ListComponent = fullQuestInfo.stageOrder === 'inOrder' ? 'ol' : 'ul';
 
-    // console.log(data.status);
-    
     return (
         <div className="questjournalinfo">
             <h3 className={`subtitle subtitleColor ${data.status === 'completed' ? 'complete' : ''}`}>{title}</h3>

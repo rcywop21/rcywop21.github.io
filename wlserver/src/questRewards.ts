@@ -106,7 +106,7 @@ const transforms: Record<QuestId, Transform> = {
     ),
     [questIds.SHRINE_2]: (state) => { 
         let result = makeAddItemTransform(itemDetails.UNICORN_TEAR.id, 1)(state);
-        result = makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(state);
+        result = makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(result);
         result = makeAddMessageTransform({
             text: `[Announcement] Team ${state.playerState.id} has found the Unicorn's Tear!`,
             visibility: 'public'
