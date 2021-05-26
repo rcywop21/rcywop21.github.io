@@ -94,6 +94,7 @@ const Game = (props: GameProps): React.ReactElement => {
             <TopBar 
                 inventory={playerState.inventory} 
                 oxygenUntil={playerState.oxygenUntil} 
+                challengeMode={playerState.challengeMode} 
                 crimsonUntil={new Date()}
                 triggerTooltip={triggerTooltip}
             />

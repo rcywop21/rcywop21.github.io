@@ -24,4 +24,5 @@
     align-items: center;
     width: 284px;
     height: 90px;
+    flex-direction: column;
 }
