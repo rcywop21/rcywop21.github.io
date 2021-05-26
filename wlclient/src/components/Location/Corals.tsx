@@ -33,7 +33,7 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "26px", "106px"),
-        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Get Oxygen", "There is a small oxygen stream at the Memorial Corals. By Undersea law, after topping up Oxygen, you must wait 5 minutes before you can top up Oxygen at the same Oxygen Stream." + coolDownMessage, 
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Get Oxygen", "There is a small oxygen stream at the Memorial Corals. By Undersea law, after topping up Oxygen, you must wait 10 minutes before you can top up Oxygen at the same Oxygen Stream." + coolDownMessage, 
             "Each person has to present a fully filled water bottle to the mentors to receive 20 minutes of Oxygen.",
             "108px", "438px",
             (playerState) => playerState.streamCooldownExpiry[playerState.locationId] ? new Date(playerState.streamCooldownExpiry[playerState.locationId]) : new Date(0),

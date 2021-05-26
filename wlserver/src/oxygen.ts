@@ -84,7 +84,7 @@ export const updateStreamCooldownTransform: Transform = (state) => {
             ...state.playerState,
             streamCooldownExpiry: {
                 ...state.playerState.streamCooldownExpiry,
-                [location]: new Date(Date.now() + 5 * 60 * 1000),
+                [location]: new Date(Date.now() + 10 * 60 * 1000),
             },
         },
     };

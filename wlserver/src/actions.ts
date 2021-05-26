@@ -177,7 +177,7 @@ const applyLocationActions: Record<
                 `Player ${state.playerState.id} has accessed the Oxygen Stream at ${Locations.locationIds.STATUE}.`
             );
             return composite(
-                makeAddOxygenTransform(oxygenToAdd / 250),
+                makeAddOxygenTransform(oxygenToAdd / 1000),
                 updateStreamCooldownTransform
             )({
                 ...state,
@@ -339,7 +339,6 @@ const applyLocationActions: Record<
                 makeAdvanceQuestTransform(questIds.CLOAK_3, 0),
                 makeAddItemTransform(itemDetails.BLINKSEED.id, 1)
             )(state);
-            console.log(result.playerState.inventory[itemDetails.BLINKSEED.id]);
             if (result.playerState.inventory[itemDetails.BLINKSEED.id]?.qty >= 3) {
                 console.log('advancing quest');
                 result = makeAdvanceQuestTransform(questIds.CLOAK_3, 1)(result);
