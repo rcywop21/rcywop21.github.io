@@ -19,15 +19,20 @@ function determineIfRecent(d: Date): boolean {
 const Notification = (props: NotificationProps): React.ReactElement => {
     const { time, message } = props;
     
-    const [isRecent, setIsRecent] = React.useState<boolean>(determineIfRecent(time));
-    
-    if (determineIfRecent(time)) {
-        setInterval(() => setIsRecent(false),
-            recentNotifTiming - (Date.now() - time.valueOf()));
-    }
+    const [isRecent, setIsRecent] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        if (determineIfRecent(time)) {
+            setIsRecent(true);
+            const timeout = setTimeout(() => setIsRecent(false), recentNotifTiming - (Date.now() - time.valueOf()));
+            return () => clearTimeout(timeout);
+        }
+    }, [time]);
+
+    const isRecentQuestNotif = isRecent && /quest/ig.test(message);
     
     return (
-        <p className={`notif ${isRecent ? "recentNotif" : "oldNotif"}`}>
+        <p className={`notif ${isRecent ? "recentNotif" : "oldNotif"} ${isRecentQuestNotif ? "questNotif" : ""}`}>
             {message}
         </p>
     );

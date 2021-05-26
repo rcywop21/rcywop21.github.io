@@ -196,7 +196,7 @@ const applyLocationActions: Record<
         [Actions.specificActions.LIBRARY.EXPLORE]: (state) => { 
             let result = composite(
                 makeIssueQuestTransform(questIds.ARTEFACTS_1),
-                makeAddMessageTransform('You approach the librarians and ask them about your quest...'),
+                makeAddMessageTransform('You approach the librarians and ask them about the artefacts of the Undersea...'),
                 makeRemoveOxygenTransform(300)
             )(state);
             if (result.playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty)
