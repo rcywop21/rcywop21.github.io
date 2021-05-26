@@ -24,6 +24,7 @@ const Statue = (props: SpecificLocationProps): React.ReactElement => {
             (): void => { return; },),
         [Actions.specificActions.STATUE.DECODE_ENGRAVING]: new PlayerAction("Decode Engraving", "You have found an engraving written in the ancient language. Decode it to learn what it says.", 
             "Decode 'Vwwh Ujaekgf'", "250px", "553px",
+            (playerState) => playerState.foundEngraving,
             (playerState) => playerState.knowsLanguage),
         [Actions.specificActions.STATUE.CAST_COOLING_AURA]: new PlayerAction("Cast Cool Aura", "The Crimson's body temperature is kept low as part of its slumber. Prevent it from getting too high!",
             "Water Parade.", "414px", "324px",

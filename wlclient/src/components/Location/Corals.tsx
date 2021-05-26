@@ -22,7 +22,9 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
             "The ancient language of the Undersea is interesting. Devote some time to learning it.", 
             "Gather items: 2 brushes, 2 pieces of paper, 2 storybooks; Each person then has to say 'hi' in a different language and say what language it is.",
             "427px", "419px",
-            (playerState) => playerState.quests[questIds.FINCHES]?.status === 'incomplete'),
+            (playerState) => playerState.quests[questIds.FINCHES]?.status === 'incomplete',
+                (playerState) => !playerState.knowsLanguage
+                                                                     ),
         [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction("Store Oxygen", "Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.", 
             "No task required.", "870px", "488px",
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
