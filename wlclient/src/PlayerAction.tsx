@@ -96,7 +96,7 @@ export const makeDynamicActionProps = (actions: Record<string, PlayerAction>, is
                 action: actionId,
                 x: dynamicPlayerAction.x,
                 y: dynamicPlayerAction.y,
-                isVisible: isVisible || !isMentor,
+                isVisible: isVisible || !!isMentor,
                 isEnabled,
                 handleAction: handleAction(actionId),
                 triggerTooltip: triggerTooltip,
