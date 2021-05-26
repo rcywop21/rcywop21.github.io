@@ -65,25 +65,47 @@ const Admin = (props: AdminProps): React.ReactElement => {
         if (input === 'clear') {
             outputDispatch({ type: 'clear' });
         } else {
-            socket?.emit(
-                'admin',
-                input.split(' '),
-                (event: string, payload: unknown) => {
-                    const message =
-                        typeof payload === 'string'
-                            ? payload
-                            : JSON.stringify(payload);
-                    outputDispatch({
-                        type: 'new_entry',
-                        payload: {
-                            time: new Date(),
-                            message,
-                            type: event,
-                            input,
-                        },
-                    });
-                }
-            );
+            if (input.slice(0, 8) === 'announce') {
+                socket?.emit(
+                    'announce',
+                    input.slice(9),
+                    (event: string, payload: unknown) => {
+                        const message =
+                            typeof payload === 'string'
+                                ? payload
+                                : JSON.stringify(payload);
+                        outputDispatch({
+                            type: 'new_entry',
+                            payload: {
+                                time: new Date(),
+                                message,
+                                type: event,
+                                input,
+                            },
+                        });
+                    }
+                )
+            } else {
+                socket?.emit(
+                    'admin',
+                    input.split(' '),
+                    (event: string, payload: unknown) => {
+                        const message =
+                            typeof payload === 'string'
+                                ? payload
+                                : JSON.stringify(payload);
+                        outputDispatch({
+                            type: 'new_entry',
+                            payload: {
+                                time: new Date(),
+                                message,
+                                type: event,
+                                input,
+                            },
+                        });
+                    }
+                );
+            }
         }
         setInput('');
     };

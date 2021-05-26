@@ -10,7 +10,7 @@ import { makeAddOxygenTransform } from './oxygen';
 import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './questRewards';
 import { Reply, SocketHandler } from './socketHandlers';
 import { saveGameState, setupFreshGameState } from './startup';
-import { applyTransform, gameState, makePlayerStatTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
+import { applyTransform, gameState, makeAddMessageTransform, makePlayerStatTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
 
 const commands = {
     state: (payload: string[], reply: Reply): void => {
@@ -266,6 +266,19 @@ export const onAdminHandler: SocketHandler<string[]> = async (
         reply('error', e);
     }
 };
+
+export const onAnnounceHandler: SocketHandler<string> = async (socket, payload, reply) => {
+    const credentials = getCredentials(socket.id);
+    if (credentials?.clientType !== 'admin')
+        return reply('error', 'Not authenticated.');
+
+    applyTransform(makeAddMessageTransform({
+        text: payload,
+        visibility: 'public'
+    }), 0);
+    
+    reply('cmdok', 'Announcement sent.')
+}
 
 const getPlayerId = (payload: string[]): TeamId => {
     const playerId = parseInt(payload.shift()) as TeamId;
