@@ -44,7 +44,7 @@ async function auth(mode: ClientType, id: number, pass: string): Promise<true> {
 
         const entry = data[mode].find((e: AuthEntry) => e.id === id);
         if (entry === undefined)
-            throw `Group name should be a number between 0 to 9`;
+            throw `Unknown group name.`;
         if (entry.pass !== pass) throw `Incorrect Password`;
         return true;
     } finally {
