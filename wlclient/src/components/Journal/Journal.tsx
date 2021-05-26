@@ -14,7 +14,7 @@ export interface JournalProps {
 }
 
 export enum JournalPages {
-    QUEST_JOURNAL = "Quest Log",
+    QUEST_JOURNAL = "Quest Journal",
     CHALLENGE_MODE_INFO = "Challenge Mode",
     OXYGEN = "Oxygen",
     ANNOUNCEMENTS = "Announcements",
