@@ -1,11 +1,12 @@
 import React from 'react';
+import { LoginMode } from '../App';
 import Login from '../components/Login';
 import { SocketContext } from '../socket/socket';
 import './Admin.css';
 
 export interface AdminProps {
     loggedIn: boolean;
-    updateLoggedIn: (x: boolean) => void;
+    updateLoggedIn: (x: LoginMode | undefined) => void;
 }
 
 interface OutputEntry {

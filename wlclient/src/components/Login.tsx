@@ -1,10 +1,11 @@
 import React from 'react';
 import { GlobalState, PlayerState } from 'wlcommon';
+import { LoginMode } from '../App';
 import { SocketContext } from '../socket/socket';
 import './Login.css';
 
 export interface NormalLoginProps {
-    updateLoggedIn: (x: boolean) => void;
+    updateLoggedIn: (x: LoginMode | undefined) => void;
     updatePlayerState: (state: PlayerState) => void;
     updateGlobalState: (state: GlobalState) => void;
     updateTeamId: (x: number) => void;
@@ -12,7 +13,7 @@ export interface NormalLoginProps {
 }
 
 export interface AdminLoginProps {
-    updateLoggedIn: (x: boolean) => void;
+    updateLoggedIn: (x: LoginMode | undefined) => void;
     mode: 'admin';
 }
 
@@ -61,7 +62,10 @@ const Login = (props: LoginProps): React.ReactElement => {
             setHasErrorMessage(true);
             setErrorMessage(payload as string);
         } else {
-            updateLoggedIn(true);
+            updateLoggedIn({
+                teamId: groupName ?? 0,
+                mode
+            });
             if (mode !== 'admin') {
                 const {
                     updatePlayerState,
