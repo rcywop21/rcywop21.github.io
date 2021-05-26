@@ -12,7 +12,7 @@ const actions: Record<string, PlayerAction> = {
         300000,
         (setIsVisible, setIsEnabled): void => { setIsEnabled(false); },
         (): void => { return; },
-        (playerState) => !playerState.inventory['Map']),
+       ),
     [Actions.specificActions.STORE.BUY_GUIDE]: new DynamicPlayerAction("Buy Guide", "It's an introduction of all the Oxygen Streams in the Undersea.",
         "Pay 5 minutes of Oxygen to receive 1 x Guide to the Oxygen Streams of the Undersea.", "717px", "308px",
         (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
