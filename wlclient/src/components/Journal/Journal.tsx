@@ -19,7 +19,7 @@ export enum JournalPages {
 }
 
 const Journal = (props: JournalProps): React.ReactElement => {
-    const { playerState, globalState, isMentor } = props;
+    const { playerState, globalState } = props;
     
     const [page, setPage] = React.useState<JournalPages>(JournalPages.QUEST_JOURNAL);
     
@@ -32,12 +32,11 @@ const Journal = (props: JournalProps): React.ReactElement => {
         [JournalPages.NOTES, <Notes key="n" playerState="" />],
         [JournalPages.OXYGEN, <Oxygen key="o" playerState={playerState} globalState={globalState}/>]
     ]);
-    const pageElement: React.ReactElement = pageElements.get(page)!;
-    
+
     return (
         <div className="journal">
-            <JournalMenu handlePageSwitch={handlePageSwitch}/>
-            {pageElement}
+            <JournalMenu handlePageSwitch={handlePageSwitch} knowsOxygen={playerState.knowsOxygen} />
+            {pageElements.get(page)}
         </div>
     );
 };
