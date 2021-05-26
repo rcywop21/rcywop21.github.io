@@ -23,20 +23,23 @@ import Bubble from './Bubble';
 import Shrine from './Shrine';
 import Alcove from './Alcove';
 
+export type ActionHandlerCreator = (a: string) => () => void;
+export type TooltipTrigger = (t?: TooltipType, d?: string[], b?: boolean) => () => void;
+
 export interface LocationProps {
     globalState: GlobalState;
     playerState: PlayerState;
-    handleAction: (a: string) => () => void;
+    handleAction: ActionHandlerCreator;
     handleTravel: (a: Locations.LocationId) => () => void;
-    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
+    triggerTooltip: TooltipTrigger;
     isMentor?: boolean;
 }
 
 export interface SpecificLocationProps {
     globalState?: GlobalState;
     playerState: PlayerState;
-    handleAction: (a: string) => () => void;
-    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
+    handleAction: ActionHandlerCreator;
+    triggerTooltip: TooltipTrigger;
     isMentor?: boolean;
 }
 
