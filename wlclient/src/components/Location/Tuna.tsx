@@ -21,7 +21,7 @@ const Tuna = (props: SpecificLocationProps): React.ReactElement => {
             (playerState) => playerState.storedOxygen !== null && playerState.challengeMode !== null),
         [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction("Resurface", "Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!",
             "No task required.", "615px", "141px"),
-        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Get Oxygen", "There is a large Oxygen Stream here, however, it has fallen into disrepair. Getting Oxygen from here will be slightly more challenging, but you can still expect to get 40 minutes of Oxygen here." + coolDownMessage,
+        [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Get Oxygen", "There is a large Oxygen Stream here, however, it has fallen into disrepair. Getting Oxygen from here will be slightly more challenging, but you can still expect to get 30 minutes of Oxygen here." + coolDownMessage,
             "2 members of your team will EACH have to draw an item while blindfolded, guided by the rest of the team. Your mentors will tell the other members of the team the items to draw. You cannot say the name of these items.", "198px", "491px",
             (playerState) => playerState.streamCooldownExpiry[playerState.locationId] ? new Date(playerState.streamCooldownExpiry[playerState.locationId]) : new Date(0),
             0,

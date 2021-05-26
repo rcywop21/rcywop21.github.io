@@ -286,7 +286,7 @@ const applyLocationActions: Record<
     },
     [Locations.locationIds.TUNA]: {
         [Actions.ALL_OXYGEN.GET_OXYGEN]: composite(
-            makeAddOxygenTransform(900),
+            makeAddOxygenTransform(1800),
             updateStreamCooldownTransform
         )
     },
