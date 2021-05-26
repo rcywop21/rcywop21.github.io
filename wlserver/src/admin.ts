@@ -132,6 +132,7 @@ const commands = {
             throw `Invalid delta ${delta}.`;
         }
         applyTransform(makeAddOxygenTransform(delta), playerId);
+        notifyPlayerState(playerId);
         reply('cmdok', 'Oxygen added.');
     },
     resetcd: (payload: string[], reply: Reply) => {
