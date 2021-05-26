@@ -7,7 +7,6 @@ export type ChallengeModeParameter = number | 'vague' | null
 interface BaseOxygenEntryProps {
     locationId: Locations.LocationId;
     cooldown?: Date;
-    actionKey: keyof typeof allPlayerActions;
     addendum?: React.ReactNode;
     challengeMode: ChallengeModeParameter;
     oxygenInSeconds: number;
@@ -35,7 +34,7 @@ const getChallengeModeDescription = (parameter: ChallengeModeParameter, seconds:
 }
 
 const OxygenEntry = (props: OxygenEntryProps): React.ReactElement => {
-    const { locationId, actionKey, addendum, cooldown, enabled, disabledDescription, challengeMode, oxygenInSeconds } = props;
+    const { locationId, addendum, cooldown, enabled, disabledDescription, challengeMode, oxygenInSeconds } = props;
 
     const [onCooldown, setOnCooldown] = React.useState<boolean>(false);
 
@@ -49,9 +48,8 @@ const OxygenEntry = (props: OxygenEntryProps): React.ReactElement => {
             return () => clearTimeout(timeout);
         }
     }, [cooldown]);
-
     const locationInfo = Locations.locationsMapping[locationId];
-    const dynamicPlayerAction = allPlayerActions[actionKey][Actions.ALL_OXYGEN.GET_OXYGEN] as DynamicPlayerAction;
+    const dynamicPlayerAction = allPlayerActions[locationId][Actions.ALL_OXYGEN.GET_OXYGEN] as DynamicPlayerAction;
 
     const streamEnabled = (enabled ?? true) && !onCooldown;
 

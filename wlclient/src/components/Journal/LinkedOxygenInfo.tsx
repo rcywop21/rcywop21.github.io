@@ -37,7 +37,6 @@ const LinkedOxygenInfo = (props: LinkedOxygenInfoProps): React.ReactElement => {
 
     return (<OxygenEntry 
         locationId={locationId}
-        actionKey={actionKey}
         addendum={
             otherEndActivated && otherStreamLastId !== playerState.id && (<div className="cooldown off-cooldown">One end of the Linked Streams was just activated by Team {otherStreamLastId}. Hurry here to collect Oxygen!</div>)
         }

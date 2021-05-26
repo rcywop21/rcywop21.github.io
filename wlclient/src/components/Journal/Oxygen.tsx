@@ -28,22 +28,19 @@ const Oxygen = (props: OxygenProps): React.ReactElement => {
             <h2 className="journalTitle">OXYGEN INFO</h2>
             <p className= "helptext">Here&apos;s information regarding the oxygen streams. Note that after using an Oxygen Stream, you must wait 10 minutes before you can use the <b>same</b> Oxygen Stream again.</p>
             <OxygenEntry 
-                locationId={Locations.locationIds.CORALS} 
-                actionKey="corals"
+                locationId={Locations.locationIds.CORALS}
                 cooldown={playerState.streamCooldownExpiry[Locations.locationIds.CORALS]}
                 challengeMode={challengeModeParameter}
                 oxygenInSeconds={1200}
                 />
             <OxygenEntry 
                 locationId={Locations.locationIds.TUNA} 
-                actionKey="tuna"
                 cooldown={playerState.streamCooldownExpiry[Locations.locationIds.TUNA]}
                 challengeMode={challengeModeParameter}
                 oxygenInSeconds={1800}
                 />
             <OxygenEntry 
-                locationId={Locations.locationIds.BUBBLE} 
-                actionKey="bubble"
+                locationId={Locations.locationIds.BUBBLE}
                 cooldown={playerState.streamCooldownExpiry[Locations.locationIds.BUBBLE]}
                 enabled={!!playerState.hasBubblePass}
                 disabledDescription="You need a Bubble Pass to use this Oxygen Stream."

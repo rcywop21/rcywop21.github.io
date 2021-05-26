@@ -24,7 +24,6 @@ const TritonOxygenInfo = (props: TritonOxygenInfoProps): React.ReactElement => {
 
     return (<OxygenEntry 
         locationId={Locations.locationIds.STATUE}
-        actionKey="statue"
         addendum={<div className="addendum">The Statue of Triton has accumulated {Util.formatDuration(availableOxygen)} of Oxygen. It was last extracted by {lastTeam}.</div>}
         oxygenInSeconds={availableOxygen / 10000}
         {...other}
