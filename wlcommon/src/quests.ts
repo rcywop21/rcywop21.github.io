@@ -231,7 +231,7 @@ const questList: Quest[] = [
         when: "You received this quest by performing the action 'Explore' at the Barnacle Residences.",
         description: [
             '‘Oh hello there, dearie. Talk to an old lady, would you?’',
-            '‘They call me the Pyrite Lady. Why’s that? Well, all my potionware are made of pyrite. The ignorant call pyrite ‘fool’s gold’, but it has vary special magical properties, which I need for the potions I make.’',
+            '‘They call me the Pyrite Lady. Why’s that? Well, all my potionware are made of pyrite. The ignorant call pyrite ‘fool’s gold’, but it has very special magical properties, which I need for the potions I make.’',
             '‘I am getting old, and I accidentally mixed some of my potion ingredients together. Help an old lady, and you will get one of her extra pans.’',
         ].join('\n\n'),
         stages: [
