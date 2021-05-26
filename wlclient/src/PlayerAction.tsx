@@ -71,7 +71,7 @@ export const makeActionProps = (actions: Record<string, PlayerAction>, isMentor:
             y: playerAction.y,
             isVisible: isVisible || !!isMentor,
             isEnabled,
-            handleAction: handleAction(actionId),
+            handleAction: handleAction(actionId, playerAction.display),
             triggerTooltip: triggerTooltip,
             tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
         };
@@ -93,7 +93,7 @@ export const makeDynamicActionProps = (actions: Record<string, PlayerAction>, is
                 y: dynamicPlayerAction.y,
                 isVisible,
                 isEnabled,
-                handleAction: handleAction(actionId),
+                handleAction: handleAction(actionId, playerAction.display),
                 triggerTooltip: triggerTooltip,
                 tooltipInfo: [playerAction.display, dynamicPlayerAction.description, dynamicPlayerAction.task]
             },

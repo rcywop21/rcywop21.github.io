@@ -7,6 +7,7 @@ export interface OnActionPopupProps {
     priority?: boolean;
     isMentor?: boolean;
     mentorProps?: OnActionPopupMentorProps;
+    displayName?: string;
 }
 
 export interface OnActionPopupMentorProps {
@@ -15,11 +16,13 @@ export interface OnActionPopupMentorProps {
 }
 
 const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
-    const { action, priority, isMentor, mentorProps } = props;
+    const { action, priority, isMentor, mentorProps, displayName } = props;
     
     if (!action || (isMentor && action === "pause")) {
         return <React.Fragment></React.Fragment>;
     }
+    
+    const actionNameToShow = displayName ? displayName : action;
     
     if (isMentor && mentorProps) {
         const { handleActionApprove, handleActionReject } = mentorProps;
@@ -27,7 +30,7 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
             <React.Fragment>
                 <div className={`onActionPopup ${priority ? "priorityLayer" : "normalLayer"}`}>
                     <h2>Performing Action...</h2>
-                    <p>Your group is currently performing an action: {action}</p>
+                    <p>Your group is currently performing an action: {actionNameToShow}</p>
                     <p>Approve?</p>
                     <button onClick={handleActionApprove}>Yes</button>
                     <button onClick={handleActionReject}>No</button>
@@ -50,7 +53,7 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
         popupText = (
             <React.Fragment>
                 <h2>Performing Action...</h2>
-                <p>You are currently performing an action: {action}</p>
+                <p>You are currently performing an action: {actionNameToShow}</p>
                 <p>Please wait for mentor approval...</p>
             </React.Fragment>
         );
