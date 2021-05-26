@@ -38,8 +38,8 @@ const ChallengeModeInfo = (props: ChallengeModeInfoProps): React.ReactElement =>
         <React.Fragment>
             <h3 className="subtitle challengeColor">You are currently in challenge mode!</h3>
             <p>Challenge Mode will end at {playerState.challengeMode.toString().slice(11, 19)}</p>
-            <p>With {globalState.artefactsFound} artefacts found, the current oxygen modifier is 
-                {` ${Math.max(150, 125 + 25 * globalState.artefactsFound)/10}%`}. </p>
+                { completeFinchesCode && <p>With {globalState.artefactsFound} artefacts found among all teams, the current oxygen modifier is 
+                    {` ${Math.max(150, 125 + 25 * globalState.artefactsFound)/10}%`}. </p>}
         </React.Fragment>
     ) : <React.Fragment></React.Fragment>;
     
