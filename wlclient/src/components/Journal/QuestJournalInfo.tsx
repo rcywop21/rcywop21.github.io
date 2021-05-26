@@ -30,13 +30,15 @@ const QuestJournalInfo = (props: QuestJournalInfoProps): React.ReactElement => {
         }
         return index > currStage ? "stageFuture" : "stageIncomplete";
     }
+
+    const ListComponent = fullQuestInfo.stageOrder === 'inOrder' ? 'ol' : 'ul';
     
     return (
         <div>
             <h3 className="subtitle subtitleColor">{title}</h3>
             <p>{description}</p>
             <p>{orderInstructionText}</p>
-            <ul>
+            <ListComponent>
                 { stages.map((stage, index) => { return (
                     <li 
                         key="" 
@@ -45,7 +47,13 @@ const QuestJournalInfo = (props: QuestJournalInfoProps): React.ReactElement => {
                         {stage}
                     </li>); 
                 }) }
-            </ul>
+            </ListComponent>
+            {fullQuestInfo.reward && (<div>
+                    <h4>Reward</h4>
+                    <ul>
+                        {fullQuestInfo.reward.map((reward, i) => <li key={i}>{reward}</li>)}
+                    </ul>
+                </div>)}
         </div>
     );
 }
