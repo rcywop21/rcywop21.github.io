@@ -5,10 +5,10 @@ import { Actions, itemDetails, questIds } from 'wlcommon';
 import { makeActionProps, PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
-    [Actions.specificActions.SHRINE.GIVE_HAIR]: new PlayerAction("Give Hair", "The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn's Tear.", 
+    [Actions.specificActions.SHRINE.GIVE_HAIR]: new PlayerAction("Give Unicorn's Hair", "The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn Tear.", 
         "Give 1 x Unicorn's Hair.", "434px", "449px", undefined,
         (playerState) => !!playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty),
-    [Actions.specificActions.SHRINE.COLLECT_HAIR]: new PlayerAction("Collect Tear", "Collect the Unicorn Tear from the Shrine.", 
+    [Actions.specificActions.SHRINE.COLLECT_HAIR]: new PlayerAction("Collect Unicorn Tear", "Collect the Unicorn Tear from the Shrine.", 
         "Receive 1 x Unicorn Tear.", "434px", "495px",
         (playerState) => playerState.quests[questIds.SHRINE_2]?.stages[4],
         (playerState) => !(playerState.inventory[itemDetails.UNICORN_TEAR.id]?.qty)),
