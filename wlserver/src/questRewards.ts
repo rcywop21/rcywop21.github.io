@@ -18,7 +18,7 @@ export const makeIssueQuestTransform = (questId: QuestId): Transform => (
     if (questDetails === undefined) throw `Unknown quest ID ${questId}`;
     return composite(
         makeAddMessageTransform(
-            `You have received a new quest - ${quests[questId].name}. Check your Quest Log for more information.`
+            `You have received a new quest - ${quests[questId].name}. Check your Quest Journal for more information.`
         ),
         makePlayerStatTransform('quests', {
             ...state.playerState.quests,
