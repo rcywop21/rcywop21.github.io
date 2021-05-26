@@ -40,7 +40,7 @@ const LinkedOxygenInfo = (props: LinkedOxygenInfoProps): React.ReactElement => {
         addendum={
             otherEndActivated && otherStreamLastId !== playerState.id && (<div className="cooldown off-cooldown">One end of the Linked Streams was just activated by Team {otherStreamLastId}. Hurry here to collect Oxygen!</div>)
         }
-        cooldown={playerState.streamCooldownExpiry[locationId]}
+        cooldown={new Date(playerState.streamCooldownExpiry[locationId])}
         challengeMode={challengeMode}
         oxygenInSeconds={2400}
     />)

@@ -64,12 +64,6 @@ export const makeActionProps = (actions: Record<string, PlayerAction>, isMentor:
             ? playerAction.description + playerAction.optionalDescription(playerState, globalState)
             : playerAction.description;
         
-        /*
-        if (playerAction.optionalDescription
-            && playerAction.description.substr(playerAction.description.length - 3) != "PM."
-            && playerAction.description.substr(playerAction.description.length - 3) != "AM.") {
-            playerAction.description += playerAction.optionalDescription(playerState, globalState);
-        }*/
         return {
             display: playerAction.display,
             action: actionId,
@@ -95,11 +89,6 @@ export const makeDynamicActionProps = (actions: Record<string, PlayerAction>, is
             ? dynamicPlayerAction.description + dynamicPlayerAction.optionalDescription(playerState, globalState)
             : dynamicPlayerAction.description;
 
-        /*if (dynamicPlayerAction.optionalDescription
-            && dynamicPlayerAction.description.substr(dynamicPlayerAction.description.length - 3) != "PM."
-            && dynamicPlayerAction.description.substr(dynamicPlayerAction.description.length - 3) != "AM.") {
-            dynamicPlayerAction.description += dynamicPlayerAction.optionalDescription(playerState, globalState);
-        }*/
         return {
             actionProps: {
                 display: dynamicPlayerAction.display,
