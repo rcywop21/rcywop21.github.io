@@ -13,7 +13,7 @@ import {
 export const makeIssueQuestTransform = (questId: QuestId): Transform => (
     state
 ) => {
-    if (state.playerState.quests[questId]) return;
+    if (state.playerState.quests[questId]) return state;
     const questDetails = quests[questId];
     if (questDetails === undefined) throw `Unknown quest ID ${questId}`;
     return composite(
