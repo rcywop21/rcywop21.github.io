@@ -1,8 +1,8 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { Actions } from 'wlcommon';
-import { DynamicPlayerAction, PlayerAction } from '../../PlayerAction';
+import { Actions, itemDetails } from 'wlcommon';
+import { DynamicPlayerAction, makeActionProps, makeDynamicActionProps, PlayerAction } from '../../PlayerAction';
 import DynamicAction, { DynamicActionProps } from './DynamicAction';
 
 const Bubble = (props: SpecificLocationProps): React.ReactElement => {
@@ -23,61 +23,20 @@ const Bubble = (props: SpecificLocationProps): React.ReactElement => {
             "No task required.", "434px", "524px"),
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction("Get Oxygen", "Each of you has to show a different item from the following: Pencil case, phone application and items you bring on a holiday." + coolDownMessage, 
             "Recite Red Cross Promise.", "55px", "239px",
-            (playerState) => playerState.streamCooldownExpiry[playerState.locationId] ? new Date(playerState.streamCooldownExpiry[playerState.locationId]) : new Date(0),
+            (playerState) => new Date(playerState.streamCooldownExpiry[playerState.locationId] ?? 0),
             0,
             (setIsVisible, setIsEnabled): void => { setIsEnabled(true);},
             (setIsVisible, setIsEnabled): void => { setIsEnabled(false);}, 
-            undefined, (playerState) => playerState.hasBubblePass == true)
+            undefined, (playerState) => playerState.inventory[itemDetails.BUBBLE.id]?.qty > 0)
     }
     
-    const actionProps = Object.entries(actions)
-        .filter(([, playerAction]) => !(playerAction instanceof DynamicPlayerAction))
-        .map(([actionId, playerAction]) => ({
-            display: playerAction.display,
-            action: actionId,
-            x: playerAction.x,
-            y: playerAction.y,
-            isVisible: isMentor ? 
-                true :
-                playerAction.getVisibility ? 
-                    playerAction.getVisibility(playerState) : 
-                    true,
-            isEnabled: playerAction.getVisibility ? 
-                playerAction.getVisibility(playerState) : true &&
-                playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
-            handleAction: handleAction(actionId),
-            triggerTooltip: triggerTooltip,
-            tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
-    }));
+    const actionProps = makeActionProps(
+        actions, isMentor, playerState, handleAction, triggerTooltip
+    );
     
-    const dynamicActionProps = Object.entries(actions)
-        .filter(([, playerAction]) => playerAction instanceof DynamicPlayerAction)
-        .map(([actionId, playerAction]) => {
-            const dynamicPlayerAction = playerAction as DynamicPlayerAction;
-            return {
-                actionProps: {
-                    display: playerAction.display,
-                    action: actionId,
-                    x: dynamicPlayerAction.x,
-                    y: dynamicPlayerAction.y,
-                    isVisible: isMentor ? 
-                        true :
-                        dynamicPlayerAction.getVisibility ? 
-                            dynamicPlayerAction.getVisibility(playerState) : 
-                            true,
-                    isEnabled: dynamicPlayerAction.getVisibility ? 
-                        dynamicPlayerAction.getVisibility(playerState) : true &&
-                        dynamicPlayerAction.getEnabled ? dynamicPlayerAction.getEnabled(playerState) : true,
-                    handleAction: handleAction(actionId),
-                    triggerTooltip: triggerTooltip,
-                    tooltipInfo: [playerAction.display, dynamicPlayerAction.description, dynamicPlayerAction.task]
-                },
-                timeToCompare: dynamicPlayerAction.timeToCompare(playerState),
-                howRecentToTrigger: dynamicPlayerAction.howRecentToTrigger,
-                triggerEffectsIfRecent: dynamicPlayerAction.triggerEffectsIfRecent,
-                triggerEffectsIfNotRecent: dynamicPlayerAction.triggerEffectsIfNotRecent
-            };
-        });
+    const dynamicActionProps = makeDynamicActionProps(
+        actions, isMentor, playerState, handleAction, triggerTooltip
+    );
     
     return (
         <React.Fragment>

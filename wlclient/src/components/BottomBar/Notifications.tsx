@@ -19,9 +19,9 @@ const Notifications = (props: NotificationsProps): React.ReactElement => {
         <div className="notifications">
             <h2 className="notifTitle">NOTIFICATIONS</h2>
             <div className="innerNotifBox">
-                {notifications.map((message: Message) => {
+                {notifications.map((message: Message, index: number) => {
                     return (<Notification
-                        key={message.time.toString()}
+                        key={index}
                         time={new Date(message.time)}
                         message={notifToDisplayString(message)}
                     />);

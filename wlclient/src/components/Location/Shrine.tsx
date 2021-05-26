@@ -2,7 +2,7 @@ import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Actions, itemDetails, questIds } from 'wlcommon';
-import { PlayerAction } from '../../PlayerAction';
+import { makeActionProps, PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.SHRINE.GIVE_HAIR]: new PlayerAction("Give Hair", "The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn's Tear.", 
@@ -25,24 +25,10 @@ const actions: Record<string, PlayerAction> = {
 const Shrine = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor } = props;
 
-    const actionProps = Object.entries(actions).map(([actionId, playerAction]) => ({
-        display: playerAction.display,
-        action: actionId,
-        x: playerAction.x,
-        y: playerAction.y,
-        isVisible: isMentor ? 
-            true :
-            playerAction.getVisibility ? 
-                playerAction.getVisibility(playerState) : 
-                true,
-        isEnabled: playerAction.getVisibility ? 
-            playerAction.getVisibility(playerState) : true &&
-            playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
-        handleAction: handleAction(actionId),
-        triggerTooltip: triggerTooltip,
-        tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
-    }));
-
+    const actionProps = makeActionProps(
+        actions, isMentor, playerState, handleAction, triggerTooltip
+    );
+    
     return (
         <React.Fragment>
             <img src={imgDirectoryGenerator('shrine.png')} />

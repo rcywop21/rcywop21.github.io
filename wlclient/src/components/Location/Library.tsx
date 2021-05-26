@@ -2,7 +2,7 @@ import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Actions, itemDetails, questIds } from 'wlcommon';
-import { DynamicPlayerAction, PlayerAction } from '../../PlayerAction';
+import { DynamicPlayerAction, makeActionProps, makeDynamicActionProps, PlayerAction } from '../../PlayerAction';
 import DynamicAction, { DynamicActionProps } from './DynamicAction';
 
 const actions: Record<string, PlayerAction> = {
@@ -19,7 +19,7 @@ const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.LIBRARY.STUDY_ARTEFACT]: new PlayerAction("Study Artefact", "Learn more about the artefacts.", 
         "Create a new group cheer and do it to energise yourselves.", "630px", "202px",
         (playerState) => playerState.quests[questIds.ARTEFACTS_1]?.status === 'incomplete',
-        (playerState) => playerState.inventory[itemDetails.LIBRARY_PASS.id] !== undefined),
+        (playerState) => playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty >= 0),
     [Actions.specificActions.LIBRARY.DECODE_ARTEFACT]: new PlayerAction("Decode Artefact", "The artefact legend is written in an ancient language. You will need to decode it before you can understand it.", 
         "Decode 'Hwljaxawv Ljalgf'.", "703px", "265px",
         (playerState) => playerState.quests[questIds.ARTEFACTS_2]?.status === 'incomplete',
@@ -36,55 +36,14 @@ const actions: Record<string, PlayerAction> = {
 
 const Library = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor } = props;
+
+    const actionProps = makeActionProps(
+        actions, isMentor, playerState, handleAction, triggerTooltip
+    );
     
-    const actionProps = Object.entries(actions)
-        .filter(([, playerAction]) => !(playerAction instanceof DynamicPlayerAction))
-        .map(([actionId, playerAction]) => ({
-            display: playerAction.display,
-            action: actionId,
-            x: playerAction.x,
-            y: playerAction.y,
-            isVisible: isMentor ? 
-                true :
-                playerAction.getVisibility ? 
-                    playerAction.getVisibility(playerState) : 
-                    true,
-            isEnabled: playerAction.getVisibility ? 
-                playerAction.getVisibility(playerState) : true &&
-                playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
-            handleAction: handleAction(actionId),
-            triggerTooltip: triggerTooltip,
-            tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
-    }));
-    
-    const dynamicActionProps = Object.entries(actions)
-        .filter(([, playerAction]) => playerAction instanceof DynamicPlayerAction)
-        .map(([actionId, playerAction]) => {
-            const dynamicPlayerAction = playerAction as DynamicPlayerAction;
-            return {
-                actionProps: {
-                    display: playerAction.display,
-                    action: actionId,
-                    x: dynamicPlayerAction.x,
-                    y: dynamicPlayerAction.y,
-                    isVisible: isMentor ? 
-                        true :
-                        dynamicPlayerAction.getVisibility ? 
-                            dynamicPlayerAction.getVisibility(playerState) : 
-                            true,
-                    isEnabled: dynamicPlayerAction.getVisibility ? 
-                        dynamicPlayerAction.getVisibility(playerState) : true &&
-                        dynamicPlayerAction.getEnabled ? dynamicPlayerAction.getEnabled(playerState) : true,
-                    handleAction: handleAction(actionId),
-                    triggerTooltip: triggerTooltip,
-                    tooltipInfo: [playerAction.display, dynamicPlayerAction.description, dynamicPlayerAction.task]
-                },
-                timeToCompare: dynamicPlayerAction.timeToCompare(playerState),
-                howRecentToTrigger: dynamicPlayerAction.howRecentToTrigger,
-                triggerEffectsIfRecent: dynamicPlayerAction.triggerEffectsIfRecent,
-                triggerEffectsIfNotRecent: dynamicPlayerAction.triggerEffectsIfNotRecent
-            };
-        });
+    const dynamicActionProps = makeDynamicActionProps(
+        actions, isMentor, playerState, handleAction, triggerTooltip
+    );
     
     return (
         <React.Fragment>

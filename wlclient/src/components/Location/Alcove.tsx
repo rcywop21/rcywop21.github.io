@@ -2,7 +2,7 @@ import React from 'react';
 import { Action, ActionProps } from './Action';
 import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
 import { Actions, itemDetails } from 'wlcommon';
-import { PlayerAction } from '../../PlayerAction';
+import { makeActionProps, PlayerAction } from '../../PlayerAction';
 
 const actions: Record<string, PlayerAction> = {
     [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: new PlayerAction("Retrieve Pearl", "You know what you're here for.", 
@@ -21,23 +21,9 @@ const actions: Record<string, PlayerAction> = {
 const Alcove = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor } = props;
 
-    const actionProps = Object.entries(actions).map(([actionId, playerAction]) => ({
-        display: playerAction.display,
-        action: actionId,
-        x: playerAction.x,
-        y: playerAction.y,
-        isVisible: isMentor ? 
-            true :
-            playerAction.getVisibility ? 
-                playerAction.getVisibility(playerState) : 
-                true,
-        isEnabled: playerAction.getVisibility ? 
-            playerAction.getVisibility(playerState) : true &&
-            playerAction.getEnabled ? playerAction.getEnabled(playerState) : true,
-        handleAction: handleAction(actionId),
-        triggerTooltip: triggerTooltip,
-        tooltipInfo: [playerAction.display, playerAction.description, playerAction.task]
-    }));
+    const actionProps = makeActionProps(
+        actions, isMentor, playerState, handleAction, triggerTooltip
+    );
 
     return (
         <React.Fragment>
