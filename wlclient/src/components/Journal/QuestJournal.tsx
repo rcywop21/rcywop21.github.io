@@ -18,7 +18,7 @@ const QuestJournal = (props: QuestJournalProps): React.ReactElement => {
     
     return (
         <div>
-            <h2 className="journalTitle">QUEST JOURNAL</h2>
+            <h2 className="journalTitle">QUEST LOG</h2>
             <p className="helptext">
                 This journal contains all information you have regarding quests.
             </p>
