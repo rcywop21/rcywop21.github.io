@@ -80,6 +80,7 @@ const applyLocationActions: Record<
     [Locations.locationIds.CORALS]: {
         [Actions.specificActions.CORALS.EXPLORE]: composite(
             makeIssueQuestTransform(questIds.FINCHES),
+            makeAddMessageTransform('While exploring the historical exhibits at the Memorial Corals, you have found something interesting.'),
             makeRemoveOxygenTransform(300)
         ),
         [Actions.specificActions.CORALS.LEARN_LANG]: (state) => {
@@ -195,6 +196,7 @@ const applyLocationActions: Record<
         [Actions.specificActions.LIBRARY.EXPLORE]: (state) => { 
             let result = composite(
                 makeIssueQuestTransform(questIds.ARTEFACTS_1),
+                makeAddMessageTransform('You approach the librarians and ask them about your quest...'),
                 makeRemoveOxygenTransform(300)
             )(state);
             if (result.playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty)
@@ -256,6 +258,7 @@ const applyLocationActions: Record<
     [Locations.locationIds.SALMON]: {
         [Actions.specificActions.SALMON.EXPLORE]: composite(
             makeIssueQuestTransform(questIds.ARGUMENT),
+            makeAddMessageTransform('You hear two young children causing a ruckus. Turning around, you see them chasing each other with a pointed stick. How dangerous!'),
             makeRemoveOxygenTransform(300)
         ),
         [Actions.specificActions.SALMON.CONFRONT]: makeAdvanceQuestTransform(
@@ -326,6 +329,7 @@ const applyLocationActions: Record<
     [Locations.locationIds.KELP]: {
         [Actions.specificActions.KELP.EXPLORE]: composite(
             makeIssueQuestTransform(questIds.SHRINE_1),
+            makeAddMessageTransform('You wander around the Kelp Plains. Behind a very thick patch of seaweed, you notice a small valley...'),
             makeRemoveOxygenTransform(300)
         ),
         [Actions.specificActions.KELP.CLIMB_DOWN]: composite(
@@ -356,6 +360,7 @@ const applyLocationActions: Record<
     [Locations.locationIds.UMBRAL]: {
         [Actions.specificActions.UMBRAL.EXPLORE]: (state) => { 
             let result = makeIssueQuestTransform(questIds.CLOAK_1)(state);
+            result = makeAddMessageTransform('Wandering around the ruins, you notice a shady-looking man in a cloak. You make eye contact with him...')(result);
             if (state.playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty)
                 result = makeAdvanceQuestTransform(questIds.CLOAK_1, 0)(result);
             return result;
