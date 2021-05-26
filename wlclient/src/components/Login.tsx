@@ -41,6 +41,13 @@ const Login = (props: LoginProps): React.ReactElement => {
         }
     }, [socket]);
 
+    React.useEffect(() => {
+        if (mode === 'player')
+            document.title = 'WOP Ex Wanderlust';
+        else
+            document.title = `Ex Wanderlust (${mode})`
+    }, [mode])
+
     function authenticateReply(eventType: 'error', payload: string): void;
     function authenticateReply(
         eventType: 'auth_ok',
