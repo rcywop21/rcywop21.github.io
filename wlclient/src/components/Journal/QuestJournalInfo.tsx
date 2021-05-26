@@ -41,7 +41,7 @@ const QuestJournalInfo = (props: QuestJournalInfoProps): React.ReactElement => {
             <ListComponent>
                 { stages.map((stage, index) => { return (
                     <li 
-                        key="" 
+                        key={index}
                         className={determineStageStyle(index)}
                     >
                         {stage}
