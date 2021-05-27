@@ -114,7 +114,7 @@ const Login = (props: LoginProps): React.ReactElement => {
 
     return (
         <div className="login">
-            <div className="title">Group Name</div>
+            <div className="title">Group No.</div>
             <input
                 value={groupName === undefined ? '' : groupName.toString()}
                 onChange={onGroupNameChange}
