@@ -1,5 +1,5 @@
 import React from 'react';
-import { TooltipType, tooltipTypes } from '../Popups/Tooltip';
+import { TooltipData, TooltipType, tooltipTypes } from '../Popups/Tooltip';
 import { Locations, PlayerState } from 'wlcommon';
 import './TravelPopup.css';
 
@@ -8,7 +8,7 @@ export interface TravelPopupProps {
     isVisible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     handleTravel: (a: Locations.LocationId) => () => void;
-    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
+    triggerTooltip: (t?: TooltipType, d?: TooltipData, b?: boolean) => () => void;
 }
 
 function checkHiddenLocationRequirement(

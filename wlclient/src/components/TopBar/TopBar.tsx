@@ -1,7 +1,7 @@
 import React from 'react';
 import InventoryItem from './InventoryItem';
 import Timer from './Timer';
-import { TooltipType } from '../Popups/Tooltip';
+import { TooltipData, TooltipType } from '../Popups/Tooltip';
 import { ItemId, ItemRecord } from 'wlcommon';
 import './TopBar.css';
 
@@ -10,7 +10,7 @@ export interface TopBarProps {
     oxygenUntil: Date | null;
     challengeMode: Date | null;
     crimsonUntil: Date;
-    triggerTooltip: (t?: TooltipType, d?: string[]) => () => void;
+    triggerTooltip: (t?: TooltipType, d?: TooltipData) => () => void;
 }
 
 const TopBar = (props: TopBarProps): React.ReactElement => {
@@ -40,7 +40,6 @@ const TopBar = (props: TopBarProps): React.ReactElement => {
                 {challengeMode && (
                     <Timer name="crimson" until={challengeMode} />
                 )}
-                {/*<Timer name="crimson" time={crimsonTime} />*/}
             </div>
         </div>
     );

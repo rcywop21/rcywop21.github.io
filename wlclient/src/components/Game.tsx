@@ -8,7 +8,7 @@ import {
     OnActionPopupProps,
     OnActionPopupMentorProps,
 } from './Popups/OnActionPopup';
-import { TooltipType } from './Popups/Tooltip';
+import { TooltipData, TooltipType } from './Popups/Tooltip';
 import Tooltip from './Popups/Tooltip';
 import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
 import './Game.css';
@@ -58,7 +58,7 @@ const Game = (props: GameProps): React.ReactElement => {
         false
     );
     const [tooltipType, setTooltipType] = React.useState<TooltipType>(null);
-    const [tooltipData, setTooltipData] = React.useState<string[]>(['']);
+    const [tooltipData, setTooltipData] = React.useState<TooltipData>(['']);
     const [isTooltipRightSide, setIsTooltipRightSide] = React.useState<boolean>(
         true
     );
@@ -81,7 +81,7 @@ const Game = (props: GameProps): React.ReactElement => {
 
     function triggerTooltip(
         type: TooltipType = null,
-        data = [''],
+        data: TooltipData = [''],
         isRightSide = true
     ) {
         return () => {

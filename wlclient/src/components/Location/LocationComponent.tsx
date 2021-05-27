@@ -1,7 +1,7 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
 import TravelPopup from './TravelPopup';
-import { TooltipType, tooltipTypes } from '../Popups/Tooltip';
+import { TooltipData, TooltipType, tooltipTypes } from '../Popups/Tooltip';
 import { GlobalState, Locations, PlayerState } from 'wlcommon';
 import './LocationComponent.css';
 
@@ -26,7 +26,7 @@ import Alcove from './Alcove';
 export type ActionHandlerCreator = (a: string) => () => void;
 export type TooltipTrigger = (
     t?: TooltipType,
-    d?: string[],
+    d?: TooltipData,
     b?: boolean
 ) => () => void;
 
@@ -55,11 +55,11 @@ export function getSpecificLocationComponent(
     isMentor?: boolean
 ): React.ReactElement {
     const specificLocationComponentProps = {
-        globalState: globalState,
-        playerState: playerState,
-        handleAction: handleAction,
-        triggerTooltip: triggerTooltip,
-        isMentor: isMentor,
+        globalState,
+        playerState,
+        handleAction,
+        triggerTooltip,
+        isMentor,
     };
 
     const SPECIFIC_LOCATION_COMPONENT_MAP: Map<
@@ -231,7 +231,7 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
                 setIsTravelPopupVisible(true);
             }
         },
-        triggerTooltip: triggerTooltip,
+        triggerTooltip,
         tooltipInfo: [
             'Travel',
             'Go somewhere else in this wonderful world!',

@@ -2,10 +2,12 @@ import React from 'react';
 import { itemsById, Locations } from 'wlcommon';
 import './Tooltip.css';
 
+export type TooltipData = [string] | [string, React.ReactNode, string];
+
 export interface TooltipProps {
     isVisible: boolean;
     tooltipType: TooltipType;
-    data: string[];
+    data: TooltipData;
     isRightSide: boolean;
 }
 
@@ -38,7 +40,7 @@ const Tooltip = (props: TooltipProps): React.ReactElement => {
         title = data[0];
         const reqLine = data[2] ? (
             <p>
-                <b>Requirement</b>: {data[2]}
+                <b>Task</b>: {data[2]}
             </p>
         ) : undefined;
         details = (

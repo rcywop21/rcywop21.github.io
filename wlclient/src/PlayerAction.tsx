@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import React from 'react';
 import {
     PlayerState,
     Actions,
@@ -13,12 +14,13 @@ import {
     ActionHandlerCreator,
     TooltipTrigger,
 } from './components/Location/LocationComponent';
+import './PlayerAction.css';
 
 export type StatePredicate = (playerState: PlayerState) => boolean;
-export type DescriptionPredicate = (
+export type DescriptionCreator = (
     playerState: PlayerState,
     globalState?: GlobalState
-) => string;
+) => React.ReactNode;
 
 export class PlayerAction {
     display: string;
@@ -26,7 +28,7 @@ export class PlayerAction {
     task: string;
     x: string;
     y: string;
-    optionalDescription?: DescriptionPredicate;
+    optionalDescription?: DescriptionCreator;
     getVisibility?: StatePredicate;
     getEnabled?: StatePredicate;
     isVisible: boolean;
@@ -37,7 +39,7 @@ export class PlayerAction {
         task: string,
         x: string,
         y: string,
-        optionalDescription?: DescriptionPredicate,
+        optionalDescription?: DescriptionCreator,
         visibility?: StatePredicate,
         enabled?: StatePredicate
     ) {
@@ -82,7 +84,7 @@ export class DynamicPlayerAction extends PlayerAction {
             v: (b: boolean) => void,
             e: (b: boolean) => void
         ) => void,
-        optionalDescription?: DescriptionPredicate,
+        optionalDescription?: DescriptionCreator,
         visibility?: StatePredicate,
         enabled?: StatePredicate
     ) {
@@ -126,10 +128,12 @@ export const makeActionProps = (
                     ? playerAction.getEnabled(playerState)
                     : true);
 
-            const actionDescription = playerAction.optionalDescription
-                ? playerAction.description +
-                  playerAction.optionalDescription(playerState, globalState)
-                : playerAction.description;
+            const actionDescription = (
+                <React.Fragment>
+                    <p>{playerAction.description}</p>
+                    {playerAction.optionalDescription && playerAction.optionalDescription(playerState, globalState)}
+                </React.Fragment>
+            );
 
             return {
                 display: playerAction.display,
@@ -139,7 +143,7 @@ export const makeActionProps = (
                 isVisible: isVisible || !!isMentor,
                 isEnabled,
                 handleAction: handleAction(actionId),
-                triggerTooltip: triggerTooltip,
+                triggerTooltip,
                 tooltipInfo: [
                     playerAction.display,
                     actionDescription,
@@ -226,6 +230,48 @@ const lastUsedMessage = (
     return coolDownMessage(playerState) + display;
 };
 
+const oxygenPumpActions = {
+    [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
+        'Store Oxygen',
+        'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
+        'No task required.',
+        '870px',
+        '488px',
+        (playerState) => {
+            if (playerState.storedOxygen === null)
+                return (<p className="warning">This action is disabled as you do not have an oxygen pump.</p>);
+            if (playerState.challengeMode !== null)
+                return (<p className="warning">This action is disabled as you are in Challenge Mode.</p>);
+        },
+        (playerState) =>
+            playerState.storedOxygen !== null &&
+            playerState.challengeMode !== null
+    ),
+    [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
+        'Withdraw Oxygen',
+        'Withdraw all Oxygen from your Oxygen Pump.',
+        'No task required.',
+        '870px',
+        '543px',
+        (playerState) => {
+            if (playerState.storedOxygen === null)
+                return (<p className="warning">This action is disabled as you do not have an oxygen pump.</p>);
+            if (playerState.challengeMode !== null)
+                return (<p className="warning">This action is disabled as you are in Challenge Mode.</p>);
+        },
+        (playerState) =>
+            playerState.storedOxygen !== null &&
+            playerState.challengeMode !== null
+    ),
+    [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
+        'Resurface',
+        'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
+        'No task required.',
+        '729px',
+        '101px'
+    ),
+}
+
 export const allPlayerActions = {
     [Locations.locationIds.ALCOVE]: {
         [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: new PlayerAction(
@@ -234,39 +280,13 @@ export const allPlayerActions = {
             'Receive 1 x Pearl of Asclepius.',
             '409px',
             '399px',
-            undefined,
-            undefined,
-            (playerState) =>
-                playerState.inventory[itemDetails.UNICORN_TEAR.id] == null
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
+            (playerState) => { 
+                if (playerState.inventory[itemDetails.PEARL.id]?.qty)
+                    return <p className="warning">You already have a Pearl of Asclepius.</p>
+            },
             undefined,
             (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '729px',
-            '101px'
+                !playerState.inventory[itemDetails.PEARL.id]?.qty
         ),
     },
     [Locations.locationIds.ANCHOVY]: {
@@ -287,7 +307,10 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.LIBRARIAN_PASS])
+                    return <p className="warning">You have already explored this location.</p>
+            },
             undefined,
             (playerState) => !playerState.quests[questIds.LIBRARIAN_PASS]
         ),
@@ -301,35 +324,6 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.quests[questIds.LIBRARIAN_PASS]?.status ===
                 'incomplete'
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '209px',
-            '120px'
         ),
     },
     [Locations.locationIds.BARNACLE]: {
@@ -350,7 +344,10 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.PYRITE])
+                    return <p className="warning">You have already explored this location.</p>
+            },
             undefined,
             (playerState) => !playerState.quests[questIds.PYRITE]
         ),
@@ -520,7 +517,10 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.FINCHES])
+                    return <p className="warning">You have already explored this location.</p>
+            },
             undefined,
             (playerState) => !playerState.quests[questIds.FINCHES]
         ),
@@ -606,7 +606,10 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.SHRINE_1])
+                    return <p className="warning">You have already explored this location.</p>
+            },
             undefined,
             (playerState) => !playerState.quests[questIds.SHRINE_1]
         ),
@@ -675,7 +678,10 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.ARTEFACTS_1])
+                    return <p className="warning">You have already explored this location.</p>
+            },
             undefined,
             (playerState) => !playerState.quests[questIds.ARTEFACTS_1]
         ),
@@ -764,7 +770,10 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.ARGUMENT])
+                    return <p className="warning">You have already explored this location.</p>
+            },
             undefined,
             (playerState) => !playerState.quests[questIds.ARGUMENT]
         ),
@@ -942,7 +951,12 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.ARTEFACTS_4]?.status === 'completed')
+                    return <p className="warning">You have already explored this location.</p>
+                if (playerState.foundEngraving)
+                    return <p className="warning">There doesn&apos;t seem to be anymore interesting things here...</p>
+            },
             undefined,
             (playerState) => !playerState.foundEngraving || playerState.quests[questIds.ARTEFACTS_4]?.status === 'incomplete'
         ),
@@ -1291,7 +1305,10 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.CLOAK_1])
+                    return <p className="warning">You have already explored this location.</p>
+            },
             undefined,
             (playerState) => !playerState.quests[questIds.CLOAK_1]
         ),
@@ -1365,3 +1382,8 @@ export const allPlayerActions = {
         ),
     },
 };
+
+Object.keys(allPlayerActions).forEach((key) => {
+    if (Locations.locationsMapping[key]?.undersea)
+        Object.assign(allPlayerActions[key], oxygenPumpActions);
+})

@@ -1,11 +1,11 @@
 import React from 'react';
-import { tooltipTypes, TooltipType } from '../Popups/Tooltip';
+import { tooltipTypes, TooltipType, TooltipData } from '../Popups/Tooltip';
 import { ItemId, itemDetails, itemsById } from 'wlcommon';
 import './InventoryItem.css';
 
 export interface InventoryItemProps {
     name: ItemId;
-    triggerTooltip: (t?: TooltipType, d?: string[]) => () => void;
+    triggerTooltip: (t?: TooltipType, d?: TooltipData) => () => void;
 }
 
 const INVENTORY_ITEMS_ASSET_MAP: Map<ItemId, string> = new Map([

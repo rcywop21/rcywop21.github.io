@@ -1,5 +1,5 @@
 import React from 'react';
-import { tooltipTypes, TooltipType } from '../Popups/Tooltip';
+import { tooltipTypes, TooltipType, TooltipData } from '../Popups/Tooltip';
 import './Action.css';
 
 export interface ActionProps {
@@ -10,8 +10,8 @@ export interface ActionProps {
     isVisible: boolean;
     isEnabled: boolean;
     handleAction: () => void;
-    triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
-    tooltipInfo: string[];
+    triggerTooltip: (t?: TooltipType, d?: TooltipData, b?: boolean) => () => void;
+    tooltipInfo: TooltipData;
 }
 
 export const Action = (props: ActionProps): React.ReactElement => {
