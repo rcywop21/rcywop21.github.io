@@ -145,7 +145,8 @@ export const killTransform: Transform = (state) => {
         makePlayerStatTransform('locationId', Locations.locationIds.SHORES),
         makePlayerStatTransform('quests', playerQuests),
         makePlayerStatTransform('oxygenUntil', null),
-        makePlayerStatTransform('challengeMode', null)
+        makePlayerStatTransform('challengeMode', null),
+        makePlayerStatTransform('stagedAction', null)
     )(state);
 };
 
