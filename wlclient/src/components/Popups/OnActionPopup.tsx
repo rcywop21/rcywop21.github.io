@@ -34,24 +34,24 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
                 >
                     <h2 className="status">Performing Action...</h2>
                     <div className="popupText">
-                        <p>
+                        <div className="actionName">
                             Your group is currently performing an action:{' '}
                             {
                                 allPlayerActions[playerState.locationId][
                                     playerState.stagedAction!
                                 ].display
                             }
-                        </p>
-                        <p>
-                            Task Required:{' '}
+                        </div>
+                        <div className="taskRequired">
+                            <h4>Task Required</h4>
                             {
                                 allPlayerActions[playerState.locationId][
                                     playerState.stagedAction!
                                 ].task
                             }
-                        </p>
-                        <p>Approve?</p>
+                        </div>
                         <div>
+                            <h4>Approve?</h4>
                             <button onClick={handleActionApprove}>Yes</button>
                             <button onClick={handleActionReject}>No</button>
                         </div>
@@ -78,22 +78,22 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
             <React.Fragment>
                 <h2 className="status">Performing Action...</h2>
                 <div className="popupText">
-                    <p>
+                    <div className="actionName">
                         You are currently performing an action:{' '}
                         {
                             allPlayerActions[playerState.locationId][
                                 playerState.stagedAction!
                             ].display
                         }
-                    </p>
-                    <p>
-                        Task Required:{' '}
+                    </div>
+                    <div className="taskRequired">
+                        <h4>Task Required</h4>
                         {
                             allPlayerActions[playerState.locationId][
                                 playerState.stagedAction!
                             ].task
                         }
-                    </p>
+                    </div>
                     <p>Please wait for mentor approval...</p>
                 </div>
             </React.Fragment>

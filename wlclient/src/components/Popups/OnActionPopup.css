@@ -3,11 +3,13 @@
     left: 157px;
     top: 170px;
     width: 710px;
+    min-height: 270px;
     background-color: #4d96c3;
     color: black;
     display: flex;
     flex-direction: column;
-    padding: 30px 0 45px 0;
+    justify-content: center;
+    align-items: center;
 }
 
 .onActionBackgroundShroud {
@@ -44,9 +46,13 @@
 }
 
 .popupText {
-    position: relative;
     width: 90%;
-    height: fit-content;
-    margin: 0 auto;
-    top: 20px;
+}
+
+.popupText > .actionName {
+    margin-top: 0;
+}
+
+.popupText h4 {
+    margin-bottom: 0;
 }
