@@ -233,7 +233,7 @@ const lastUsedMessage = (
 
     return (
         <React.Fragment>
-            <p>This Oxygen Stream was last used by {lastTeamLbl} at {formatTime(lastExtract)}.</p>
+            <p>This Oxygen Stream was last used by {lastTeamLbl} at {formatTime(new Date(lastExtract))}.</p>
             {makeOxygenStreamMessage(playerState, globalState)}
         </React.Fragment>
     )
