@@ -40,7 +40,7 @@ export interface LocationProps {
 }
 
 export interface SpecificLocationProps {
-    globalState?: GlobalState;
+    globalState: GlobalState;
     playerState: PlayerState;
     handleAction: ActionHandlerCreator;
     triggerTooltip: TooltipTrigger;

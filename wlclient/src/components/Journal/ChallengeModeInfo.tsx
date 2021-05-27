@@ -2,6 +2,7 @@ import React from 'react';
 import { PlayerState, GlobalState, questIds, QuestId } from 'wlcommon';
 import './Journal.css';
 import './ChallengeModeInfo.css';
+import { formatTime } from '../../util';
 
 export interface ChallengeModeInfoProps {
     playerState: PlayerState;
@@ -46,7 +47,7 @@ const ChallengeModeInfo = (
             </h3>
             <p>
                 Challenge Mode will end at{' '}
-                {playerState.challengeMode.toString().slice(11, 19)}
+                {formatTime(new Date(playerState.challengeMode))}.
             </p>
             {completeFinchesCode && (
                 <p>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Actions, Locations, Util } from 'wlcommon';
 import { allPlayerActions, DynamicPlayerAction } from '../../PlayerAction';
+import { formatTime } from '../../util';
 
 export type ChallengeModeParameter = number | 'vague' | null;
 
@@ -19,12 +20,6 @@ interface SpecialRequirementProps {
 
 export type OxygenEntryProps = BaseOxygenEntryProps &
     Partial<SpecialRequirementProps>;
-
-const formatTime = (date: Date) => {
-    const hh = date.getHours().toString().padStart(2, '0');
-    const mm = date.getMinutes().toString().padStart(2, '0');
-    return hh + ':' + mm;
-};
 
 const getChallengeModeDescription = (
     parameter: ChallengeModeParameter,

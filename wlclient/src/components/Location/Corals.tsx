@@ -13,7 +13,9 @@ import DynamicAction, { DynamicActionProps } from './DynamicAction';
 import { Locations } from 'wlcommon';
 
 const Corals = (props: SpecificLocationProps): React.ReactElement => {
-    const { playerState, handleAction, triggerTooltip, isMentor } = props;
+    const { playerState, handleAction, triggerTooltip, isMentor, globalState } = props;
+
+    console.log(globalState);
 
     const actions = allPlayerActions[Locations.locationIds.CORALS];
 
@@ -22,7 +24,8 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
         isMentor,
         playerState,
         handleAction,
-        triggerTooltip
+        triggerTooltip,
+        globalState
     );
 
     const dynamicActionProps = makeDynamicActionProps(
@@ -30,7 +33,8 @@ const Corals = (props: SpecificLocationProps): React.ReactElement => {
         isMentor,
         playerState,
         handleAction,
-        triggerTooltip
+        triggerTooltip,
+        globalState
     );
 
     return (

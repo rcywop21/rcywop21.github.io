@@ -15,11 +15,12 @@ import {
     TooltipTrigger,
 } from './components/Location/LocationComponent';
 import './PlayerAction.css';
+import { formatTime } from './util';
 
 export type StatePredicate = (playerState: PlayerState) => boolean;
 export type DescriptionCreator = (
     playerState: PlayerState,
-    globalState?: GlobalState
+    globalState: GlobalState
 ) => React.ReactNode;
 
 export class PlayerAction {
@@ -111,7 +112,7 @@ export const makeActionProps = (
     playerState: PlayerState,
     handleAction: ActionHandlerCreator,
     triggerTooltip: TooltipTrigger,
-    globalState?: GlobalState
+    globalState: GlobalState
 ): ActionProps[] =>
     Object.entries(actions)
         .filter(
@@ -158,7 +159,7 @@ export const makeDynamicActionProps = (
     playerState: PlayerState,
     handleAction: ActionHandlerCreator,
     triggerTooltip: TooltipTrigger,
-    globalState?: GlobalState
+    globalState: GlobalState
 ): DynamicActionProps[] =>
     Object.entries(actions)
         .filter(
@@ -176,13 +177,12 @@ export const makeDynamicActionProps = (
                     ? dynamicPlayerAction.getEnabled(playerState)
                     : true);
 
-            const actionDescription = dynamicPlayerAction.optionalDescription
-                ? dynamicPlayerAction.description +
-                  dynamicPlayerAction.optionalDescription(
-                      playerState,
-                      globalState
-                  )
-                : dynamicPlayerAction.description;
+            const actionDescription = (
+                <React.Fragment>
+                    <p>{playerAction.description}</p>
+                    {playerAction.optionalDescription && playerAction.optionalDescription(playerState, globalState)}
+                </React.Fragment>
+            );
 
             return {
                 actionProps: {
@@ -209,25 +209,31 @@ export const makeDynamicActionProps = (
             };
         });
 
-const coolDownMessage = (playerState: PlayerState) =>
-    playerState.streamCooldownExpiry[playerState.locationId]
-        ? ' You may reuse this service again at ' +
-          new Date(
-              playerState.streamCooldownExpiry[playerState.locationId]
-          ).toLocaleTimeString() +
-          '.'
-        : '';
+const makeOxygenStreamMessage: DescriptionCreator = (playerState, globalState) => {
+    return (
+        <React.Fragment>
+            {playerState.challengeMode && (
+                <p className="warning">As you are in Challenge Mode, you will receive {
+                    playerState.knowsCrimson ?  `only ${Math.max(15, 12.5 + 2.5 * globalState.artefactsFound).toFixed(1)}% of the stated Oxygen amount!` : 'less Oxygen than stated!'
+                }</p>
+            )}
+            {playerState.streamCooldownExpiry[playerState.locationId] && (
+                <p className="warning">You have used this Oxygen Stream too recently! Come back at {formatTime(new Date(playerState.streamCooldownExpiry[playerState.locationId]))}.</p>
+            )}
+        </React.Fragment>
+    )
+}
 
 const lastUsedMessage = (
     playerState: PlayerState,
     globalState: GlobalState
 ) => {
-    const display = globalState?.tritonOxygen.lastExtract
+    const display = globalState.tritonOxygen.lastExtract
         ? ' This Oxygen stream was last used on ' +
-          new Date(globalState?.tritonOxygen.lastExtract).toLocaleTimeString() +
+          new Date(globalState.tritonOxygen.lastExtract).toLocaleTimeString() +
           '.'
         : ' No group has used this Oxygen stream yet! Be the first!';
-    return coolDownMessage(playerState) + display;
+    return makeOxygenStreamMessage(playerState, globalState) + display;
 };
 
 const oxygenPumpActions = {
@@ -320,10 +326,16 @@ export const allPlayerActions = {
             'Have any member of your team perform Project Inspire.',
             '294px',
             '533px',
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.LIBRARIAN_PASS]?.status === 'completed')
+                    return <p className="warning">You have already inspired the Chief Librarian.</p>;
+                if (playerState.quests[questIds.LIBRARIAN_PASS]?.status !== 'incomplete')
+                    return <p className="warning">You have not met the Chief Librarian yet.</p>;
+            },
             (playerState) =>
-                playerState.quests[questIds.LIBRARIAN_PASS]?.status ===
-                'incomplete'
+                !!playerState.quests[questIds.LIBRARIAN_PASS],
+            (playerState) =>
+                playerState.quests[questIds.LIBRARIAN_PASS]?.status === 'incomplete',
         ),
     },
     [Locations.locationIds.BARNACLE]: {
@@ -357,70 +369,19 @@ export const allPlayerActions = {
             'Create a list of youngest to oldest of your whole group.',
             '437px',
             '471px',
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.PYRITE]?.status === 'completed')
+                    return <p className="warning">You have already helped the Pyrite Lady.</p>;
+                if (playerState.quests[questIds.PYRITE]?.status !== 'incomplete')
+                    return <p className="warning">You have not met the Pyrite Lady yet.</p>;
+            },
             (playerState) =>
-                playerState.quests[questIds.PYRITE]?.status === 'incomplete'
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
+                !!playerState.quests[questIds.PYRITE],
             (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '729px',
-            '113px'
+                playerState.quests[questIds.PYRITE]?.status === 'incomplete',
         ),
     },
     [Locations.locationIds.BUBBLE]: {
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '434px',
-            '524px'
-        ),
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
             'The Bubble Factory is one of the largest sources of Oxygen in the Undersea, giving a user 40 minutes of Oxygen. However, you will need a Bubble Pass to use it.',
@@ -439,42 +400,18 @@ export const allPlayerActions = {
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
             },
-            coolDownMessage,
+            (playerState, globalState) => {
+                if (!playerState.hasBubblePass)
+                    return <p className="warning">You cannot use this Oxygen Stream without a Bubble Pass.</p>
+                else 
+                    return makeOxygenStreamMessage(playerState, globalState);
+            },
             undefined,
             (playerState) =>
                 playerState.inventory[itemDetails.BUBBLE.id]?.qty > 0
         ),
     },
     [Locations.locationIds.CATFISH]: {
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '169px',
-            '348px'
-        ),
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
             'The Oxygen Stream at Catfish Crescent is curiously linked with the one located at Salmon Street. Both need to be activated at roughly the same time, before you can receive 40 minutes of Oxygen.',
@@ -496,7 +433,7 @@ export const allPlayerActions = {
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
             },
-            coolDownMessage
+            makeOxygenStreamMessage
         ),
     },
     [Locations.locationIds.CORALS]: {
@@ -530,39 +467,19 @@ export const allPlayerActions = {
             "Gather items: 2 brushes, 2 pieces of paper, 2 storybooks; Each person then has to say 'hi' in a different language and say what language it is.",
             '427px',
             '419px',
-            undefined,
+            (playerState) => {
+                switch (playerState.quests[questIds.FINCHES]?.status) {
+                    case 'completed':
+                        return <p className="warning">You have already learnt this language.</p>;
+                    case 'incomplete':
+                        return;
+                    default:
+                        return <p className="warning">You have not explored enough of this area to learn this language.</p>;
+                }
+            },
             (playerState) =>
-                playerState.quests[questIds.FINCHES]?.status === 'incomplete',
+                !!playerState.quests[questIds.FINCHES],
             (playerState) => !playerState.knowsLanguage
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '26px',
-            '106px'
         ),
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
@@ -585,7 +502,7 @@ export const allPlayerActions = {
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
             },
-            coolDownMessage
+            makeOxygenStreamMessage
         ),
     },
     [Locations.locationIds.KELP]: {
@@ -619,7 +536,14 @@ export const allPlayerActions = {
             'Online Maze: https://www.mathsisfun.com/games/mazes.html. Complete one Hard maze.',
             '360px',
             '487px',
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.SHRINE_1]?.status === 'completed')
+                    return <p className="warning">You have already found the way to the Shrine of the Innocent. Use &lsquo;Travel&rsquo; to revisit it.</p>;
+                if (playerState.quests[questIds.SHRINE_1]?.status !== 'incomplete')
+                    return <p className="warning">You have not explored enough of the area to do this.</p>;
+            },
+            (playerState) =>
+                !!playerState.quests[questIds.SHRINE_1],
             (playerState) =>
                 playerState.quests[questIds.SHRINE_1]?.status === 'incomplete'
         ),
@@ -629,35 +553,6 @@ export const allPlayerActions = {
             'Have a member receive a message from the mentors. The rest of you have to lipread what he/she is saying.',
             '510px',
             '284px'
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '122px',
-            '117px'
         ),
     },
     [Locations.locationIds.LIBRARY]: {
@@ -691,11 +586,18 @@ export const allPlayerActions = {
             'Have any member share an incident when things did not go as planned for a training/ project and how did the plan get adapted.',
             '99px',
             '503px',
-            undefined,
+            (playerState) => {
+                if (!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty)
+                    return <p className="warning">You need a Library Pass to access tomes about Challenge Mode.</p>;
+                if (playerState.knowsCrimson)
+                    return <p className="warning">You already know about Challenge Mode.</p>;
+                if (playerState.quests[questIds.FINCHES_2])
+                    return <p className="warning">You haven&apos;t learnt enough about Challenge Mode outside of the Library yet.</p>;
+            },
             (playerState) =>
-                playerState.quests[questIds.FINCHES_2]?.status === 'incomplete',
+                !!playerState.quests[questIds.FINCHES_2],
             (playerState) =>
-                playerState.inventory[itemDetails.LIBRARY_PASS.id] !== undefined
+                !!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty && !playerState.knowsCrimson
         ),
         [Actions.specificActions.LIBRARY.STUDY_ARTEFACT]: new PlayerAction(
             'Study Artefact Legends',
@@ -703,53 +605,36 @@ export const allPlayerActions = {
             'Create a new group cheer and do it to energise yourselves.',
             '630px',
             '202px',
-            undefined,
+            (playerState) => {
+                if (!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty)
+                    return <p className="warning">You need a Library Pass to access tomes about artefacts.</p>;
+                if (playerState.quests[questIds.ARTEFACTS_2])
+                    return <p className="warning">You have already found the books about artefacts.</p>;
+                if (!playerState.quests[questIds.ARTEFACTS_1])
+                    return <p className="warning">You haven&apos;t explored the Library enough yet to study these books.</p>;
+            },
             (playerState) =>
-                playerState.quests[questIds.ARTEFACTS_1]?.status ===
-                'incomplete',
+                !!playerState.quests[questIds.ARTEFACTS_1],
             (playerState) =>
-                playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty >= 0
+                !!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty && !playerState.quests[questIds.ARTEFACTS_2]
         ),
         [Actions.specificActions.LIBRARY.DECODE_ARTEFACT]: new PlayerAction(
-            'Decode Artefact',
-            'The artefact legend is written in an ancient language. You will need to decode it before you can understand it.',
+            'Decode Artefact Legends',
+            'The books about artefact legends are written in an ancient language. You will need to decode it before you can understand it.',
             "Decode 'Hwljaxawv Ljalgf'.",
             '703px',
             '265px',
-            undefined,
+            (playerState) => {
+                if (!playerState.knowsLanguage)
+                    return <p className="warning">You don&apos;t know enough about the ancient language to decode these books.</p>;
+                if (playerState.quests[questIds.ARTEFACTS_3])
+                    return <p className="warning">You have already decoded these books.</p>;
+                if (!playerState.quests[questIds.ARTEFACTS_2])
+                    return <p className="warning">You haven&apos;t studied the books enough to decode them yet.</p>;
+            },
             (playerState) =>
-                playerState.quests[questIds.ARTEFACTS_2]?.status ===
-                'incomplete',
-            (playerState) => playerState.knowsLanguage
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '33px',
-            '171px'
+                !!playerState.quests[questIds.ARTEFACTS_2],
+            (playerState) => playerState.knowsLanguage && !playerState.quests[questIds.ARTEFACTS_3]
         ),
     },
     [Locations.locationIds.SALMON]: {
@@ -783,38 +668,16 @@ export const allPlayerActions = {
             'Have any member of your team perform Project MTW.',
             '142px',
             '542px',
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.ARGUMENT]?.status === 'completed')
+                    return <p className="warning">You have already confronted the children.</p>;
+                if (playerState.quests[questIds.ARGUMENT]?.status !== 'incomplete')
+                    return <p className="warning">You have not met anybody to confront yet.</p>;
+            },
             (playerState) =>
-                playerState.quests[questIds.ARGUMENT]?.status === 'incomplete'
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
+                !!playerState.quests[questIds.ARGUMENT],
             (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '18px',
-            '96px'
+                playerState.quests[questIds.ARGUMENT]?.status === 'incomplete',
         ),
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
@@ -837,39 +700,10 @@ export const allPlayerActions = {
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
             },
-            coolDownMessage
+            makeOxygenStreamMessage
         ),
     },
     [Locations.locationIds.SHALLOWS]: {
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '45px',
-            '120px'
-        ),
     },
     [Locations.locationIds.SHORES]: {
         [Actions.specificActions.SHORES.DIVE]: new PlayerAction(
@@ -887,7 +721,10 @@ export const allPlayerActions = {
             "Give 1 x Unicorn's Hair.",
             '434px',
             '449px',
-            undefined,
+            (playerState) => {
+                if (!playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty)
+                    return <p className="warning">You don&apos;t have any Unicorn Hair to give.</p>
+            },
             undefined,
             (playerState) =>
                 !!playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty
@@ -898,39 +735,15 @@ export const allPlayerActions = {
             'Receive 1 x Unicorn Tear.',
             '434px',
             '495px',
-            undefined,
+            (playerState) => {
+                if (playerState.quests[questIds.SHRINE_2]?.stages[4])
+                    return <p className="warning">You have not reached the final stage of the Shrine of the Innocent quest yet.</p>
+                if (playerState.inventory[itemDetails.UNICORN_TEAR.id]?.qty)
+                    return <p className="warning">You already have a Unicorn Tear.</p>
+            },
             (playerState) => playerState.quests[questIds.SHRINE_2]?.stages[4],
             (playerState) =>
                 !playerState.inventory[itemDetails.UNICORN_TEAR.id]?.qty
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '52px',
-            '123px'
         ),
     },
     [Locations.locationIds.STATUE]: {
@@ -1284,7 +1097,7 @@ export const allPlayerActions = {
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
             },
-            coolDownMessage
+            makeOxygenStreamMessage
         ),
     },
     [Locations.locationIds.UMBRAL]: {
