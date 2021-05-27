@@ -243,11 +243,11 @@ export const allPlayerActions = {
             "No task required.", "122px", "117px")
     },
     [Locations.locationIds.LIBRARY]: {
-        [Actions.specificActions.LIBRARY.EXPLORE]: new DynamicPlayerAction("Explore", "Talk to the librarians about the Marine Library.", 
+        [Actions.specificActions.LIBRARY.EXPLORE]: new DynamicPlayerAction("Explore", "Talk to the librarians about the collection of the Marine Library.", 
             "Use 5 minutes of Oxygen.", "432px", "385px",
             (playerState) => playerState.oxygenUntil ? new Date(playerState.oxygenUntil) : new Date(0),
             300000, (setIsVisible, setIsEnabled): void => { setIsEnabled(false); }, (): void => { return; },),
-        [Actions.specificActions.LIBRARY.STUDY_CRIMSON]: new PlayerAction("Study Crimson", "Learn more about the Crimson, a crisis that took place 10,000 years ago.", 
+        [Actions.specificActions.LIBRARY.STUDY_CRIMSON]: new PlayerAction("Study Challenge Mode", 'Learn more about Challenge Mode, an ancient ritual which outsiders from the Undersea went through.', 
             "Have any member share an incident when things did not go as planned for a training/ project and how did the plan get adapted.", "99px", "503px", undefined,
             (playerState) => playerState.quests[questIds.FINCHES_2]?.status === 'incomplete',
             (playerState) => playerState.inventory[itemDetails.LIBRARY_PASS.id] !== undefined),

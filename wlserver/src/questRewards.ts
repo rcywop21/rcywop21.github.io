@@ -87,7 +87,7 @@ const transforms: Record<QuestId, Transform> = {
     [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60, false),
     [questIds.FINCHES_2]: composite(
         makeAddMessageTransform(
-            'Refer to your Journal for details on the four spells used to keep the Crimson asleep.'
+            'You have added information about Challenge Mode to your Journal.'
         ),
         makePlayerStatTransform('knowsCrimson', true)
     ),

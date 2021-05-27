@@ -95,10 +95,10 @@ const questList: Quest[] = [
         name: 'The Finches Code, Decoded',
         when: 'You received this quest after completing The Finches Code.',
         description:
-            "The engraving ominously talks about something called the 'Crimson', and how it is extremely sensitive to artefacts that symbolize healing. The engraving then describes an Undersea legend about Triton putting the 'Crimson' into a deep sleep ten thousand years ago. Perhaps you could learn more about this legend...",
+            'The engraving talks about an ancient ritual, known as Challenge Mode, which people from outside the Undersea used to perform in the Undersea. It is said that Triton, who was originally born outside the Undersea, became worthy of acclaim by performing this ritual at the highest difficulty. Those who complete this ritual are said to have received very valuable rewards. Perhaps you could learn more abut Challenge Mode at the Marine Library...',
         stages: [
             'Get the Library Pass from the Chief Librarian',
-            "Perform the 'Study Crimson Legend' action at the Marine Library",
+            "Perform the 'Study Challenge Mode' action at the Marine Library",
         ],
         reward: ['Knowledge on how to pacify the Crimson.'],
         stageOrder: 'inOrder',
