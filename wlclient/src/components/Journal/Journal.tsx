@@ -21,7 +21,7 @@ export enum JournalPages {
 }
 
 const Journal = (props: JournalProps): React.ReactElement => {
-    const { playerState, globalState } = props;
+    const { playerState, globalState, isMentor } = props;
 
     const knowsChallengeMode =
         (playerState.quests[questIds.FINCHES_2] &&
@@ -50,6 +50,7 @@ const Journal = (props: JournalProps): React.ReactElement => {
                 key="n"
                 playerState={playerState}
                 globalState={globalState}
+                isMentor={isMentor}
             />,
         ],
         [
@@ -58,6 +59,7 @@ const Journal = (props: JournalProps): React.ReactElement => {
                 key="o"
                 playerState={playerState}
                 globalState={globalState}
+                isMentor={isMentor}
             />,
         ],
         [
@@ -72,6 +74,7 @@ const Journal = (props: JournalProps): React.ReactElement => {
                 handlePageSwitch={handlePageSwitch}
                 knowsOxygen={playerState.knowsOxygen}
                 knowsChallengeMode={knowsChallengeMode}
+                isMentor={isMentor}
             />
             {pageElements.get(page)}
         </div>

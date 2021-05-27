@@ -7,10 +7,11 @@ export interface JournalMenuProps {
     handlePageSwitch: (jp: JournalPages) => () => void;
     knowsOxygen?: boolean;
     knowsChallengeMode?: boolean;
+    isMentor?: boolean;
 }
 
 const JournalMenu = (props: JournalMenuProps): React.ReactElement => {
-    const { handlePageSwitch, knowsOxygen, knowsChallengeMode } = props;
+    const { handlePageSwitch, knowsOxygen, knowsChallengeMode, isMentor } = props;
 
     return (
         <div className="journalMenu">
@@ -25,19 +26,24 @@ const JournalMenu = (props: JournalMenuProps): React.ReactElement => {
                 {JournalPages.ANNOUNCEMENTS}
             </button>
             <span>&emsp;</span>
-            {knowsChallengeMode && (
+            {(isMentor || knowsChallengeMode) && (
                 <button
+                    className={isMentor && !knowsChallengeMode ? "mentorHax" : ""}
                     onClick={handlePageSwitch(JournalPages.CHALLENGE_MODE_INFO)}
                 >
                     {JournalPages.CHALLENGE_MODE_INFO}
                 </button>
             )}
             <span>&emsp;</span>
-            {knowsOxygen && (
-                <button onClick={handlePageSwitch(JournalPages.OXYGEN)}>
+            {(isMentor || knowsOxygen) && (
+                <button 
+                    className={isMentor && !knowsOxygen ? "mentorHax" : ""}
+                    onClick={handlePageSwitch(JournalPages.OXYGEN)}>
                     {JournalPages.OXYGEN}
                 </button>
             )}
+            <span>&emsp;</span>
+            {isMentor && <span className="mentorHax mentorHaxTextBox">Light blue = Only mentors can see this.</span>}
         </div>
     );
 };
