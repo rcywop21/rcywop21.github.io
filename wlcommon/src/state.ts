@@ -26,7 +26,7 @@ export interface GlobalState {
         lastCatfish?: Date;
         lastSalmonId?: TeamId;
         lastCatfishId?: TeamId;
-    }
+    };
 }
 
 export interface CrimsonAlarm {

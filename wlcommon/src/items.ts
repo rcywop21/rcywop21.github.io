@@ -74,33 +74,39 @@ export const itemDetails = {
     LIBRARY_PASS: {
         id: 'LibraryPass',
         name: 'Library Pass',
-        description: "It lets you read books from the Restricted Section of the Marine Library. The Chief Librarian has the authority to bestow it on individuals she deems worthy."
+        description:
+            'It lets you read books from the Restricted Section of the Marine Library. The Chief Librarian has the authority to bestow it on individuals she deems worthy.',
     },
     UNICORN_HAIR: {
         id: 'UnicornHair',
         name: "Unicorn's Hair",
-        description: 'The hair of a Unicorn. WARNING: Performing a dive with this in your inventory will put you in Challenge Mode. In Challenge Mode, any oxygen you gain from diving or Oxygen Streams will be halved.',
+        description:
+            'The hair of a Unicorn. WARNING: Performing a dive with this in your inventory will put you in Challenge Mode. In Challenge Mode, any oxygen you gain from diving or Oxygen Streams will be halved.',
     },
     UNICORN_TEAR: {
         id: 'UnicornTear',
-        name: "Unicorn Tear",
-        description: 'An incredibly valuable artefact. When mixed with the proper reagents, it can help cure any degree of exhaustion.',
+        name: 'Unicorn Tear',
+        description:
+            'An incredibly valuable artefact. When mixed with the proper reagents, it can help cure any degree of exhaustion.',
     },
     PEARL: {
         id: 'Pearl',
-        name: "Pearl of Asclepius",
-        description: 'An incredibly valuable artefact. Fashioned by the legendary healer Asclepius, a skilled healer can use this to heal someone of almost any kind of ailment.',
+        name: 'Pearl of Asclepius',
+        description:
+            'An incredibly valuable artefact. Fashioned by the legendary healer Asclepius, a skilled healer can use this to heal someone of almost any kind of ailment.',
     },
     ELEPHANT: {
         id: 'Elephant',
         name: 'Elephant Figurine',
-        description: 'An exquisitely carved figurine of an elephant. It seems to be made of some white, polished mineral. It looks expensive and you probably need to shine it frequently.'
+        description:
+            'An exquisitely carved figurine of an elephant. It seems to be made of some white, polished mineral. It looks expensive and you probably need to shine it frequently.',
     },
     HERRING_CHARM: {
         id: 'HerringCharm',
         name: 'Herring Charm',
-        description: 'A fish-shaped amulet that is said to bless the bearer with wisdom. It is red in colour.'
-    }
+        description:
+            'A fish-shaped amulet that is said to bless the bearer with wisdom. It is red in colour.',
+    },
 };
 
 export const itemsById: Record<ItemId, Item> = {};
