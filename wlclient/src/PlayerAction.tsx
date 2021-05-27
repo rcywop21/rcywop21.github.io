@@ -218,7 +218,7 @@ const makeOxygenStreamMessage: DescriptionCreator = (playerState, globalState) =
                 }</p>
             )}
             {playerState.streamCooldownExpiry[playerState.locationId] && (
-                <p className="warning">You have used this Oxygen Stream too recently! Come back at {formatTime(new Date(playerState.streamCooldownExpiry[playerState.locationId]))}.</p>
+                <p className="informative">You can use this Oxygen Stream starting from {formatTime(new Date(playerState.streamCooldownExpiry[playerState.locationId]))}.</p>
             )}
         </React.Fragment>
     )
@@ -228,12 +228,15 @@ const lastUsedMessage = (
     playerState: PlayerState,
     globalState: GlobalState
 ) => {
-    const display = globalState.tritonOxygen.lastExtract
-        ? ' This Oxygen stream was last used on ' +
-          new Date(globalState.tritonOxygen.lastExtract).toLocaleTimeString() +
-          '.'
-        : ' No group has used this Oxygen stream yet! Be the first!';
-    return makeOxygenStreamMessage(playerState, globalState) + display;
+    const { lastTeam, lastExtract } = globalState.tritonOxygen;
+    const lastTeamLbl = lastTeam === undefined ? 'an unknown person' : `Team ${lastTeam}`;
+
+    return (
+        <React.Fragment>
+            <p>This Oxygen Stream was last used by {lastTeamLbl} at {formatTime(lastExtract)}.</p>
+            {makeOxygenStreamMessage(playerState, globalState)}
+        </React.Fragment>
+    )
 };
 
 const oxygenPumpActions = {
@@ -703,8 +706,7 @@ export const allPlayerActions = {
             makeOxygenStreamMessage
         ),
     },
-    [Locations.locationIds.SHALLOWS]: {
-    },
+    [Locations.locationIds.SHALLOWS]: {},
     [Locations.locationIds.SHORES]: {
         [Actions.specificActions.SHORES.DIVE]: new PlayerAction(
             'Dive',
@@ -779,10 +781,18 @@ export const allPlayerActions = {
             "Decode 'Vwwh Ujaekgf'",
             '250px',
             '553px',
-            undefined,
+            (playerState) => {
+                if (!playerState.foundEngraving)
+                    return <p className="warning">You have not found this engraving yet.</p>;
+                if (!playerState.knowsLanguage)
+                    return <p className="warning">You don&apos;t know enough the ancient language to decode the engraving.</p>;
+                if (playerState.quests[questIds.FINCHES_2])
+                    return <p className="warning">You have already decoded this engraving.</p>;
+            },
             (playerState) => playerState.foundEngraving,
-            (playerState) => playerState.knowsLanguage
+            (playerState) => playerState.knowsLanguage && !playerState.quests[questIds.FINCHES_2],
         ),
+        /*
         [Actions.specificActions.STATUE.CAST_COOLING_AURA]: new PlayerAction(
             'Cast Cool Aura',
             "The Crimson's body temperature is kept low as part of its slumber. Prevent it from getting too high!",
@@ -790,7 +800,7 @@ export const allPlayerActions = {
             '414px',
             '324px',
             undefined,
-            (playerState) => playerState.knowsCrimson,
+            () => false,
             (playerState) =>
                 playerState.quests[questIds.CHAPTER_3]?.status === 'incomplete'
         ),
@@ -828,35 +838,7 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.quests[questIds.CHAPTER_3]?.status === 'incomplete'
         ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '689px',
-            '100px'
-        ),
+        */
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
             'The Statue of Triton has a publicly-accessible storage of Oxygen, which slowly builds up 4 minutes of Oxygen every minute. You can get all the Oxygen inside this store. Note that this storage is shared between everyone.',
@@ -878,8 +860,7 @@ export const allPlayerActions = {
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
             },
-            (playerState, globalState) =>
-                lastUsedMessage(playerState, globalState!)
+            lastUsedMessage
         ),
     },
     [Locations.locationIds.STORE]: {
@@ -900,8 +881,7 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            undefined,
-            (playerState) => !playerState.inventory['Map']
+            undefined
         ),
         [Actions.specificActions.STORE.BUY_GUIDE]: new DynamicPlayerAction(
             'Buy Guide',
@@ -921,7 +901,8 @@ export const allPlayerActions = {
                 return;
             },
             undefined,
-            (playerState) => !playerState.inventory['OxygenGuide']
+            undefined,
+            (playerState) => !playerState.inventory[itemDetails.OXYGEN_GUIDE.id]
         ),
         [Actions.specificActions.STORE.BUY_DOLL]: new DynamicPlayerAction(
             'Buy Doll',
@@ -997,8 +978,7 @@ export const allPlayerActions = {
                 return;
             }
         ),
-        [Actions.specificActions.STORE
-            .BUY_BUBBLE_PASS]: new DynamicPlayerAction(
+        [Actions.specificActions.STORE.BUY_BUBBLE_PASS]: new DynamicPlayerAction(
             'Buy Bubble Pass',
             'This golden pass lets you access the Bubble Factory. It has no expiry date and can be used multiple times.',
             'Pay 40 minutes of Oxygen to receive 1 x Bubble Pass.',
@@ -1047,35 +1027,6 @@ export const allPlayerActions = {
         ),
     },
     [Locations.locationIds.TUNA]: {
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '615px',
-            '141px'
-        ),
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
             'There is a large Oxygen Stream here, however, it has fallen into disrepair. Getting Oxygen from here will be slightly more challenging, but you can still expect to get 30 minutes of Oxygen here.',
@@ -1103,7 +1054,7 @@ export const allPlayerActions = {
     [Locations.locationIds.UMBRAL]: {
         [Actions.specificActions.UMBRAL.EXPLORE]: new DynamicPlayerAction(
             'Explore',
-            'This is a shady, run-down area. Apparently it used to be a residential district, but the Oxygen Stream here vanished one day, suddenly. You shudder as you walk around the area.',
+            'This is a shady, run-down area. Apparently it used to be a residential district, but the Oxygen Stream here vanished one day, suddenly. As you walk around the ruins, a cold shiver runs down your spine.',
             'Use 5 minutes of Oxygen.',
             '656px',
             '402px',
@@ -1131,52 +1082,29 @@ export const allPlayerActions = {
             'Give 1 x Pyrite Pan.',
             '579px',
             '197px',
-            undefined,
+            (playerState) => {
+                if (!playerState.inventory[itemDetails.PYRITE_PAN.id])
+                    return <p className="warning">You don&apos;t have a Pyrite Pan to show Alyusi.</p>
+            },
             (playerState) =>
                 playerState.quests[questIds.CLOAK_1]?.status === 'incomplete',
             (playerState) =>
-                playerState.inventory[itemDetails.PYRITE_PAN.id] !== undefined
+                !!playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty
         ),
         [Actions.specificActions.UMBRAL.GIVE_ROCK]: new PlayerAction(
             'Give Rock',
             'Give Alyusi the Chmyrrkyth.',
-            'Give 1 x Mysterious Black Rock.',
+            'Give Alyusi something that fits his description of Chmyrrkyth.',
             '749px',
             '177px',
-            undefined,
+            (playerState) => {
+                if (!playerState.inventory[itemDetails.BLACK_ROCK.id])
+                    return <p className="warning">You don&apos;t have a Chmyrrkyth to give Alyusi.</p>
+            },
             (playerState) =>
                 playerState.quests[questIds.CLOAK_2]?.status === 'incomplete',
             (playerState) =>
                 playerState.inventory[itemDetails.BLACK_ROCK.id] !== undefined
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '60px',
-            '304px'
         ),
     },
     [Locations.locationIds.WOODS]: {
@@ -1186,6 +1114,12 @@ export const allPlayerActions = {
             'Share a point in time when you received help and support from others to receive 1 X Unicorn Hair.',
             '703px',
             '382px',
+            (playerState) => {
+                if (playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty) 
+                    return <p className="warning">You already have a Unicorn&apos;s Hair.</p>
+                if (playerState.inventory[itemDetails.UNICORN_TEAR.id]?.qty) 
+                    return <p className="warning">You already have a Unicorn Tear.</p>
+            },
             undefined,
             (playerState) =>
                 !(

@@ -15,7 +15,7 @@ import { Locations } from 'wlcommon';
 const Umbral = (props: SpecificLocationProps): React.ReactElement => {
     const { playerState, handleAction, triggerTooltip, isMentor, globalState } = props;
 
-    const actions = allPlayerActions[Locations.locationIds.TUNA];
+    const actions = allPlayerActions[Locations.locationIds.UMBRAL];
 
     const actionProps = makeActionProps(
         actions,

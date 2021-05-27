@@ -2,3 +2,8 @@ p.warning {
     color: #e1614b;
     font-weight: bold;
 }
+
+p.informative {
+    color: #e1e161;
+    font-weight: bold;
+}
