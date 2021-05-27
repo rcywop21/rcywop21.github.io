@@ -58,15 +58,12 @@ const applyLocationActions: Record<
             const doChallengeMode =
                 state.playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty;
             const now = Date.now();
+            const INCREMENT = 20 * 60 * 1000;
             let result = composite(
                 makeAdvanceQuestTransform(questIds.CHAPTER_1, 0),
                 makeAdvanceQuestTransform(questIds.SHRINE_2, 2),
                 makeAddMessageTransform(
                     'You dive into the deep blue sea... and arrive at the Shallows!'
-                ),
-                makePlayerStatTransform(
-                    'oxygenUntil',
-                    new Date(now + (doChallengeMode ? 240000 : 1200000))
                 ),
                 makePlayerStatTransform(
                     'locationId',
@@ -75,12 +72,21 @@ const applyLocationActions: Record<
             )(state);
             if (doChallengeMode) {
                 result = makePlayerStatTransform(
+                    'oxygenUntil',
+                    new Date(now + INCREMENT * Math.max(0.15, 0.125 + 0.025 * state.globalState.artefactsFound)),
+                )(result);
+                result = makePlayerStatTransform(
                     'challengeMode',
                     new Date(now + 1800000)
                 )(result);
                 result = makeAddMessageTransform(
-                    "You are now in Challenge Mode. Reminder: In Challenge Mode, you will receive less Oxygen from Oxygen Streams and your pump is disabled. Bring the Unicorn's Hair to the Shrine and survive for 30 minutes without resurfacing to complete your quest!"
+                    "You are now in Challenge Mode. Reminder: In Challenge Mode, you will receive much less Oxygen from Oxygen Streams and your pump is disabled. Bring the Unicorn's Hair to the Shrine and survive for 30 minutes without resurfacing to complete your quest!"
                 )(result);
+            } else {
+                result = makePlayerStatTransform(
+                    'oxygenUntil',
+                    new Date(now + INCREMENT)
+                )(result)
             }
             return result;
         },
