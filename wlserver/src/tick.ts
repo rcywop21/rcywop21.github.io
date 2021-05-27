@@ -32,7 +32,7 @@ const finishChallengeModeTransform: Transform = (state) =>
                 visibility: 'public',
                 text: `[Announcement] Team ${
                     state.playerState.id
-                } has completed Challenge Mode. (Difficulty: ${Math.max(
+                } has completed Challenge Mode. (Highest Oxygen Multiplier: ${Math.max(
                     15,
                     12.5 + 0.25 * state.globalState.artefactsFound
                 ).toFixed(1)}% Oxygen)`,
