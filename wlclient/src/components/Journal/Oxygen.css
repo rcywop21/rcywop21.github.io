@@ -28,18 +28,17 @@
 }
 
 .cooldown.on-cooldown {
-    color: #FF8363;
+    color: #ff8363;
 }
 
 .cooldown.off-cooldown {
-    color: #4AE0A0;
+    color: #4ae0a0;
 }
 
 h3.on-cooldown {
-    color: #BB6666;
+    color: #bb6666;
 }
 
 h3.off-cooldown {
-    color: #13945D;
+    color: #13945d;
 }
-

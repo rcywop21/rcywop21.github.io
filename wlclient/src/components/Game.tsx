@@ -4,7 +4,10 @@ import LocationComponent from './Location/LocationComponent';
 import BottomBar from './BottomBar/BottomBar';
 import Journal from './Journal/Journal';
 import OnActionPopup from './Popups/OnActionPopup';
-import { OnActionPopupProps, OnActionPopupMentorProps } from './Popups/OnActionPopup';
+import {
+    OnActionPopupProps,
+    OnActionPopupMentorProps,
+} from './Popups/OnActionPopup';
 import { TooltipType } from './Popups/Tooltip';
 import Tooltip from './Popups/Tooltip';
 import { PlayerState, GlobalState, Locations, Message } from 'wlcommon';
@@ -43,13 +46,23 @@ export interface GameMentorProps {
 */
 
 const Game = (props: GameProps): React.ReactElement => {
-    const { globalState, playerState, teamId, isMentor, gameMentorProps } = props;
+    const {
+        globalState,
+        playerState,
+        teamId,
+        isMentor,
+        gameMentorProps,
+    } = props;
 
-    const [isTooltipVisible, setIsTooltipVisible] = React.useState<boolean>(false);
+    const [isTooltipVisible, setIsTooltipVisible] = React.useState<boolean>(
+        false
+    );
     const [tooltipType, setTooltipType] = React.useState<TooltipType>(null);
-    const [tooltipData, setTooltipData] = React.useState<string[]>([""]);
-    const [isTooltipRightSide, setIsTooltipRightSide] = React.useState<boolean>(true);
-    
+    const [tooltipData, setTooltipData] = React.useState<string[]>(['']);
+    const [isTooltipRightSide, setIsTooltipRightSide] = React.useState<boolean>(
+        true
+    );
+
     const socket = React.useContext(SocketContext);
 
     function handleSpecificAction(action: string) {
@@ -65,8 +78,12 @@ const Game = (props: GameProps): React.ReactElement => {
     function handleTravel(location: Locations.LocationId) {
         return () => socket?.emit('travel', location);
     }
-    
-    function triggerTooltip(type: TooltipType = null, data = [""], isRightSide = true) {
+
+    function triggerTooltip(
+        type: TooltipType = null,
+        data = [''],
+        isRightSide = true
+    ) {
         return () => {
             setIsTooltipVisible(type ? true : false);
             if (type) {
@@ -76,43 +93,47 @@ const Game = (props: GameProps): React.ReactElement => {
             }
         };
     }
-    
-    const playerNotifs: Message[] = globalState.messages
-        .filter(message => message.visibility === "all" || message.visibility === teamId);
-    
+
+    const playerNotifs: Message[] = globalState.messages.filter(
+        (message) =>
+            message.visibility === 'all' || message.visibility === teamId
+    );
+
     const onActionPopupProps: OnActionPopupProps = {
         action: playerState.stagedAction,
         playerState: playerState,
-        isMentor: isMentor
+        isMentor: isMentor,
     };
-    
+
     if (isMentor && gameMentorProps) {
-        onActionPopupProps.mentorProps = gameMentorProps.onActionPopupMentorProps;
+        onActionPopupProps.mentorProps =
+            gameMentorProps.onActionPopupMentorProps;
     }
-    
+
     return (
-        <div className={`game ${isMentor ? "smallTopGap" : "bigTopGap"}`}>
-            <TopBar 
-                inventory={playerState.inventory} 
-                oxygenUntil={playerState.oxygenUntil} 
-                challengeMode={playerState.challengeMode} 
+        <div className={`game ${isMentor ? 'smallTopGap' : 'bigTopGap'}`}>
+            <TopBar
+                inventory={playerState.inventory}
+                oxygenUntil={playerState.oxygenUntil}
+                challengeMode={playerState.challengeMode}
                 crimsonUntil={new Date()}
                 triggerTooltip={triggerTooltip}
             />
-            <LocationComponent 
+            <LocationComponent
                 globalState={globalState}
-                playerState={playerState} 
-                handleAction={handleSpecificAction} 
+                playerState={playerState}
+                handleAction={handleSpecificAction}
                 handleTravel={handleTravel}
                 triggerTooltip={triggerTooltip}
                 isMentor={isMentor}
             />
-            <OnActionPopup 
-                action={playerState.pausedOxygen ? "pause" : null}
+            <OnActionPopup
+                action={playerState.pausedOxygen ? 'pause' : null}
                 isMentor={isMentor}
-                playerState={playerState}/>
+                playerState={playerState}
+            />
             <OnActionPopup {...onActionPopupProps} />
-            <Tooltip 
+            <Tooltip
                 isVisible={isTooltipVisible}
                 tooltipType={tooltipType}
                 data={tooltipData}
@@ -120,10 +141,10 @@ const Game = (props: GameProps): React.ReactElement => {
             />
             <BottomBar
                 key={playerNotifs.length}
-                notifications={playerNotifs} 
-                quests={playerState.quests} 
+                notifications={playerNotifs}
+                quests={playerState.quests}
             />
-            <Journal 
+            <Journal
                 isMentor={isMentor}
                 playerState={playerState}
                 globalState={globalState}

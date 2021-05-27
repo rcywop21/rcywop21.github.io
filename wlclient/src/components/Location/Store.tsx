@@ -1,7 +1,14 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
-import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { allPlayerActions, makeActionProps, makeDynamicActionProps } from '../../PlayerAction';
+import {
+    SpecificLocationProps,
+    imgDirectoryGenerator,
+} from './LocationComponent';
+import {
+    allPlayerActions,
+    makeActionProps,
+    makeDynamicActionProps,
+} from '../../PlayerAction';
 import DynamicAction, { DynamicActionProps } from './DynamicAction';
 import { Locations } from 'wlcommon';
 
@@ -10,11 +17,19 @@ const Store = (props: SpecificLocationProps): React.ReactElement => {
 
     const actions = allPlayerActions[Locations.locationIds.STORE];
     const actionProps = makeActionProps(
-        actions, isMentor, playerState, handleAction, triggerTooltip
+        actions,
+        isMentor,
+        playerState,
+        handleAction,
+        triggerTooltip
     );
-    
+
     const dynamicActionProps = makeDynamicActionProps(
-        actions, isMentor, playerState, handleAction, triggerTooltip
+        actions,
+        isMentor,
+        playerState,
+        handleAction,
+        triggerTooltip
     );
 
     return (

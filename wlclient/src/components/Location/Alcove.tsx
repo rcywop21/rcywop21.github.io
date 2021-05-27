@@ -1,6 +1,9 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
-import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
+import {
+    SpecificLocationProps,
+    imgDirectoryGenerator,
+} from './LocationComponent';
 import { makeActionProps, allPlayerActions } from '../../PlayerAction';
 import { Locations } from 'wlcommon';
 
@@ -10,7 +13,11 @@ const Alcove = (props: SpecificLocationProps): React.ReactElement => {
     const actions = allPlayerActions[Locations.locationIds.ALCOVE];
 
     const actionProps = makeActionProps(
-        actions, isMentor, playerState, handleAction, triggerTooltip
+        actions,
+        isMentor,
+        playerState,
+        handleAction,
+        triggerTooltip
     );
 
     return (

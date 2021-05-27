@@ -9,10 +9,10 @@ export interface QuestLogProps {
 
 const QuestLog = (props: QuestLogProps): React.ReactElement => {
     const { quests } = props;
-    
+
     const questStates: QuestState[] = Object.values(quests)
-        .filter((qs) => qs.status !== "completed")
-        .sort((q1, q2) => q1.id < q2.id ? 1 : -1);
+        .filter((qs) => qs.status !== 'completed')
+        .sort((q1, q2) => (q1.id < q2.id ? 1 : -1));
 
     return (
         <div className="questLog">

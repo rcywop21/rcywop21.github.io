@@ -42,11 +42,9 @@ const Login = (props: LoginProps): React.ReactElement => {
     }, [socket]);
 
     React.useEffect(() => {
-        if (mode === 'player')
-            document.title = 'WOP Ex Wanderlust';
-        else
-            document.title = `Ex Wanderlust (${mode})`
-    }, [mode])
+        if (mode === 'player') document.title = 'WOP Ex Wanderlust';
+        else document.title = `Ex Wanderlust (${mode})`;
+    }, [mode]);
 
     function authenticateReply(eventType: 'error', payload: string): void;
     function authenticateReply(
@@ -63,7 +61,7 @@ const Login = (props: LoginProps): React.ReactElement => {
         } else {
             updateLoggedIn({
                 teamId: groupName ?? 0,
-                mode
+                mode,
             });
             if (mode !== 'admin') {
                 const {
@@ -127,7 +125,9 @@ const Login = (props: LoginProps): React.ReactElement => {
                 onChange={(e) => setPassword(e.target.value)}
             ></input>
             <div>
-                <button className="loginButton" onClick={handleLogin}>Login</button>
+                <button className="loginButton" onClick={handleLogin}>
+                    Login
+                </button>
             </div>
             <div>
                 {hasErrorMessage && (

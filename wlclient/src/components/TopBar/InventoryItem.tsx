@@ -9,20 +9,20 @@ export interface InventoryItemProps {
 }
 
 const INVENTORY_ITEMS_ASSET_MAP: Map<ItemId, string> = new Map([
-    [itemDetails.MAP.id, "world-map.png"],
-    [itemDetails.OXYGEN_GUIDE.id, "guide.png"],
-    [itemDetails.MERMAID_DOLL.id, "doll.png"],
-    [itemDetails.PUMP.id, "pump.png"],
-    [itemDetails.BLACK_ROCK.id, "rock.png"],
-    [itemDetails.BUBBLE.id, "pass.png"],
-    [itemDetails.DISCOVERS.id, "ticket.png"],
-    [itemDetails.STAFF.id, "staff.png"],
-    [itemDetails.BLINKSEED.id, "blinkseed.png"],
-    [itemDetails.PYRITE_PAN.id, "pan.png"],
-    [itemDetails.LIBRARY_PASS.id, "library.png"],
-    [itemDetails.UNICORN_HAIR.id, "hair.png"],
-    [itemDetails.UNICORN_TEAR.id, "tear.png"],
-    [itemDetails.PEARL.id, "pearl.png"]
+    [itemDetails.MAP.id, 'world-map.png'],
+    [itemDetails.OXYGEN_GUIDE.id, 'guide.png'],
+    [itemDetails.MERMAID_DOLL.id, 'doll.png'],
+    [itemDetails.PUMP.id, 'pump.png'],
+    [itemDetails.BLACK_ROCK.id, 'rock.png'],
+    [itemDetails.BUBBLE.id, 'pass.png'],
+    [itemDetails.DISCOVERS.id, 'ticket.png'],
+    [itemDetails.STAFF.id, 'staff.png'],
+    [itemDetails.BLINKSEED.id, 'blinkseed.png'],
+    [itemDetails.PYRITE_PAN.id, 'pan.png'],
+    [itemDetails.LIBRARY_PASS.id, 'library.png'],
+    [itemDetails.UNICORN_HAIR.id, 'hair.png'],
+    [itemDetails.UNICORN_TEAR.id, 'tear.png'],
+    [itemDetails.PEARL.id, 'pearl.png'],
 ]);
 
 function getImg(item: ItemId): string {
@@ -39,13 +39,15 @@ function getImg(item: ItemId): string {
 
 const InventoryItem = (props: InventoryItemProps): React.ReactElement => {
     const { name, triggerTooltip } = props;
-    
-    const triggerTooltipWithData = triggerTooltip(tooltipTypes.INVENTORY, [name]);
+
+    const triggerTooltipWithData = triggerTooltip(tooltipTypes.INVENTORY, [
+        name,
+    ]);
 
     return (
-        <div 
-            className="inventoryItem" 
-            onMouseEnter={triggerTooltipWithData} 
+        <div
+            className="inventoryItem"
+            onMouseEnter={triggerTooltipWithData}
             onMouseLeave={triggerTooltip()}
         >
             <img src={getImg(name)} />

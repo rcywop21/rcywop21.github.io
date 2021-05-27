@@ -39,9 +39,9 @@
 }
 
 .hidden {
-    display: "none";
+    display: 'none';
 }
 
 .visible {
-    display: "";
+    display: '';
 }

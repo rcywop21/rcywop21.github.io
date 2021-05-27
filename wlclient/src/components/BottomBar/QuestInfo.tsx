@@ -12,23 +12,28 @@ const QuestInfo = (props: QuestInfoProps): React.ReactElement => {
     const questInfo = quests[questState.id];
     const questName = questInfo.name;
     const questSteps: string[] = [];
-    
+
     const currProgress = questState.stages.indexOf(false);
-    
-    if (questInfo.stageOrder === "inOrder") {
+
+    if (questInfo.stageOrder === 'inOrder') {
         questSteps.push(questInfo.stages[currProgress]);
     }
-    
-    if (questInfo.stageOrder === "anyOrder") {
+
+    if (questInfo.stageOrder === 'anyOrder') {
         for (let i = currProgress; i < questInfo.stages.length; i++) {
-            !questState.stages[i] && questSteps.push(`\u{2022} ${questInfo.stages[i]}`);
+            !questState.stages[i] &&
+                questSteps.push(`\u{2022} ${questInfo.stages[i]}`);
         }
     }
 
     return (
         <div className="questInfo">
             <h4 className="questName">{questName}</h4>
-            { questSteps.map((info, index) => <p key={index} className="questStep">{info}</p>) }
+            {questSteps.map((info, index) => (
+                <p key={index} className="questStep">
+                    {info}
+                </p>
+            ))}
         </div>
     );
 };

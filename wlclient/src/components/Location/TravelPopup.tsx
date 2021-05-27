@@ -4,14 +4,17 @@ import { Locations, PlayerState } from 'wlcommon';
 import './TravelPopup.css';
 
 export interface TravelPopupProps {
-    playerState: PlayerState
+    playerState: PlayerState;
     isVisible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     handleTravel: (a: Locations.LocationId) => () => void;
     triggerTooltip: (t?: TooltipType, d?: string[], b?: boolean) => () => void;
 }
 
-function checkHiddenLocationRequirement (location: Locations.Location, playerState: PlayerState): boolean {
+function checkHiddenLocationRequirement(
+    location: Locations.Location,
+    playerState: PlayerState
+): boolean {
     if (location.id == Locations.locationIds.ALCOVE) {
         return playerState.unlockedAlcove as boolean;
     } else if (location.id == Locations.locationIds.SHRINE) {
@@ -19,15 +22,23 @@ function checkHiddenLocationRequirement (location: Locations.Location, playerSta
     } else if (location.id == Locations.locationIds.WOODS) {
         return playerState.unlockedWoods as boolean;
     } else {
-        return playerState.hasMap || !Locations.locationsMapping[location.id].needsMap;
+        return (
+            playerState.hasMap ||
+            !Locations.locationsMapping[location.id].needsMap
+        );
     }
 }
 
-
 const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
-    const { playerState, isVisible, setVisible, handleTravel, triggerTooltip } = props;
+    const {
+        playerState,
+        isVisible,
+        setVisible,
+        handleTravel,
+        triggerTooltip,
+    } = props;
 
-    const visibility = isVisible ? "inline" : "none";
+    const visibility = isVisible ? 'inline' : 'none';
     const locationIds = Object.values(Locations.locationIds);
 
     function handleTravelClosePopup(id: Locations.LocationId) {
@@ -40,10 +51,15 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
     function canTravel(location: Locations.Location) {
         if (location.id == playerState.locationId) {
             return false;
-        } 
+        }
 
-        const hiddenRequirement = checkHiddenLocationRequirement(location, playerState);
-        const regionRequirement = Locations.locationsMapping[playerState.locationId].undersea === Locations.locationsMapping[location.id].undersea;
+        const hiddenRequirement = checkHiddenLocationRequirement(
+            location,
+            playerState
+        );
+        const regionRequirement =
+            Locations.locationsMapping[playerState.locationId].undersea ===
+            Locations.locationsMapping[location.id].undersea;
 
         return hiddenRequirement && regionRequirement;
     }
@@ -67,15 +83,19 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
                                 Locations.locationsMapping[locationId];
 
                             const travellable = canTravel(location);
-                            const display = { display: travellable ? "" : "none"}
+                            const display = {
+                                display: travellable ? '' : 'none',
+                            };
                             return (
-                                <button className="travelButton" style={display}
+                                <button
+                                    className="travelButton"
+                                    style={display}
                                     key={locationId}
                                     onClick={handleTravelClosePopup(
                                         location.id
                                     )}
                                     onMouseEnter={triggerTooltip(
-                                        tooltipTypes.LOCATION, 
+                                        tooltipTypes.LOCATION,
                                         [location.id]
                                     )}
                                     onMouseLeave={triggerTooltip()}

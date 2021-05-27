@@ -14,7 +14,10 @@ const BottomBar = (props: BottomBarProps): React.ReactElement => {
 
     return (
         <div className="bottomBar">
-            <Notifications key = {notifications.length} notifications={notifications} />
+            <Notifications
+                key={notifications.length}
+                notifications={notifications}
+            />
             <QuestLog quests={quests} />
         </div>
     );

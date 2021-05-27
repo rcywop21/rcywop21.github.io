@@ -6,40 +6,84 @@ export interface DynamicActionProps {
     actionProps: ActionProps;
     timeToCompare: Date;
     howRecentToTrigger: number;
-    triggerEffectsIfRecent: (v: ((b: boolean) => void), e: ((b: boolean) => void)) => void;
-    triggerEffectsIfNotRecent: (v: ((b: boolean) => void), e: ((b: boolean) => void)) => void;
+    triggerEffectsIfRecent: (
+        v: (b: boolean) => void,
+        e: (b: boolean) => void
+    ) => void;
+    triggerEffectsIfNotRecent: (
+        v: (b: boolean) => void,
+        e: (b: boolean) => void
+    ) => void;
 }
 
 const DynamicAction = (props: DynamicActionProps): React.ReactElement => {
-    const { actionProps, timeToCompare, howRecentToTrigger, triggerEffectsIfNotRecent, triggerEffectsIfRecent } = props;
+    const {
+        actionProps,
+        timeToCompare,
+        howRecentToTrigger,
+        triggerEffectsIfNotRecent,
+        triggerEffectsIfRecent,
+    } = props;
 
     // when current time has passed timeToCompare
-    const [timeToCompareIsInThePast, setTimeToCompareIsInThePast] = React.useState<boolean>(true);
-    
+    const [
+        timeToCompareIsInThePast,
+        setTimeToCompareIsInThePast,
+    ] = React.useState<boolean>(true);
+
     const stateControlledVisible: boolean = actionProps.isVisible;
     const stateControlledEnabled: boolean = actionProps.isEnabled;
 
-    const [timeControlledVisible, setTimeControlledVisible] = React.useState<boolean>(stateControlledVisible);
-    const [timeControlledEnabled, setTimeControlledEnabled] = React.useState<boolean>(stateControlledEnabled);
+    const [
+        timeControlledVisible,
+        setTimeControlledVisible,
+    ] = React.useState<boolean>(stateControlledVisible);
+    const [
+        timeControlledEnabled,
+        setTimeControlledEnabled,
+    ] = React.useState<boolean>(stateControlledEnabled);
 
     React.useEffect(() => {
         if (timeToCompare.valueOf() - Date.now() > howRecentToTrigger) {
-            triggerEffectsIfNotRecent(setTimeControlledVisible, setTimeControlledEnabled);
+            triggerEffectsIfNotRecent(
+                setTimeControlledVisible,
+                setTimeControlledEnabled
+            );
             const timer = setTimeout(() => {
-                setTimeToCompareIsInThePast(timeToCompare.valueOf() - Date.now() < howRecentToTrigger)
-                triggerEffectsIfRecent(setTimeControlledVisible, setTimeControlledEnabled);
+                setTimeToCompareIsInThePast(
+                    timeToCompare.valueOf() - Date.now() < howRecentToTrigger
+                );
+                triggerEffectsIfRecent(
+                    setTimeControlledVisible,
+                    setTimeControlledEnabled
+                );
             }, timeToCompare.valueOf() - Date.now() - howRecentToTrigger + 20);
 
             return () => clearTimeout(timer);
         } else {
-            triggerEffectsIfRecent(setTimeControlledVisible, setTimeControlledEnabled);
+            triggerEffectsIfRecent(
+                setTimeControlledVisible,
+                setTimeControlledEnabled
+            );
         }
-    }, [timeToCompareIsInThePast, timeToCompare, howRecentToTrigger, triggerEffectsIfRecent, triggerEffectsIfNotRecent]);
+    }, [
+        timeToCompareIsInThePast,
+        timeToCompare,
+        howRecentToTrigger,
+        triggerEffectsIfRecent,
+        triggerEffectsIfNotRecent,
+    ]);
 
     const finalIsVisible = timeControlledVisible && stateControlledVisible;
     const finalIsEnabled = timeControlledEnabled && stateControlledEnabled;
 
-    return <Action {...actionProps} isVisible={finalIsVisible} isEnabled={finalIsEnabled} />;
-}
+    return (
+        <Action
+            {...actionProps}
+            isVisible={finalIsVisible}
+            isEnabled={finalIsEnabled}
+        />
+    );
+};
 
 export default DynamicAction;

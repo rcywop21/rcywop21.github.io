@@ -1,14 +1,14 @@
 .stageComplete {
-    color: #13945D;
+    color: #13945d;
     text-decoration: line-through;
 }
 
 .stageIncomplete {
-    color: #FF836E;
+    color: #ff836e;
 }
 
 .stageFuture {
-    color: #AAAAAA;
+    color: #aaaaaa;
 }
 
 .subtitle.complete {
@@ -24,7 +24,8 @@
     margin-top: 0;
 }
 
-.questjournalinfo > ol, ul {
+.questjournalinfo > ol,
+ul {
     margin: 0;
 }
 

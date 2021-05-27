@@ -8,23 +8,27 @@ export interface NotificationsProps {
 }
 
 export function notifToDisplayString(message: Message): string {
-        return `[${(new Date(message.time)).toTimeString().slice(0, 5)}]  ${message.message}`;
-    }
+    return `[${new Date(message.time).toTimeString().slice(0, 5)}]  ${
+        message.message
+    }`;
+}
 
 const Notifications = (props: NotificationsProps): React.ReactElement => {
     const { notifications } = props;
-    notifications.sort((n1, n2) => n1.time < n2.time ? 1 : -1);
-    
+    notifications.sort((n1, n2) => (n1.time < n2.time ? 1 : -1));
+
     return (
         <div className="notifications">
             <h2 className="notifTitle">NOTIFICATIONS</h2>
             <div className="innerNotifBox">
                 {notifications.map((message: Message, index: number) => {
-                    return (<Notification
-                        key={index}
-                        time={new Date(message.time)}
-                        message={notifToDisplayString(message)}
-                    />);
+                    return (
+                        <Notification
+                            key={index}
+                            time={new Date(message.time)}
+                            message={notifToDisplayString(message)}
+                        />
+                    );
                 })}
             </div>
         </div>

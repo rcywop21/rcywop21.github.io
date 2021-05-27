@@ -15,22 +15,35 @@ export interface ActionProps {
 }
 
 export const Action = (props: ActionProps): React.ReactElement => {
-    const { display, x, y, isVisible, isEnabled, handleAction, triggerTooltip, tooltipInfo } = props;
-    
+    const {
+        display,
+        x,
+        y,
+        isVisible,
+        isEnabled,
+        handleAction,
+        triggerTooltip,
+        tooltipInfo,
+    } = props;
+
     const position = {
         top: y,
         left: x,
-        display: isVisible ? "" : "none"
+        display: isVisible ? '' : 'none',
     };
-    
-    const isTooltipRightSide = x.length < 5 || x < "512px";
+
+    const isTooltipRightSide = x.length < 5 || x < '512px';
 
     return (
         <div
-            className={`action ${isEnabled ? "enabled" : "disabled"}`} 
+            className={`action ${isEnabled ? 'enabled' : 'disabled'}`}
             style={position}
             onClick={isEnabled ? handleAction : undefined}
-            onMouseEnter={triggerTooltip(tooltipTypes.ACTION, tooltipInfo ? tooltipInfo : ["derp", "", ""], isTooltipRightSide)}
+            onMouseEnter={triggerTooltip(
+                tooltipTypes.ACTION,
+                tooltipInfo ? tooltipInfo : ['derp', '', ''],
+                isTooltipRightSide
+            )}
             onMouseLeave={triggerTooltip()}
         >
             <p>{display}</p>

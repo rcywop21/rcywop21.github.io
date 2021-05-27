@@ -7,46 +7,59 @@ import './MentorGame.css';
 
 const MentorGame = (props: GameProps): React.ReactElement => {
     const { playerState } = props;
-    
+
     const socket = React.useContext(SocketContext);
-    
+
     function handleActionApprove() {
-        socket?.emit("action_ok");
+        socket?.emit('action_ok');
     }
-    
+
     function handleActionReject() {
-        socket?.emit("action_reject");
+        socket?.emit('action_reject');
     }
-    
+
     const onActionPopupMentorProps: OnActionPopupMentorProps = {
         handleActionApprove: handleActionApprove,
-        handleActionReject: handleActionReject
-    }
-    
+        handleActionReject: handleActionReject,
+    };
+
     const gameMentorProps: GameMentorProps = {
-        onActionPopupMentorProps: onActionPopupMentorProps
-    }
-    
+        onActionPopupMentorProps: onActionPopupMentorProps,
+    };
+
     function onPause() {
         //Implement actual pause functionality
         if (playerState.pausedOxygen) {
-            socket?.emit("pause", false);
+            socket?.emit('pause', false);
         } else {
-            socket?.emit("pause", true);
+            socket?.emit('pause', true);
         }
     }
-    
+
     return (
         <div className="mentorGame">
             <div className="mentorTopGap"></div>
             <h3>~ Mentor Powers! ~</h3>
-            <span><b>Pause</b> disables all player actions and pauses the oxygen timer. </span>
-            <span>{playerState.pausedOxygen ? "Your team is currently paused. " : ""}</span>
+            <span>
+                <b>Pause</b> disables all player actions and pauses the oxygen
+                timer.{' '}
+            </span>
+            <span>
+                {playerState.pausedOxygen
+                    ? 'Your team is currently paused. '
+                    : ''}
+            </span>
             <span>&emsp;</span>
-            <button onClick={onPause}>{playerState.pausedOxygen ? "Resume" : "Pause"}</button>
-            <Game {...props} isMentor={true} gameMentorProps={gameMentorProps}/>
+            <button onClick={onPause}>
+                {playerState.pausedOxygen ? 'Resume' : 'Pause'}
+            </button>
+            <Game
+                {...props}
+                isMentor={true}
+                gameMentorProps={gameMentorProps}
+            />
         </div>
     );
-}
+};
 
 export default MentorGame;

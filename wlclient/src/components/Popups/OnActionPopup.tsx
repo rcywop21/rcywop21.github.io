@@ -19,19 +19,37 @@ export interface OnActionPopupMentorProps {
 
 const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
     const { action, playerState, priority, isMentor, mentorProps } = props;
-    
-    if (!action || (isMentor && action === "pause")) {
+
+    if (!action || (isMentor && action === 'pause')) {
         return <React.Fragment></React.Fragment>;
     }
     if (isMentor && mentorProps) {
         const { handleActionApprove, handleActionReject } = mentorProps;
         return (
             <React.Fragment>
-                <div className={`onActionPopup ${priority ? "priorityLayer" : "normalLayer"}`}>
+                <div
+                    className={`onActionPopup ${
+                        priority ? 'priorityLayer' : 'normalLayer'
+                    }`}
+                >
                     <h2 className="status">Performing Action...</h2>
                     <div className="popupText">
-                        <p>Your group is currently performing an action: {allPlayerActions[playerState.locationId][playerState.stagedAction!].display}</p>
-                        <p>Task Required: {allPlayerActions[playerState.locationId][playerState.stagedAction!].task}</p>
+                        <p>
+                            Your group is currently performing an action:{' '}
+                            {
+                                allPlayerActions[playerState.locationId][
+                                    playerState.stagedAction!
+                                ].display
+                            }
+                        </p>
+                        <p>
+                            Task Required:{' '}
+                            {
+                                allPlayerActions[playerState.locationId][
+                                    playerState.stagedAction!
+                                ].task
+                            }
+                        </p>
                         <p>Approve?</p>
                         <div>
                             <button onClick={handleActionApprove}>Yes</button>
@@ -43,9 +61,9 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
             </React.Fragment>
         );
     }
-    
+
     let popupText: React.ReactElement;
-    if (action === "pause") {
+    if (action === 'pause') {
         popupText = (
             <React.Fragment>
                 <h2 className="status">Pause</h2>
@@ -60,22 +78,40 @@ const OnActionPopup = (props: OnActionPopupProps): React.ReactElement => {
             <React.Fragment>
                 <h2 className="status">Performing Action...</h2>
                 <div className="popupText">
-                    <p>You are currently performing an action: {allPlayerActions[playerState.locationId][playerState.stagedAction!].display}</p>
-                    <p>Task Required: {allPlayerActions[playerState.locationId][playerState.stagedAction!].task}</p>
+                    <p>
+                        You are currently performing an action:{' '}
+                        {
+                            allPlayerActions[playerState.locationId][
+                                playerState.stagedAction!
+                            ].display
+                        }
+                    </p>
+                    <p>
+                        Task Required:{' '}
+                        {
+                            allPlayerActions[playerState.locationId][
+                                playerState.stagedAction!
+                            ].task
+                        }
+                    </p>
                     <p>Please wait for mentor approval...</p>
                 </div>
             </React.Fragment>
         );
     }
-    
+
     return (
         <React.Fragment>
-            <div className={`onActionPopup ${priority ? "priorityLayer" : "normalLayer"}`}>
+            <div
+                className={`onActionPopup ${
+                    priority ? 'priorityLayer' : 'normalLayer'
+                }`}
+            >
                 {popupText}
             </div>
             <div className="onActionBackgroundShroud"></div>
         </React.Fragment>
     );
-}
+};
 
 export default OnActionPopup;

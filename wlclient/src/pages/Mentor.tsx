@@ -33,7 +33,11 @@ const Mentor = (props: MentorProps): React.ReactElement => {
     if (playerState && globalState) {
         return (
             <div>
-                <MentorGame globalState={globalState} playerState={playerState} teamId={playerState.id}/>
+                <MentorGame
+                    globalState={globalState}
+                    playerState={playerState}
+                    teamId={playerState.id}
+                />
             </div>
         );
     }

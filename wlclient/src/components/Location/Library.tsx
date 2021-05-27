@@ -1,7 +1,14 @@
 import React from 'react';
 import { Action, ActionProps } from './Action';
-import { SpecificLocationProps, imgDirectoryGenerator } from './LocationComponent';
-import { makeActionProps, makeDynamicActionProps, allPlayerActions } from '../../PlayerAction';
+import {
+    SpecificLocationProps,
+    imgDirectoryGenerator,
+} from './LocationComponent';
+import {
+    makeActionProps,
+    makeDynamicActionProps,
+    allPlayerActions,
+} from '../../PlayerAction';
 import DynamicAction, { DynamicActionProps } from './DynamicAction';
 import { Locations } from 'wlcommon';
 
@@ -10,13 +17,21 @@ const Library = (props: SpecificLocationProps): React.ReactElement => {
 
     const actions = allPlayerActions[Locations.locationIds.LIBRARY];
     const actionProps = makeActionProps(
-        actions, isMentor, playerState, handleAction, triggerTooltip
+        actions,
+        isMentor,
+        playerState,
+        handleAction,
+        triggerTooltip
     );
-    
+
     const dynamicActionProps = makeDynamicActionProps(
-        actions, isMentor, playerState, handleAction, triggerTooltip
+        actions,
+        isMentor,
+        playerState,
+        handleAction,
+        triggerTooltip
     );
-    
+
     return (
         <React.Fragment>
             <img src={imgDirectoryGenerator('Library.png')} />

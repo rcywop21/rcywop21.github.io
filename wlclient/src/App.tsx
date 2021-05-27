@@ -17,7 +17,9 @@ export interface LoginMode {
 }
 
 function App(): React.ReactElement {
-    const [loggedIn, setLoggedIn] = React.useState<LoginMode | undefined>(undefined);
+    const [loggedIn, setLoggedIn] = React.useState<LoginMode | undefined>(
+        undefined
+    );
 
     React.useEffect(
         () => () => {

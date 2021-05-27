@@ -7,7 +7,7 @@
     background-color: #22222290;
 }
 
-.rightTooltip { 
+.rightTooltip {
     right: 0px;
 }
 
@@ -20,10 +20,10 @@
     padding: 5px;
     text-align: left;
     font-size: 24px;
-    color: #FF836E;
+    color: #ff836e;
 }
 
-.tooltipText > p{
+.tooltipText > p {
     margin: 0;
     padding: 0 5px 5px 5px;
     text-align: left;

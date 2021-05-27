@@ -33,7 +33,11 @@ const Main = (props: MainProps): React.ReactElement => {
     if (playerState && globalState) {
         return (
             <div>
-                <Game globalState={globalState} playerState={playerState} teamId={playerState.id}/>
+                <Game
+                    globalState={globalState}
+                    playerState={playerState}
+                    teamId={playerState.id}
+                />
             </div>
         );
     }

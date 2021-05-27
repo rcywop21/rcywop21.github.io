@@ -85,7 +85,7 @@ const Admin = (props: AdminProps): React.ReactElement => {
                             },
                         });
                     }
-                )
+                );
             } else {
                 socket?.emit(
                     'admin',
