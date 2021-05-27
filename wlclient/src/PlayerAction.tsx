@@ -242,7 +242,7 @@ const lastUsedMessage = (
 const oxygenPumpActions = {
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
         'Store Oxygen',
-        'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
+        'Store all your Oxygen (except 1.5 mins, enough for you to resurface) into your Oxygen Pump.',
         'No task required.',
         '870px',
         '488px',
@@ -286,7 +286,7 @@ export const allPlayerActions = {
         [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: new PlayerAction(
             'Retrieve Pearl',
             "You know what you're here for.",
-            'Receive 1 x Pearl of Asclepius.',
+            'As a team, present 8 items to your mentors which match the color of each item in this image: https://imgur.com/a/61SICv6',
             '409px',
             '399px',
             (playerState) => { 
@@ -324,7 +324,7 @@ export const allPlayerActions = {
             (playerState) => !playerState.quests[questIds.LIBRARIAN_PASS]
         ),
         [Actions.specificActions.ANCHOVY.INSPIRE]: new PlayerAction(
-            'Inspire',
+            'Inspire Chief Librarian',
             'Inspire the Chief Librarian with your leadership!',
             'Have any member of your team perform Project Inspire.',
             '294px',
@@ -367,9 +367,9 @@ export const allPlayerActions = {
             (playerState) => !playerState.quests[questIds.PYRITE]
         ),
         [Actions.specificActions.BARNACLE.HELP]: new PlayerAction(
-            'Help',
+            'Help Pyrite Lady',
             'The Pyrite Lady has mixed up some of her potion ingredients. Help her!',
-            'Create a list of youngest to oldest of your whole group.',
+            'Create a list of team members in your group, sorted from youngest to oldest.',
             '437px',
             '471px',
             (playerState) => {
@@ -667,8 +667,8 @@ export const allPlayerActions = {
         ),
         [Actions.specificActions.SALMON.CONFRONT]: new PlayerAction(
             'Confront',
-            'The children are chasing each other with a long and pointy stick. Tell them what is right.',
-            'Have any member of your team perform Project MTW.',
+            'The children are chasing each other with a long, pointed stick. Tell them what is right.',
+            'Have any member of your team correct the children using Project MTW.',
             '142px',
             '542px',
             (playerState) => {
@@ -718,7 +718,7 @@ export const allPlayerActions = {
     },
     [Locations.locationIds.SHRINE]: {
         [Actions.specificActions.SHRINE.GIVE_HAIR]: new PlayerAction(
-            'Give Hair',
+            "Give Unicorn's Hair",
             "The shrinekeeper says he can transform a Unicorn's Hair into a Unicorn's Tear.",
             "Give 1 x Unicorn's Hair.",
             '434px',
@@ -732,9 +732,9 @@ export const allPlayerActions = {
                 !!playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty
         ),
         [Actions.specificActions.SHRINE.COLLECT_HAIR]: new PlayerAction(
-            'Collect Tear',
+            'Collect Unicorn Tear',
             'Collect the Unicorn Tear from the Shrine.',
-            'Receive 1 x Unicorn Tear.',
+            'No task required.',
             '434px',
             '495px',
             (playerState) => {
@@ -842,7 +842,7 @@ export const allPlayerActions = {
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
             'The Statue of Triton has a publicly-accessible storage of Oxygen, which slowly builds up 1 minute of Oxygen every minute. You can get all the Oxygen inside this store. Note that this storage is shared between everyone.',
-            'Conduct a Water Parade (skip if fasting) to receive all Oxygen stored at the statue.',
+            'Conduct a Water Parade to receive all Oxygen stored at the statue.',
             '826px',
             '238px',
             (playerState) =>
@@ -1050,7 +1050,7 @@ export const allPlayerActions = {
         [Actions.specificActions.UMBRAL.GIVE_PAN]: new PlayerAction(
             'Show Pyrite Pan',
             'Show Alyusi the Pyrite Pan.',
-            'Give 1 x Pyrite Pan.',
+            'Draw a pan using the Zoom whiteboard. It should look similar to the pan on the top of the screen.',
             '579px',
             '197px',
             (playerState) => {
@@ -1063,7 +1063,7 @@ export const allPlayerActions = {
                 !!playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty
         ),
         [Actions.specificActions.UMBRAL.GIVE_ROCK]: new PlayerAction(
-            'Give Rock',
+            'Give Chmyrrkyth',
             'Give Alyusi the Chmyrrkyth.',
             'Give Alyusi something that fits his description of Chmyrrkyth.',
             '749px',
@@ -1082,7 +1082,7 @@ export const allPlayerActions = {
         [Actions.specificActions.WOODS.GET_HAIR]: new PlayerAction(
             'Get Hair',
             'It is said that a herd of unicorns live in the Whispering Woods, and they only appear to the pure of heart. Fortunately, we only need to find the hair that they shed.',
-            'Share a point in time when you received help and support from others to receive 1 X Unicorn Hair.',
+            "Share a point in time when you received help and support from others to receive 1 x Unicorn's Hair.",
             '703px',
             '382px',
             (playerState) => {
