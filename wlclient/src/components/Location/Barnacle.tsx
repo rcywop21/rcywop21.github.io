@@ -13,7 +13,7 @@ import DynamicAction, { DynamicActionProps } from './DynamicAction';
 import { Locations } from 'wlcommon';
 
 const Barnacle = (props: SpecificLocationProps): React.ReactElement => {
-    const { playerState, handleAction, triggerTooltip, isMentor } = props;
+    const { playerState, handleAction, triggerTooltip, isMentor, globalState } = props;
 
     const actions = allPlayerActions[Locations.locationIds.BARNACLE];
 
@@ -22,7 +22,8 @@ const Barnacle = (props: SpecificLocationProps): React.ReactElement => {
         isMentor,
         playerState,
         handleAction,
-        triggerTooltip
+        triggerTooltip,
+        globalState
     );
 
     const dynamicActionProps = makeDynamicActionProps(
@@ -30,7 +31,8 @@ const Barnacle = (props: SpecificLocationProps): React.ReactElement => {
         isMentor,
         playerState,
         handleAction,
-        triggerTooltip
+        triggerTooltip,
+        globalState
     );
 
     return (
