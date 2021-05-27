@@ -286,7 +286,10 @@ export const allPlayerActions = {
             },
             (): void => {
                 return;
-            }
+            },
+            undefined,
+            undefined,
+            (playerState) => !playerState.quests[questIds.LIBRARIAN_PASS]
         ),
         [Actions.specificActions.ANCHOVY.INSPIRE]: new PlayerAction(
             'Inspire',
@@ -346,7 +349,10 @@ export const allPlayerActions = {
             },
             (): void => {
                 return;
-            }
+            },
+            undefined,
+            undefined,
+            (playerState) => !playerState.quests[questIds.PYRITE]
         ),
         [Actions.specificActions.BARNACLE.HELP]: new PlayerAction(
             'Help',
@@ -513,7 +519,10 @@ export const allPlayerActions = {
             },
             (): void => {
                 return;
-            }
+            },
+            undefined,
+            undefined,
+            (playerState) => !playerState.quests[questIds.FINCHES]
         ),
         [Actions.specificActions.CORALS.LEARN_LANG]: new PlayerAction(
             'Learn Language',
@@ -596,7 +605,10 @@ export const allPlayerActions = {
             },
             (): void => {
                 return;
-            }
+            },
+            undefined,
+            undefined,
+            (playerState) => !playerState.quests[questIds.SHRINE_1]
         ),
         [Actions.specificActions.KELP.CLIMB_DOWN]: new PlayerAction(
             'Climb Down Valley',
@@ -662,7 +674,10 @@ export const allPlayerActions = {
             },
             (): void => {
                 return;
-            }
+            },
+            undefined,
+            undefined,
+            (playerState) => !playerState.quests[questIds.ARTEFACTS_1]
         ),
         [Actions.specificActions.LIBRARY.STUDY_CRIMSON]: new PlayerAction(
             'Study Challenge Mode',
@@ -748,7 +763,10 @@ export const allPlayerActions = {
             },
             (): void => {
                 return;
-            }
+            },
+            undefined,
+            undefined,
+            (playerState) => !playerState.quests[questIds.ARGUMENT]
         ),
         [Actions.specificActions.SALMON.CONFRONT]: new PlayerAction(
             'Confront',
@@ -923,7 +941,10 @@ export const allPlayerActions = {
             },
             (): void => {
                 return;
-            }
+            },
+            undefined,
+            undefined,
+            (playerState) => !playerState.foundEngraving || playerState.quests[questIds.ARTEFACTS_4]?.status === 'incomplete'
         ),
         [Actions.specificActions.STATUE.DECODE_ENGRAVING]: new PlayerAction(
             'Decode Engraving',
@@ -1269,7 +1290,10 @@ export const allPlayerActions = {
             },
             (): void => {
                 return;
-            }
+            },
+            undefined,
+            undefined,
+            (playerState) => !playerState.quests[questIds.CLOAK_1]
         ),
         [Actions.specificActions.UMBRAL.GIVE_PAN]: new PlayerAction(
             'Show Pyrite Pan',
