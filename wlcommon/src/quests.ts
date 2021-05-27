@@ -60,7 +60,7 @@ const questList: Quest[] = [
         description:
             'Now that you are familiar with how to dive and survive in the Undersea, it is time for you to properly begin your journey. Explore around to find the two legendary artefacts.',
         stages: [
-            "Search for a Unicorn's Tear.",
+            'Search for a Unicorn Tear.',
             'Search for a Pearl of Asclepius.',
         ],
         stageOrder: 'anyOrder',
@@ -100,7 +100,7 @@ const questList: Quest[] = [
             'Get the Library Pass from the Chief Librarian',
             "Perform the 'Study Challenge Mode' action at the Marine Library",
         ],
-        reward: ['Knowledge on how to pacify the Crimson.'],
+        reward: ['Knowledge on Challenge Mode.'],
         stageOrder: 'inOrder',
     },
     {
@@ -136,7 +136,7 @@ const questList: Quest[] = [
             "It seems that some of the books in the Restricted Section are written in some sort of ancient language. You will need to learn this language before you can understand the books. Unfortunately, it seems that this language isn't described anywhere in this library...",
         stages: [
             'Learn the ancient language.',
-            "Perfom the 'Decode' action to decode the books.",
+            "Perform the 'Decode Artefact Legends' action to decode the books.",
         ],
         unlocks: questIds.ARTEFACTS_3,
         stageOrder: 'inOrder',
@@ -181,7 +181,7 @@ const questList: Quest[] = [
         description:
             'Wandering around Kelp Plains, you discover a small shrine tucked in a valley. The journey to the shrine looks rather arduous.',
         stages: [
-            "Perform the 'Climb down valley' action to get to the Shrine of the Innocent.",
+            "Perform the 'Climb Down Valley' action to get to the Shrine of the Innocent.",
         ],
         stageOrder: 'anyOrder',
         unlocks: questIds.SHRINE_2,
@@ -225,7 +225,7 @@ const questList: Quest[] = [
     },
     {
         id: questIds.PYRITE,
-        name: 'Pyrite Lady',
+        name: 'The Pyrite Lady',
         when: "You received this quest by performing the action 'Explore' at the Barnacle Residences.",
         description: [
             '‘Oh hello there, dearie. Talk to an old lady, would you?’',
@@ -264,8 +264,8 @@ const questList: Quest[] = [
         ].join('\n\n'),
         stages: [
             "Perform the 'Harvest' action at Kelp Plains.",
-            'Get 3 x Blinkseed.',
-            'Travel back to the Umbral Plains.',
+            'Get 3 x Blinkseed Blades.',
+            'Travel back to the Umbral Ruins.',
         ],
         stageOrder: 'inOrder',
     },
