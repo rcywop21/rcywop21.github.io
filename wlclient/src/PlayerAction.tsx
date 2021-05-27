@@ -841,7 +841,7 @@ export const allPlayerActions = {
         */
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
-            'The Statue of Triton has a publicly-accessible storage of Oxygen, which slowly builds up 4 minutes of Oxygen every minute. You can get all the Oxygen inside this store. Note that this storage is shared between everyone.',
+            'The Statue of Triton has a publicly-accessible storage of Oxygen, which slowly builds up 1 minute of Oxygen every minute. You can get all the Oxygen inside this store. Note that this storage is shared between everyone.',
             'Conduct a Water Parade (skip if fasting) to receive all Oxygen stored at the statue.',
             '826px',
             '238px',
@@ -995,35 +995,6 @@ export const allPlayerActions = {
             (): void => {
                 return;
             }
-        ),
-        [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
-            'Store Oxygen',
-            'Store all your Oxygen (except 2 mins, enough for you to resurface) into your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '488px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
-            'Withdraw Oxygen',
-            'Withdraw all Oxygen from your Oxygen Pump.',
-            'No task required.',
-            '870px',
-            '543px',
-            undefined,
-            (playerState) =>
-                playerState.storedOxygen !== null &&
-                playerState.challengeMode !== null
-        ),
-        [Actions.ALL_UNDERWATER.RESURFACE]: new PlayerAction(
-            'Resurface',
-            'Return to Sleepy Shore. Note that when you return to the surface, all your oxygen will be lost as it escapes into the air!',
-            'No task required.',
-            '99px',
-            '251px'
         ),
     },
     [Locations.locationIds.TUNA]: {
