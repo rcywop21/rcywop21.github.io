@@ -1,5 +1,5 @@
 import {
-   Actions,
+    Actions,
     Locations,
     Util,
     questIds,
@@ -14,7 +14,10 @@ import {
     makeRemoveOxygenTransform,
     updateStreamCooldownTransform,
 } from './oxygen';
-import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './questRewards';
+import {
+    makeAdvanceQuestTransform,
+    makeIssueQuestTransform,
+} from './questRewards';
 import {
     composite,
     makeAddMessageTransform,
@@ -26,7 +29,6 @@ const actionList = {
     underwater: Object.values(Actions.ALL_UNDERWATER),
     oxygen: Object.values(Actions.ALL_OXYGEN),
 };
-
 
 const applyAction: Transform = (state) => {
     if (!state.playerState.stagedAction) throw 'No action staged.';
@@ -52,8 +54,9 @@ const applyLocationActions: Record<
     Record<Action, Transform>
 > = {
     [Locations.locationIds.SHORES]: {
-        [Actions.specificActions.SHORES.DIVE]: (state) => { 
-            const doChallengeMode = state.playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty;
+        [Actions.specificActions.SHORES.DIVE]: (state) => {
+            const doChallengeMode =
+                state.playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty;
             const now = Date.now();
             let result = composite(
                 makeAdvanceQuestTransform(questIds.CHAPTER_1, 0),
@@ -63,24 +66,31 @@ const applyLocationActions: Record<
                 ),
                 makePlayerStatTransform(
                     'oxygenUntil',
-                    new Date(now + (doChallengeMode ? 240000 : 1200000)),
+                    new Date(now + (doChallengeMode ? 240000 : 1200000))
                 ),
                 makePlayerStatTransform(
                     'locationId',
                     Locations.locationIds.SHALLOWS
-                ),
-            )(state); 
+                )
+            )(state);
             if (doChallengeMode) {
-                result = makePlayerStatTransform('challengeMode', new Date(now + 1800000))(result);
-                result = makeAddMessageTransform("You are now in Challenge Mode. Reminder: In Challenge Mode, you will receive less Oxygen from Oxygen Streams and your pump is disabled. Bring the Unicorn's Hair to the Shrine and survive for 30 minutes without resurfacing to complete your quest!")(result);
+                result = makePlayerStatTransform(
+                    'challengeMode',
+                    new Date(now + 1800000)
+                )(result);
+                result = makeAddMessageTransform(
+                    "You are now in Challenge Mode. Reminder: In Challenge Mode, you will receive less Oxygen from Oxygen Streams and your pump is disabled. Bring the Unicorn's Hair to the Shrine and survive for 30 minutes without resurfacing to complete your quest!"
+                )(result);
             }
             return result;
-        }
+        },
     },
     [Locations.locationIds.CORALS]: {
         [Actions.specificActions.CORALS.EXPLORE]: composite(
             makeIssueQuestTransform(questIds.FINCHES),
-            makeAddMessageTransform('While exploring the historical exhibits at the Memorial Corals, you have found something interesting.'),
+            makeAddMessageTransform(
+                'While exploring the historical exhibits at the Memorial Corals, you have found something interesting.'
+            ),
             makeRemoveOxygenTransform(300)
         ),
         [Actions.specificActions.CORALS.LEARN_LANG]: (state) => {
@@ -193,14 +203,19 @@ const applyLocationActions: Record<
         },
     },
     [Locations.locationIds.LIBRARY]: {
-        [Actions.specificActions.LIBRARY.EXPLORE]: (state) => { 
+        [Actions.specificActions.LIBRARY.EXPLORE]: (state) => {
             let result = composite(
                 makeIssueQuestTransform(questIds.ARTEFACTS_1),
-                makeAddMessageTransform('You approach the librarians and ask them about the artefacts of the Undersea...'),
+                makeAddMessageTransform(
+                    'You approach the librarians and ask them about the artefacts of the Undersea...'
+                ),
                 makeRemoveOxygenTransform(300)
             )(state);
             if (result.playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty)
-                result = makeAdvanceQuestTransform(questIds.ARTEFACTS_1, 0)(result)
+                result = makeAdvanceQuestTransform(
+                    questIds.ARTEFACTS_1,
+                    0
+                )(result);
             return result;
         },
         [Actions.specificActions.LIBRARY.STUDY_CRIMSON]: (state) => {
@@ -258,7 +273,9 @@ const applyLocationActions: Record<
     [Locations.locationIds.SALMON]: {
         [Actions.specificActions.SALMON.EXPLORE]: composite(
             makeIssueQuestTransform(questIds.ARGUMENT),
-            makeAddMessageTransform('You hear two young children causing a ruckus. Turning around, you see them chasing each other with a pointed stick. How dangerous!'),
+            makeAddMessageTransform(
+                'You hear two young children causing a ruckus. Turning around, you see them chasing each other with a pointed stick. How dangerous!'
+            ),
             makeRemoveOxygenTransform(300)
         ),
         [Actions.specificActions.SALMON.CONFRONT]: makeAdvanceQuestTransform(
@@ -272,7 +289,9 @@ const applyLocationActions: Record<
             if (linkedStreams.lastCatfishId === state.playerState.id)
                 throw 'Same player cannot activate both ends of the linked streams.';
             return composite(
-                makeAddMessageTransform('You activate the Salmon Street end of the linked Oxygen Streams, waiting for someone else to activate the other end.'),
+                makeAddMessageTransform(
+                    'You activate the Salmon Street end of the linked Oxygen Streams, waiting for someone else to activate the other end.'
+                ),
                 updateStreamCooldownTransform
             )({
                 ...state,
@@ -282,16 +301,16 @@ const applyLocationActions: Record<
                         ...state.globalState.linkedStreams,
                         lastSalmonId: state.playerState.id,
                         lastSalmon: new Date(),
-                    }
-                }
+                    },
+                },
             });
-        }
+        },
     },
     [Locations.locationIds.TUNA]: {
         [Actions.ALL_OXYGEN.GET_OXYGEN]: composite(
             makeAddOxygenTransform(1800),
             updateStreamCooldownTransform
-        )
+        ),
     },
     [Locations.locationIds.CATFISH]: {
         [Actions.ALL_OXYGEN.GET_OXYGEN]: (state) => {
@@ -301,7 +320,9 @@ const applyLocationActions: Record<
             if (linkedStreams.lastSalmonId === state.playerState.id)
                 throw 'Same player cannot activate both ends of the linked streams.';
             return composite(
-                makeAddMessageTransform('You activate the Catfish Crescent end of the linked Oxygen Streams, waiting for someone else to activate the other end.'),
+                makeAddMessageTransform(
+                    'You activate the Catfish Crescent end of the linked Oxygen Streams, waiting for someone else to activate the other end.'
+                ),
                 updateStreamCooldownTransform
             )({
                 ...state,
@@ -311,56 +332,62 @@ const applyLocationActions: Record<
                         ...state.globalState.linkedStreams,
                         lastCatfishId: state.playerState.id,
                         lastCatfish: new Date(),
-                    }
-                }
+                    },
+                },
             });
-        }
+        },
     },
     [Locations.locationIds.BUBBLE]: {
         [Actions.ALL_OXYGEN.GET_OXYGEN]: (state) => {
-            if (!state.playerState.hasBubblePass)
-                throw 'Requirements not met.';
+            if (!state.playerState.hasBubblePass) throw 'Requirements not met.';
             return composite(
                 makeAddOxygenTransform(2400),
                 updateStreamCooldownTransform
             )(state);
-        }
+        },
     },
     [Locations.locationIds.KELP]: {
         [Actions.specificActions.KELP.EXPLORE]: composite(
             makeIssueQuestTransform(questIds.SHRINE_1),
-            makeAddMessageTransform('You wander around the Kelp Plains. Behind a very thick patch of seaweed, you notice a small valley...'),
+            makeAddMessageTransform(
+                'You wander around the Kelp Plains. Behind a very thick patch of seaweed, you notice a small valley...'
+            ),
             makeRemoveOxygenTransform(300)
         ),
         [Actions.specificActions.KELP.CLIMB_DOWN]: composite(
             makeAdvanceQuestTransform(questIds.SHRINE_1, 0),
             makePlayerStatTransform('locationId', locationIds.SHRINE),
             makePlayerStatTransform('unlockedWoods', true),
-            makePlayerStatTransform('unlockedShrine', true),
+            makePlayerStatTransform('unlockedShrine', true)
         ),
         [Actions.specificActions.KELP.HARVEST]: (state) => {
             let result = composite(
                 makeAdvanceQuestTransform(questIds.CLOAK_3, 0),
                 makeAddItemTransform(itemDetails.BLINKSEED.id, 1)
             )(state);
-            if (result.playerState.inventory[itemDetails.BLINKSEED.id]?.qty >= 3) {
+            if (
+                result.playerState.inventory[itemDetails.BLINKSEED.id]?.qty >= 3
+            ) {
                 console.log('advancing quest');
                 result = makeAdvanceQuestTransform(questIds.CLOAK_3, 1)(result);
             }
             return result;
-        }
+        },
     },
     [Locations.locationIds.SHRINE]: {
         [Actions.specificActions.SHRINE.GIVE_HAIR]: composite(
             makeAdvanceQuestTransform(questIds.SHRINE_2, 3),
             makeRemoveItemTransform(itemDetails.UNICORN_HAIR.id, 1)
         ),
-        [Actions.specificActions.SHRINE.COLLECT_HAIR]: makeAdvanceQuestTransform(questIds.SHRINE_2, 5)
+        [Actions.specificActions.SHRINE
+            .COLLECT_HAIR]: makeAdvanceQuestTransform(questIds.SHRINE_2, 5),
     },
     [Locations.locationIds.UMBRAL]: {
-        [Actions.specificActions.UMBRAL.EXPLORE]: (state) => { 
+        [Actions.specificActions.UMBRAL.EXPLORE]: (state) => {
             let result = makeIssueQuestTransform(questIds.CLOAK_1)(state);
-            result = makeAddMessageTransform('Wandering around the ruins, you notice a shady-looking man in a cloak. You make eye contact with him...')(result);
+            result = makeAddMessageTransform(
+                'Wandering around the ruins, you notice a shady-looking man in a cloak. You make eye contact with him...'
+            )(result);
             if (state.playerState.inventory[itemDetails.PYRITE_PAN.id]?.qty)
                 result = makeAdvanceQuestTransform(questIds.CLOAK_1, 0)(result);
             return result;
@@ -373,28 +400,28 @@ const applyLocationActions: Record<
         [Actions.specificActions.UMBRAL.GIVE_ROCK]: composite(
             makeAdvanceQuestTransform(questIds.CLOAK_2, 1),
             makeRemoveItemTransform(itemDetails.BLACK_ROCK.id, 1)
-        )
+        ),
     },
     [Locations.locationIds.WOODS]: {
         [Actions.specificActions.WOODS.GET_HAIR]: composite(
             makeAdvanceQuestTransform(questIds.SHRINE_2, 1),
             makeAddItemTransform(itemDetails.UNICORN_HAIR.id, 1)
-        )
+        ),
     },
     [Locations.locationIds.ALCOVE]: {
-        [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: (state) => { 
+        [Actions.specificActions.ALCOVE.RETRIEVE_PEARL]: (state) => {
             const result = composite(
                 makeAdvanceQuestTransform(questIds.CHAPTER_2, 1),
                 makeAddItemTransform(itemDetails.PEARL.id, 1),
                 makeAddMessageTransform({
                     text: `[Announcement] Team ${state.playerState.id} has found the Pearl of Asclepius!`,
-                    visibility: 'public'
-                }),
+                    visibility: 'public',
+                })
             )(state);
             result.globalState.artefactsFound += 1;
             return result;
-        }
-    }
+        },
+    },
 };
 
 const applyUnderwaterAction: Transform = (state) => {
@@ -404,19 +431,27 @@ const applyUnderwaterAction: Transform = (state) => {
     switch (state.playerState.stagedAction) {
         case Actions.ALL_UNDERWATER.RESURFACE:
             return composite(
-                makeAddMessageTransform('You have resurfaced and returned to Sleepy Shores.'),
+                makeAddMessageTransform(
+                    'You have resurfaced and returned to Sleepy Shores.'
+                ),
                 makeAdvanceQuestTransform(questIds.SHRINE_2, 0),
                 makePlayerStatTransform('oxygenUntil', null),
-                makePlayerStatTransform('locationId', Locations.locationIds.SHORES),
+                makePlayerStatTransform(
+                    'locationId',
+                    Locations.locationIds.SHORES
+                ),
                 makePlayerStatTransform('challengeMode', null)
             )(state);
 
         case Actions.ALL_UNDERWATER.STORE_OXYGEN: {
-            const { oxygenUntil, challengeMode, storedOxygen } = state.playerState;
+            const {
+                oxygenUntil,
+                challengeMode,
+                storedOxygen,
+            } = state.playerState;
             if (oxygenUntil === null || storedOxygen === null)
                 throw 'Requirements not met.';
-            if (challengeMode)
-                throw 'Cannot do this in Challenge Mode.';
+            if (challengeMode) throw 'Cannot do this in Challenge Mode.';
 
             const oxygenToStore = Math.max(
                 0,
@@ -424,10 +459,15 @@ const applyUnderwaterAction: Transform = (state) => {
             );
 
             return composite(
-                makeAddMessageTransform(`You have transferred ${Util.formatDuration(
-                    oxygenToStore
-                )} of Oxygen to storage.`),
-                makePlayerStatTransform('storedOxygen', storedOxygen + oxygenToStore),
+                makeAddMessageTransform(
+                    `You have transferred ${Util.formatDuration(
+                        oxygenToStore
+                    )} of Oxygen to storage.`
+                ),
+                makePlayerStatTransform(
+                    'storedOxygen',
+                    storedOxygen + oxygenToStore
+                ),
                 makeAddOxygenTransform(-oxygenToStore, false)
             )(state);
         }
@@ -436,13 +476,14 @@ const applyUnderwaterAction: Transform = (state) => {
             const { challengeMode, storedOxygen } = state.playerState;
             if (storedOxygen === null)
                 throw "You cannot perform this action as you don't have an oxygen tank.";
-            if (challengeMode)
-                throw 'Cannot do this in Challenge Mode.';
+            if (challengeMode) throw 'Cannot do this in Challenge Mode.';
 
             return composite(
-                makeAddMessageTransform(`You have withdrawn ${Util.formatDuration(
-                    storedOxygen
-                )} of Oxygen from storage.`),
+                makeAddMessageTransform(
+                    `You have withdrawn ${Util.formatDuration(
+                        storedOxygen
+                    )} of Oxygen from storage.`
+                ),
                 makePlayerStatTransform('storedOxygen', 0),
                 makeAddOxygenTransform(storedOxygen, true)
             )(state);

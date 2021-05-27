@@ -3,9 +3,9 @@ import { AUTH_DETAILS, NODE_ENV } from './config';
 
 export type ClientType = 'player' | 'mentor' | 'admin';
 
-export const asValidClientType = (x: string): ClientType | null => { 
-    switch (x) { 
-        case 'player': 
+export const asValidClientType = (x: string): ClientType | null => {
+    switch (x) {
+        case 'player':
             return 'player';
         case 'mentor':
             return 'mentor';
@@ -43,8 +43,7 @@ async function auth(mode: ClientType, id: number, pass: string): Promise<true> {
         );
 
         const entry = data[mode].find((e: AuthEntry) => e.id === id);
-        if (entry === undefined)
-            throw `Unknown group name.`;
+        if (entry === undefined) throw `Unknown group name.`;
         if (entry.pass !== pass) throw `Incorrect Password`;
         return true;
     } finally {

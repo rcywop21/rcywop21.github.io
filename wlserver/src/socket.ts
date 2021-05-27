@@ -19,5 +19,8 @@ app.get('/', (_, res) => res.send('This is a backend server.'));
 export const listen = (): http.Server =>
     server.listen(PORT, HOSTNAME, () => {
         logger.log('info', `[server]: Server is running in ${NODE_ENV}`);
-        logger.log('info', `[server]: Server is running on ${HOSTNAME}:${PORT}`);
+        logger.log(
+            'info',
+            `[server]: Server is running on ${HOSTNAME}:${PORT}`
+        );
     });

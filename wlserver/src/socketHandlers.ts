@@ -2,13 +2,17 @@ import { Server, Socket as BaseSocket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Actions, Locations, questIds, TeamId } from 'wlcommon';
 import applyAction from './actions';
-import {
-    getCredentials,
-    notifyPlayerState,
-} from './connections';
+import { getCredentials, notifyPlayerState } from './connections';
 import logger from './logger';
 import { makeAdvanceQuestTransform } from './questRewards';
-import { applyTransform, gameState, makeAddMessageTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
+import {
+    applyTransform,
+    gameState,
+    makeAddMessageTransform,
+    pauseTransform,
+    resumeTransform,
+    setAction,
+} from './stateMgr';
 
 export type Socket = BaseSocket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -51,7 +55,10 @@ export const onRejectionHandler: SocketHandler<undefined> = async (
     if (!stagedAction) return reply('error', 'No action to reject.');
     setAction(credentials.groupNum, null);
     notifyPlayerState(credentials.groupNum);
-    applyTransform(makeAddMessageTransform('Your action was rejected by your mentor.'), credentials.groupNum);
+    applyTransform(
+        makeAddMessageTransform('Your action was rejected by your mentor.'),
+        credentials.groupNum
+    );
 };
 
 export const onAcceptHandler: SocketHandler<undefined> = async (
@@ -70,7 +77,10 @@ export const onAcceptHandler: SocketHandler<undefined> = async (
     } catch (e) {
         setAction(credentials.groupNum, null);
         notifyPlayerState(credentials.groupNum);
-        applyTransform(makeAddMessageTransform('Error: ' + e), credentials.groupNum);
+        applyTransform(
+            makeAddMessageTransform('Error: ' + e),
+            credentials.groupNum
+        );
         return;
     }
 
@@ -115,8 +125,14 @@ export const onTravelHandler: SocketHandler<string> = async (
 
     gameState.players[credentials.groupNum].locationId = payload;
 
-    if (playerState.quests[questIds.CLOAK_3]?.status === 'incomplete' && destination.id === Locations.locationIds.UMBRAL) {
-        applyTransform(makeAdvanceQuestTransform(questIds.CLOAK_3, 2), credentials.groupNum);
+    if (
+        playerState.quests[questIds.CLOAK_3]?.status === 'incomplete' &&
+        destination.id === Locations.locationIds.UMBRAL
+    ) {
+        applyTransform(
+            makeAdvanceQuestTransform(questIds.CLOAK_3, 2),
+            credentials.groupNum
+        );
     }
 
     logger.log(
@@ -127,13 +143,19 @@ export const onTravelHandler: SocketHandler<string> = async (
     notifyPlayerState(credentials.groupNum);
 };
 
-export const onPauseHandler: SocketHandler<boolean> = async (socket, payload, reply) => {
+export const onPauseHandler: SocketHandler<boolean> = async (
+    socket,
+    payload,
+    reply
+) => {
     const credentials = getCredentials(socket.id);
     const clientType = credentials?.clientType;
     if (clientType === 'mentor' || clientType === 'admin') {
         logger.log(
             'info',
-            `Group ${credentials.groupNum} has ${payload ? 'paused' : 'resumed'} their game.`
+            `Group ${credentials.groupNum} has ${
+                payload ? 'paused' : 'resumed'
+            } their game.`
         );
 
         try {
@@ -143,13 +165,12 @@ export const onPauseHandler: SocketHandler<boolean> = async (socket, payload, re
                 return reply('ok', 'Game paused.');
             } else {
                 applyTransform(resumeTransform, credentials.groupNum);
-                return reply('ok', 'Game resumed.')
+                return reply('ok', 'Game resumed.');
             }
         } catch (e) {
             console.log(e);
             reply('error', e);
             return;
         }
-    }
-    else reply('error', 'Not authenticated.');
-}
+    } else reply('error', 'Not authenticated.');
+};

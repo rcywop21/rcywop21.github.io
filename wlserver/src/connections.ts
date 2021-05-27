@@ -115,4 +115,4 @@ export const notifyGameState = (): void => {
 
 export const notifyNewMessages = (count: number): void => {
     io.to(ROOMS.AUTHENTICATED).emit('new_msgs', count);
-}
+};

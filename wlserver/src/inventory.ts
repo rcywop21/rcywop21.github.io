@@ -33,11 +33,11 @@ export const makeRemoveItemTransform = (
                     [itemId]: {
                         qty: oldRecord.qty - qty,
                         item: itemId,
-                    }
-                }
-            }
-        }
+                    },
+                },
+            },
+        };
     }
 
     throw 'Not enough items in inventory to remove.';
-}
+};

@@ -8,7 +8,11 @@ import {
     QuestState,
     TeamId,
 } from 'wlcommon';
-import { notifyGameState, notifyNewMessages, notifyPlayerState } from './connections';
+import {
+    notifyGameState,
+    notifyNewMessages,
+    notifyPlayerState,
+} from './connections';
 import logger from './logger';
 
 export interface MessageSpec {
@@ -34,7 +38,7 @@ export const makeGlobalGameState = (): GlobalState => ({
     crimsonState: {},
     messages: [],
     linkedStreams: {},
-})
+});
 
 export const gameState: GameState = {
     global: makeGlobalGameState(),
@@ -70,8 +74,8 @@ export const applyTransform = (
         })
     );
 
-    if (messages.length) { 
-        notifyNewMessages(messages.length); 
+    if (messages.length) {
+        notifyNewMessages(messages.length);
         notifyGameState();
     }
 };
@@ -92,30 +96,38 @@ export const setAction = (playerId: TeamId, action: string | null): void => {
     }
 };
 
-export const makeAddMessageTransform = (...newMsg: (string | MessageSpec)[]): Transform => (
-    state
-) => ({
+export const makeAddMessageTransform = (
+    ...newMsg: (string | MessageSpec)[]
+): Transform => (state) => ({
     ...state,
-    messages: state.messages.concat(newMsg.map((text) => {
-        if (typeof text === 'string')
-            return {
-                text,
-                visibility: 'private'
-            };
-        else
-            return text;
-    })),
+    messages: state.messages.concat(
+        newMsg.map((text) => {
+            if (typeof text === 'string')
+                return {
+                    text,
+                    visibility: 'private',
+                };
+            else return text;
+        })
+    ),
 });
 
 const exemptQuests = [
-    questIds.CHAPTER_2, questIds.CLOAK_1, questIds.ARTEFACTS_3, questIds.FINCHES_2, questIds.ARTEFACTS_1
+    questIds.CHAPTER_2,
+    questIds.CLOAK_1,
+    questIds.ARTEFACTS_3,
+    questIds.FINCHES_2,
+    questIds.ARTEFACTS_1,
 ];
 
 export const killTransform: Transform = (state) => {
     const playerQuests: Record<QuestId, QuestState> = {};
     Object.entries(state.playerState.quests).forEach(
         ([questId, questState]) => {
-            if (questState.status === 'completed' || exemptQuests.includes(parseInt(questId))) {
+            if (
+                questState.status === 'completed' ||
+                exemptQuests.includes(parseInt(questId))
+            ) {
                 playerQuests[questId] = questState;
             } else {
                 playerQuests[questId] = {
@@ -127,7 +139,9 @@ export const killTransform: Transform = (state) => {
     );
 
     return composite(
-        makeAddMessageTransform('You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'),
+        makeAddMessageTransform(
+            'You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'
+        ),
         makePlayerStatTransform('locationId', Locations.locationIds.SHORES),
         makePlayerStatTransform('quests', playerQuests),
         makePlayerStatTransform('oxygenUntil', null),
@@ -157,8 +171,10 @@ export const pauseTransform: Transform = (state) => {
     const { oxygenUntil, challengeMode } = state.playerState;
     const now = Date.now();
 
-    const pausedOxygen = oxygenUntil === null ? -1 : oxygenUntil.valueOf() - now;
-    const challengePausedTime = challengeMode === null ? null : challengeMode.valueOf() - now;
+    const pausedOxygen =
+        oxygenUntil === null ? -1 : oxygenUntil.valueOf() - now;
+    const challengePausedTime =
+        challengeMode === null ? null : challengeMode.valueOf() - now;
 
     return {
         ...state,
@@ -168,19 +184,22 @@ export const pauseTransform: Transform = (state) => {
             pausedOxygen,
             challengeMode: null,
             challengePausedTime,
-        }
+        },
     };
 };
 
 export const resumeTransform: Transform = (state) => {
-    if (state.playerState.pausedOxygen === null)
-        throw 'Player is not paused.';
+    if (state.playerState.pausedOxygen === null) throw 'Player is not paused.';
 
     const { pausedOxygen, challengePausedTime } = state.playerState;
     const now = Date.now();
 
-    const oxygenUntil = pausedOxygen === -1 ? null : new Date(now + pausedOxygen);
-    const challengeMode = challengePausedTime === null ? null : new Date(now + challengePausedTime);
+    const oxygenUntil =
+        pausedOxygen === -1 ? null : new Date(now + pausedOxygen);
+    const challengeMode =
+        challengePausedTime === null
+            ? null
+            : new Date(now + challengePausedTime);
 
     return {
         ...state,
@@ -190,9 +209,9 @@ export const resumeTransform: Transform = (state) => {
             pausedOxygen: null,
             challengeMode,
             challengePausedTime: null,
-        }
-    }
-}
+        },
+    };
+};
 
 export const composite = (...transforms: Transform[]): Transform =>
     transforms.reduceRight((curr, next) => (state) => next(curr(state)));

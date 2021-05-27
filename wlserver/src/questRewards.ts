@@ -44,9 +44,8 @@ export const makeAdvanceQuestTransform = (
     }
 
     const questState = { ...state.playerState.quests[questId] };
-    
-    if (questState.status === 'completed')
-        return state;
+
+    if (questState.status === 'completed') return state;
 
     questState.stages = [...questState.stages];
 
@@ -104,24 +103,30 @@ const transforms: Record<QuestId, Transform> = {
         makeAdvanceQuestTransform(questIds.CLOAK_1, 0),
         makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1)
     ),
-    [questIds.SHRINE_2]: (state) => { 
-        let result = makeAddItemTransform(itemDetails.UNICORN_TEAR.id, 1)(state);
+    [questIds.SHRINE_2]: (state) => {
+        let result = makeAddItemTransform(
+            itemDetails.UNICORN_TEAR.id,
+            1
+        )(state);
         result = makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(result);
         result = makeAddMessageTransform({
             text: `[Announcement] Team ${state.playerState.id} has found the Unicorn's Tear!`,
-            visibility: 'public'
+            visibility: 'public',
         })(state);
         result.globalState.artefactsFound += 1;
         return result;
     },
     [questIds.ARTEFACTS_4]: composite(
         makePlayerStatTransform('locationId', Locations.locationIds.ALCOVE),
-        makePlayerStatTransform('unlockedAlcove', true),
+        makePlayerStatTransform('unlockedAlcove', true)
     ),
-    [questIds.CLOAK_1]: (state) => (state.playerState.inventory[itemDetails.BLACK_ROCK.id]?.qty ? makeAdvanceQuestTransform(questIds.CLOAK_2, 0) : identityTransform)(state),
+    [questIds.CLOAK_1]: (state) =>
+        (state.playerState.inventory[itemDetails.BLACK_ROCK.id]?.qty
+            ? makeAdvanceQuestTransform(questIds.CLOAK_2, 0)
+            : identityTransform)(state),
     [questIds.CLOAK_3]: makeAddMessageTransform(
         "You return to the Umbral Ruins, but it seems that Alyusi has disappeared. Without returning your Oxygen! You call his name out loud, but nobody came.\n\nYou glance at the blinkseed, and you can't help but think it looks, smells and feels exactly like common seaweed..."
-    )
+    ),
 };
 
 const postUnlock: Record<QuestId, Transform> = {
@@ -129,8 +134,14 @@ const postUnlock: Record<QuestId, Transform> = {
         (state.playerState.knowsLanguage
             ? makeAdvanceQuestTransform(questIds.ARTEFACTS_2, 0)
             : identityTransform)(state),
-    [questIds.CLOAK_1]: (state) => (state.playerState.inventory[itemDetails.BLACK_ROCK.id]?.qty ? makeAdvanceQuestTransform(questIds.CLOAK_2, 0) : identityTransform)(state),
-    [questIds.FINCHES]: (state) => (state.playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty ? makeAdvanceQuestTransform(questIds.FINCHES_2, 0) : identityTransform)(state),
+    [questIds.CLOAK_1]: (state) =>
+        (state.playerState.inventory[itemDetails.BLACK_ROCK.id]?.qty
+            ? makeAdvanceQuestTransform(questIds.CLOAK_2, 0)
+            : identityTransform)(state),
+    [questIds.FINCHES]: (state) =>
+        (state.playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty
+            ? makeAdvanceQuestTransform(questIds.FINCHES_2, 0)
+            : identityTransform)(state),
     [questIds.ARTEFACTS_2]: (state) => {
         let result = state;
         if (state.playerState.inventory[itemDetails.DISCOVERS.id]?.qty)
@@ -139,7 +150,8 @@ const postUnlock: Record<QuestId, Transform> = {
             result = makeAdvanceQuestTransform(questIds.ARTEFACTS_3, 1)(result);
         return result;
     },
-    [questIds.SHRINE_2]: (state) => makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(state),
+    [questIds.SHRINE_2]: (state) =>
+        makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(state),
 };
 
 export const makePostCompletionTransform = (questId: QuestId): Transform => (

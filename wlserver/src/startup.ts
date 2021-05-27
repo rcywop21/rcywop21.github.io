@@ -50,15 +50,19 @@ export const saveGameState = async (): Promise<void> => {
     } finally {
         await fileHandle?.close();
     }
-}
+};
 
 export const loadGameState = async (): Promise<void> => {
     logger.log('info', 'Loading game state from disk...');
     let fileHandle: FileHandle;
     try {
         fileHandle = await open(SAVE_FILE, 'r');
-        const state = JSON.parse(await fileHandle.readFile({ encoding: 'utf-8' })) as GameState;
-        state.global.tritonOxygen.lastExtract = new Date(state.global.tritonOxygen.lastExtract);
+        const state = JSON.parse(
+            await fileHandle.readFile({ encoding: 'utf-8' })
+        ) as GameState;
+        state.global.tritonOxygen.lastExtract = new Date(
+            state.global.tritonOxygen.lastExtract
+        );
 
         const { lastSalmon, lastCatfish } = state.global.linkedStreams;
         if (lastSalmon)
@@ -71,13 +75,20 @@ export const loadGameState = async (): Promise<void> => {
         });
 
         for (let i = 0; i < state.players.length; ++i) {
-            Object.entries(state.players[i].streamCooldownExpiry).forEach(([locationId, time]) => state.players[i].streamCooldownExpiry[locationId] = time);
-            
+            Object.entries(state.players[i].streamCooldownExpiry).forEach(
+                ([locationId, time]) =>
+                    (state.players[i].streamCooldownExpiry[locationId] = time)
+            );
+
             if (state.players[i].oxygenUntil !== null)
-                state.players[i].oxygenUntil = new Date(state.players[i].oxygenUntil);
+                state.players[i].oxygenUntil = new Date(
+                    state.players[i].oxygenUntil
+                );
 
             if (state.players[i].challengeMode !== null)
-                state.players[i].challengeMode = new Date(state.players[i].challengeMode);
+                state.players[i].challengeMode = new Date(
+                    state.players[i].challengeMode
+                );
         }
 
         gameState.global = state.global;
@@ -85,7 +96,7 @@ export const loadGameState = async (): Promise<void> => {
     } finally {
         fileHandle?.close();
     }
-}
+};
 
 export const setupGameState = (): void => {
     try {
@@ -97,6 +108,6 @@ export const setupGameState = (): void => {
     } catch {
         setupFreshGameState();
     }
-}
+};
 
 export default setupGameState;

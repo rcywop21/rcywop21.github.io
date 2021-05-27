@@ -1,17 +1,23 @@
 import { Locations, Util } from 'wlcommon';
 import logger from './logger';
-import { makeAddMessageTransform, makePlayerStatTransform, Transform } from './stateMgr';
+import {
+    makeAddMessageTransform,
+    makePlayerStatTransform,
+    Transform,
+} from './stateMgr';
 
 export const makeAddOxygenTransform = (
     seconds: number,
     verbose = true
 ): Transform => (state) => {
     const { oxygenUntil, challengeMode, pausedOxygen } = state.playerState;
-    const challengeMultiplier = Math.max(150, 125 + state.globalState.artefactsFound * 25);
+    const challengeMultiplier = Math.max(
+        150,
+        125 + state.globalState.artefactsFound * 25
+    );
     if (pausedOxygen !== null || pausedOxygen === -1)
         throw 'You cannot perform this action while paused.';
-    if (oxygenUntil === null)
-        return state;
+    if (oxygenUntil === null) return state;
 
     const ms = seconds * (challengeMode ? challengeMultiplier : 1000);
     const duration = Util.formatDuration(ms);
@@ -20,9 +26,14 @@ export const makeAddOxygenTransform = (
         `Player ${state.playerState.id} has received ${duration} of Oxygen.`
     );
 
-    let result = makePlayerStatTransform('oxygenUntil', new Date(oxygenUntil.valueOf() + ms))(state)
+    let result = makePlayerStatTransform(
+        'oxygenUntil',
+        new Date(oxygenUntil.valueOf() + ms)
+    )(state);
     if (verbose)
-        result = makeAddMessageTransform(`You have received ${duration} of Oxygen.`)(result);
+        result = makeAddMessageTransform(
+            `You have received ${duration} of Oxygen.`
+        )(result);
 
     return result;
 };
@@ -36,8 +47,7 @@ export const makeRemoveOxygenTransform = (
 
     if (pausedOxygen !== null || pausedOxygen === -1)
         throw 'You cannot perform this action while paused.';
-    if (oxygenUntil === null)
-        throw 'Cannot remove oxygen when not underwater.';
+    if (oxygenUntil === null) throw 'Cannot remove oxygen when not underwater.';
 
     const requiredOxygenUntil = seconds * 1000 + Date.now();
 
@@ -58,9 +68,14 @@ export const makeRemoveOxygenTransform = (
         `Player ${state.playerState.id} has used ${duration} of Oxygen.`
     );
 
-    let result = makePlayerStatTransform('oxygenUntil', new Date(oxygenUntil - ms))(state);
+    let result = makePlayerStatTransform(
+        'oxygenUntil',
+        new Date(oxygenUntil - ms)
+    )(state);
     if (verbose)
-        result = makeAddMessageTransform(`You have used ${duration} of Oxygen.`)(result);
+        result = makeAddMessageTransform(
+            `You have used ${duration} of Oxygen.`
+        )(result);
 
     return result;
 };

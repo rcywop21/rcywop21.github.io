@@ -1,16 +1,24 @@
 import { itemDetails, ItemId, Locations, QuestId, TeamId } from 'wlcommon';
-import applyAction  from './actions';
-import {
-    getCredentials,
-    notifyPlayerState,
-} from './connections';
+import applyAction from './actions';
+import { getCredentials, notifyPlayerState } from './connections';
 import { makeAddItemTransform, makeRemoveItemTransform } from './inventory';
 import logger from './logger';
 import { makeAddOxygenTransform } from './oxygen';
-import { makeAdvanceQuestTransform, makeIssueQuestTransform } from './questRewards';
+import {
+    makeAdvanceQuestTransform,
+    makeIssueQuestTransform,
+} from './questRewards';
 import { Reply, SocketHandler } from './socketHandlers';
 import { saveGameState, setupFreshGameState } from './startup';
-import { applyTransform, gameState, makeAddMessageTransform, makePlayerStatTransform, pauseTransform, resumeTransform, setAction } from './stateMgr';
+import {
+    applyTransform,
+    gameState,
+    makeAddMessageTransform,
+    makePlayerStatTransform,
+    pauseTransform,
+    resumeTransform,
+    setAction,
+} from './stateMgr';
 
 const commands = {
     state: (payload: string[], reply: Reply): void => {
@@ -166,36 +174,45 @@ const commands = {
         const playerId = getPlayerId(payload);
         const mode = payload.shift();
         const playerState = gameState.players[playerId];
-        if (playerState.pausedOxygen)
-            throw 'Cannot do this while paused.';
+        if (playerState.pausedOxygen) throw 'Cannot do this while paused.';
         switch (mode) {
             case 'set': {
                 const seconds = parseInt(payload.shift());
                 if (Number.isNaN(seconds) || seconds <= 0)
-                    throw 'Invalid argument.'
+                    throw 'Invalid argument.';
                 const deadline = new Date(Date.now() + seconds * 1000);
-                applyTransform(makePlayerStatTransform('challengeMode', deadline), playerId);
-                reply('cmdok', `Set challenge mode to ${deadline}.`)
+                applyTransform(
+                    makePlayerStatTransform('challengeMode', deadline),
+                    playerId
+                );
+                reply('cmdok', `Set challenge mode to ${deadline}.`);
                 return;
             }
             case 'change': {
                 const delta = parseInt(payload.shift());
-                if (Number.isNaN(delta))
-                    throw 'Invalid argument.';
+                if (Number.isNaN(delta)) throw 'Invalid argument.';
                 if (playerState.challengeMode === null)
                     throw 'Player is not in Challenge Mode.';
-                const deadline = new Date(playerState.challengeMode.valueOf() + delta * 1000);
-                applyTransform(makePlayerStatTransform('challengeMode', deadline), playerId);
-                reply('cmdok', `Set challenge mode to ${deadline}.`)
+                const deadline = new Date(
+                    playerState.challengeMode.valueOf() + delta * 1000
+                );
+                applyTransform(
+                    makePlayerStatTransform('challengeMode', deadline),
+                    playerId
+                );
+                reply('cmdok', `Set challenge mode to ${deadline}.`);
                 return;
             }
             case 'clear': {
-                applyTransform(makePlayerStatTransform('challengeMode', null), playerId);
+                applyTransform(
+                    makePlayerStatTransform('challengeMode', null),
+                    playerId
+                );
                 reply('cmdok', 'Challenge mode cleared.');
                 return;
             }
             default:
-                throw 'Unknown option. Should be set | change | clear.'
+                throw 'Unknown option. Should be set | change | clear.';
         }
     },
     reset: (_: unknown, reply: Reply) => {
@@ -209,29 +226,28 @@ const commands = {
     give: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
         const itemId = payload.shift() as ItemId;
-        if (!itemDetails[itemId])
-            throw `Unknown item with id ${itemId}`;
+        if (!itemDetails[itemId]) throw `Unknown item with id ${itemId}`;
         const qty = parseInt(payload.shift() ?? '1');
-        if (Number.isNaN(qty))
-            throw `Illegal quantity ${qty}.`
+        if (Number.isNaN(qty)) throw `Illegal quantity ${qty}.`;
         applyTransform(makeAddItemTransform(itemId, qty), playerId);
         reply('cmdok', 'Item awarded.');
     },
     take: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
         const itemId = payload.shift() as ItemId;
-        if (!itemDetails[itemId])
-            throw `Unknown item with id ${itemId}`;
-        const presentQty = gameState.players[playerId]?.inventory[itemId]?.qty
-        if (!presentQty)
-            throw `Player does not have item ${itemId}`;
+        if (!itemDetails[itemId]) throw `Unknown item with id ${itemId}`;
+        const presentQty = gameState.players[playerId]?.inventory[itemId]?.qty;
+        if (!presentQty) throw `Player does not have item ${itemId}`;
         const rawQty = payload.shift();
-        const qty = ((rawQty === undefined || rawQty === 'all') ? presentQty : parseInt(rawQty));
+        const qty =
+            rawQty === undefined || rawQty === 'all'
+                ? presentQty
+                : parseInt(rawQty);
         if (Number.isNaN(qty) || qty > presentQty)
             throw `Illegal quantity ${qty}`;
         applyTransform(makeRemoveItemTransform(itemId, qty), playerId);
         reply('cmdok', 'Item awarded.');
-    }
+    },
 };
 
 export const onAdminHandler: SocketHandler<string[]> = async (
@@ -267,18 +283,25 @@ export const onAdminHandler: SocketHandler<string[]> = async (
     }
 };
 
-export const onAnnounceHandler: SocketHandler<string> = async (socket, payload, reply) => {
+export const onAnnounceHandler: SocketHandler<string> = async (
+    socket,
+    payload,
+    reply
+) => {
     const credentials = getCredentials(socket.id);
     if (credentials?.clientType !== 'admin')
         return reply('error', 'Not authenticated.');
 
-    applyTransform(makeAddMessageTransform({
-        text: payload,
-        visibility: 'public'
-    }), 0);
-    
-    reply('cmdok', 'Announcement sent.')
-}
+    applyTransform(
+        makeAddMessageTransform({
+            text: payload,
+            visibility: 'public',
+        }),
+        0
+    );
+
+    reply('cmdok', 'Announcement sent.');
+};
 
 const getPlayerId = (payload: string[]): TeamId => {
     const playerId = parseInt(payload.shift()) as TeamId;
