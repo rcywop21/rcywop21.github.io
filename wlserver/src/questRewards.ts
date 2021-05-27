@@ -83,7 +83,7 @@ export const makeAdvanceQuestTransform = (
 };
 
 const transforms: Record<QuestId, Transform> = {
-    [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60, false),
+    [questIds.CHAPTER_1]: makeAddOxygenTransform(10 * 60, false),
     [questIds.FINCHES_2]: composite(
         makeAddMessageTransform(
             'You have added information about Challenge Mode to your Journal.'

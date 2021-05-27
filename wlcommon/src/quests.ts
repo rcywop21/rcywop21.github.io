@@ -45,7 +45,7 @@ const questList: Quest[] = [
         description:
             'The Queen has fallen deathly ill with a rarely-known disease. The King has therefore tasked several adventuring groups with retrieving two lost healing artefacts from the Undersea. As a newcomer to the Undersea, you will need to learn how to dive, survive in the Undersea and find your way around.',
         unlocks: 20,
-        reward: ['20 minutes of Oxygen'],
+        reward: ['10 minutes of Oxygen'],
         stages: [
             "Perform the 'Dive' action at Sleepy Shores to enter the Shallows.",
             "Perform the 'Get Oxygen' action at the Memorial Corals.",
