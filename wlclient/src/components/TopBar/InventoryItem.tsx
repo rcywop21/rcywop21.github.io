@@ -23,6 +23,8 @@ const INVENTORY_ITEMS_ASSET_MAP: Map<ItemId, string> = new Map([
     [itemDetails.UNICORN_HAIR.id, 'hair.png'],
     [itemDetails.UNICORN_TEAR.id, 'tear.png'],
     [itemDetails.PEARL.id, 'pearl.png'],
+    [itemDetails.ELEPHANT.id, 'elephant.png'],
+    [itemDetails.HERRING_CHARM.id, 'herring.png']
 ]);
 
 function getImg(item: ItemId): string {
