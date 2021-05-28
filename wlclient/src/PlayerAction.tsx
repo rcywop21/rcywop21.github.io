@@ -239,7 +239,7 @@ const lastUsedMessage = (
     )
 };
 
-const oxygenPumpActions = {
+const commonUnderseaActions = {
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
         'Store Oxygen',
         'Store all your Oxygen (except 1.5 mins, enough for you to resurface) into your Oxygen Pump.',
@@ -1131,7 +1131,35 @@ export const allPlayerActions = {
     },
 };
 
+const resurfaceLocations = {
+    [Locations.locationIds.ALCOVE]: ["729px", "101px"],
+    [Locations.locationIds.ANCHOVY]: ["209px", "120px"],
+    [Locations.locationIds.BARNACLE]: ["729px", "113px"],
+    [Locations.locationIds.BUBBLE]: ["434px", "524px"],
+    [Locations.locationIds.CATFISH]: ["169px", "348px"],
+    [Locations.locationIds.CORALS]: ["26px", "106px"],
+    [Locations.locationIds.KELP]: ["122px", "117px"],
+    [Locations.locationIds.LIBRARY]: ["33px", "171px"],
+    [Locations.locationIds.SALMON]: ["18px", "96px"],
+    [Locations.locationIds.SHALLOWS]: ["45px", "120px"],
+    [Locations.locationIds.SHRINE]: ["52px", "123px"],
+    [Locations.locationIds.STATUE]: ["689px", "100px"],
+    [Locations.locationIds.STORE]: ["99px", "251px"],
+    [Locations.locationIds.TUNA]: ["615px", "141px"],
+    [Locations.locationIds.UMBRAL]: ["60px", "304px"],
+}
+
 Object.keys(allPlayerActions).forEach((key) => {
-    if (Locations.locationsMapping[key]?.undersea)
-        Object.assign(allPlayerActions[key], oxygenPumpActions);
-})
+    if (Locations.locationsMapping[key]?.undersea) {
+        const [x, y] = resurfaceLocations[key];
+        const commonActions = {
+            ...commonUnderseaActions,
+            [Actions.ALL_UNDERWATER.RESURFACE]: {
+                ...commonUnderseaActions[Actions.ALL_UNDERWATER.RESURFACE],
+                x,
+                y,
+            }
+        };
+        Object.assign(allPlayerActions[key], commonActions);
+    }
+});
