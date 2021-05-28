@@ -10,7 +10,11 @@ export interface ActionProps {
     isVisible: boolean;
     isEnabled: boolean;
     handleAction: () => void;
-    triggerTooltip: (t?: TooltipType, d?: TooltipData, b?: boolean) => () => void;
+    triggerTooltip: (
+        t?: TooltipType,
+        d?: TooltipData,
+        b?: boolean
+    ) => () => void;
     tooltipInfo: TooltipData;
 }
 

@@ -132,7 +132,11 @@ export const makeActionProps = (
             const actionDescription = (
                 <React.Fragment>
                     <p>{playerAction.description}</p>
-                    {playerAction.optionalDescription && playerAction.optionalDescription(playerState, globalState)}
+                    {playerAction.optionalDescription &&
+                        playerAction.optionalDescription(
+                            playerState,
+                            globalState
+                        )}
                 </React.Fragment>
             );
 
@@ -180,7 +184,11 @@ export const makeDynamicActionProps = (
             const actionDescription = (
                 <React.Fragment>
                     <p>{playerAction.description}</p>
-                    {playerAction.optionalDescription && playerAction.optionalDescription(playerState, globalState)}
+                    {playerAction.optionalDescription &&
+                        playerAction.optionalDescription(
+                            playerState,
+                            globalState
+                        )}
                 </React.Fragment>
             );
 
@@ -209,34 +217,57 @@ export const makeDynamicActionProps = (
             };
         });
 
-const makeOxygenStreamMessage: DescriptionCreator = (playerState, globalState) => {
+const makeOxygenStreamMessage: DescriptionCreator = (
+    playerState,
+    globalState
+) => {
     return (
         <React.Fragment>
             {playerState.challengeMode && (
-                <p className="warning">As you are in Challenge Mode, you will receive {
-                    playerState.knowsCrimson ?  `only ${Math.max(15, 12.5 + 2.5 * globalState.artefactsFound).toFixed(1)}% of the stated Oxygen amount!` : 'less Oxygen than stated!'
-                }</p>
+                <p className="warning">
+                    As you are in Challenge Mode, you will receive{' '}
+                    {playerState.knowsCrimson
+                        ? `only ${Math.max(
+                              15,
+                              12.5 + 2.5 * globalState.artefactsFound
+                          ).toFixed(1)}% of the stated Oxygen amount!`
+                        : 'less Oxygen than stated!'}
+                </p>
             )}
             {playerState.streamCooldownExpiry[playerState.locationId] && (
-                <p className="informative">You can use this Oxygen Stream starting from {formatTime(new Date(playerState.streamCooldownExpiry[playerState.locationId]))}.</p>
+                <p className="informative">
+                    You can use this Oxygen Stream starting from{' '}
+                    {formatTime(
+                        new Date(
+                            playerState.streamCooldownExpiry[
+                                playerState.locationId
+                            ]
+                        )
+                    )}
+                    .
+                </p>
             )}
         </React.Fragment>
-    )
-}
+    );
+};
 
 const lastUsedMessage = (
     playerState: PlayerState,
     globalState: GlobalState
 ) => {
     const { lastTeam, lastExtract } = globalState.tritonOxygen;
-    const lastTeamLbl = lastTeam === undefined ? 'an unknown person' : `Team ${lastTeam}`;
+    const lastTeamLbl =
+        lastTeam === undefined ? 'an unknown person' : `Team ${lastTeam}`;
 
     return (
         <React.Fragment>
-            <p>This Oxygen Stream was last used by {lastTeamLbl} at {formatTime(new Date(lastExtract))}.</p>
+            <p>
+                This Oxygen Stream was last used by {lastTeamLbl} at{' '}
+                {formatTime(new Date(lastExtract))}.
+            </p>
             {makeOxygenStreamMessage(playerState, globalState)}
         </React.Fragment>
-    )
+    );
 };
 
 const commonUnderseaActions = {
@@ -248,9 +279,18 @@ const commonUnderseaActions = {
         '488px',
         (playerState) => {
             if (playerState.storedOxygen === null)
-                return (<p className="warning">This action is disabled as you do not have an oxygen pump.</p>);
+                return (
+                    <p className="warning">
+                        This action is disabled as you do not have an oxygen
+                        pump.
+                    </p>
+                );
             if (playerState.challengeMode !== null)
-                return (<p className="warning">This action is disabled as you are in Challenge Mode.</p>);
+                return (
+                    <p className="warning">
+                        This action is disabled as you are in Challenge Mode.
+                    </p>
+                );
         },
         (playerState) =>
             playerState.storedOxygen !== null &&
@@ -264,9 +304,18 @@ const commonUnderseaActions = {
         '543px',
         (playerState) => {
             if (playerState.storedOxygen === null)
-                return (<p className="warning">This action is disabled as you do not have an oxygen pump.</p>);
+                return (
+                    <p className="warning">
+                        This action is disabled as you do not have an oxygen
+                        pump.
+                    </p>
+                );
             if (playerState.challengeMode !== null)
-                return (<p className="warning">This action is disabled as you are in Challenge Mode.</p>);
+                return (
+                    <p className="warning">
+                        This action is disabled as you are in Challenge Mode.
+                    </p>
+                );
         },
         (playerState) =>
             playerState.storedOxygen !== null &&
@@ -279,7 +328,7 @@ const commonUnderseaActions = {
         '729px',
         '101px'
     ),
-}
+};
 
 export const allPlayerActions = {
     [Locations.locationIds.ALCOVE]: {
@@ -289,13 +338,16 @@ export const allPlayerActions = {
             'As a team, present 8 items to your mentors which match the color of each item in this image: https://imgur.com/a/61SICv6',
             '409px',
             '399px',
-            (playerState) => { 
+            (playerState) => {
                 if (playerState.inventory[itemDetails.PEARL.id]?.qty)
-                    return <p className="warning">You already have a Pearl of Asclepius.</p>
+                    return (
+                        <p className="warning">
+                            You already have a Pearl of Asclepius.
+                        </p>
+                    );
             },
             undefined,
-            (playerState) =>
-                !playerState.inventory[itemDetails.PEARL.id]?.qty
+            (playerState) => !playerState.inventory[itemDetails.PEARL.id]?.qty
         ),
     },
     [Locations.locationIds.ANCHOVY]: {
@@ -308,9 +360,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -320,7 +372,11 @@ export const allPlayerActions = {
             },
             (playerState) => {
                 if (playerState.quests[questIds.LIBRARIAN_PASS])
-                    return <p className="warning">You have already explored this location.</p>
+                    return (
+                        <p className="warning">
+                            You have already explored this location.
+                        </p>
+                    );
             },
             undefined,
             (playerState) => !playerState.quests[questIds.LIBRARIAN_PASS]
@@ -332,15 +388,29 @@ export const allPlayerActions = {
             '294px',
             '533px',
             (playerState) => {
-                if (playerState.quests[questIds.LIBRARIAN_PASS]?.status === 'completed')
-                    return <p className="warning">You have already inspired the Chief Librarian.</p>;
-                if (playerState.quests[questIds.LIBRARIAN_PASS]?.status !== 'incomplete')
-                    return <p className="warning">You have not met the Chief Librarian yet.</p>;
+                if (
+                    playerState.quests[questIds.LIBRARIAN_PASS]?.status ===
+                    'completed'
+                )
+                    return (
+                        <p className="warning">
+                            You have already inspired the Chief Librarian.
+                        </p>
+                    );
+                if (
+                    playerState.quests[questIds.LIBRARIAN_PASS]?.status !==
+                    'incomplete'
+                )
+                    return (
+                        <p className="warning">
+                            You have not met the Chief Librarian yet.
+                        </p>
+                    );
             },
+            (playerState) => !!playerState.quests[questIds.LIBRARIAN_PASS],
             (playerState) =>
-                !!playerState.quests[questIds.LIBRARIAN_PASS],
-            (playerState) =>
-                playerState.quests[questIds.LIBRARIAN_PASS]?.status === 'incomplete',
+                playerState.quests[questIds.LIBRARIAN_PASS]?.status ===
+                'incomplete'
         ),
     },
     [Locations.locationIds.BARNACLE]: {
@@ -353,9 +423,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -365,7 +435,11 @@ export const allPlayerActions = {
             },
             (playerState) => {
                 if (playerState.quests[questIds.PYRITE])
-                    return <p className="warning">You have already explored this location.</p>
+                    return (
+                        <p className="warning">
+                            You have already explored this location.
+                        </p>
+                    );
             },
             undefined,
             (playerState) => !playerState.quests[questIds.PYRITE]
@@ -378,14 +452,23 @@ export const allPlayerActions = {
             '471px',
             (playerState) => {
                 if (playerState.quests[questIds.PYRITE]?.status === 'completed')
-                    return <p className="warning">You have already helped the Pyrite Lady.</p>;
-                if (playerState.quests[questIds.PYRITE]?.status !== 'incomplete')
-                    return <p className="warning">You have not met the Pyrite Lady yet.</p>;
+                    return (
+                        <p className="warning">
+                            You have already helped the Pyrite Lady.
+                        </p>
+                    );
+                if (
+                    playerState.quests[questIds.PYRITE]?.status !== 'incomplete'
+                )
+                    return (
+                        <p className="warning">
+                            You have not met the Pyrite Lady yet.
+                        </p>
+                    );
             },
+            (playerState) => !!playerState.quests[questIds.PYRITE],
             (playerState) =>
-                !!playerState.quests[questIds.PYRITE],
-            (playerState) =>
-                playerState.quests[questIds.PYRITE]?.status === 'incomplete',
+                playerState.quests[questIds.PYRITE]?.status === 'incomplete'
         ),
     },
     [Locations.locationIds.BUBBLE]: {
@@ -409,9 +492,13 @@ export const allPlayerActions = {
             },
             (playerState, globalState) => {
                 if (!playerState.hasBubblePass)
-                    return <p className="warning">You cannot use this Oxygen Stream without a Bubble Pass.</p>
-                else 
-                    return makeOxygenStreamMessage(playerState, globalState);
+                    return (
+                        <p className="warning">
+                            You cannot use this Oxygen Stream without a Bubble
+                            Pass.
+                        </p>
+                    );
+                else return makeOxygenStreamMessage(playerState, globalState);
             },
             undefined,
             (playerState) =>
@@ -453,9 +540,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -465,7 +552,11 @@ export const allPlayerActions = {
             },
             (playerState) => {
                 if (playerState.quests[questIds.FINCHES])
-                    return <p className="warning">You have already explored this location.</p>
+                    return (
+                        <p className="warning">
+                            You have already explored this location.
+                        </p>
+                    );
             },
             undefined,
             (playerState) => !playerState.quests[questIds.FINCHES]
@@ -479,15 +570,23 @@ export const allPlayerActions = {
             (playerState) => {
                 switch (playerState.quests[questIds.FINCHES]?.status) {
                     case 'completed':
-                        return <p className="warning">You have already learnt this language.</p>;
+                        return (
+                            <p className="warning">
+                                You have already learnt this language.
+                            </p>
+                        );
                     case 'incomplete':
                         return;
                     default:
-                        return <p className="warning">You have not explored enough of this area to learn this language.</p>;
+                        return (
+                            <p className="warning">
+                                You have not explored enough of this area to
+                                learn this language.
+                            </p>
+                        );
                 }
             },
-            (playerState) =>
-                !!playerState.quests[questIds.FINCHES],
+            (playerState) => !!playerState.quests[questIds.FINCHES],
             (playerState) => !playerState.knowsLanguage
         ),
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
@@ -524,9 +623,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -536,7 +635,11 @@ export const allPlayerActions = {
             },
             (playerState) => {
                 if (playerState.quests[questIds.SHRINE_1])
-                    return <p className="warning">You have already explored this location.</p>
+                    return (
+                        <p className="warning">
+                            You have already explored this location.
+                        </p>
+                    );
             },
             undefined,
             (playerState) => !playerState.quests[questIds.SHRINE_1]
@@ -548,13 +651,27 @@ export const allPlayerActions = {
             '360px',
             '487px',
             (playerState) => {
-                if (playerState.quests[questIds.SHRINE_1]?.status === 'completed')
-                    return <p className="warning">You have already found the way to the Shrine of the Innocent. Use &lsquo;Travel&rsquo; to revisit it.</p>;
-                if (playerState.quests[questIds.SHRINE_1]?.status !== 'incomplete')
-                    return <p className="warning">You have not explored enough of the area to do this.</p>;
+                if (
+                    playerState.quests[questIds.SHRINE_1]?.status ===
+                    'completed'
+                )
+                    return (
+                        <p className="warning">
+                            You have already found the way to the Shrine of the
+                            Innocent. Use &lsquo;Travel&rsquo; to revisit it.
+                        </p>
+                    );
+                if (
+                    playerState.quests[questIds.SHRINE_1]?.status !==
+                    'incomplete'
+                )
+                    return (
+                        <p className="warning">
+                            You have not explored enough of the area to do this.
+                        </p>
+                    );
             },
-            (playerState) =>
-                !!playerState.quests[questIds.SHRINE_1],
+            (playerState) => !!playerState.quests[questIds.SHRINE_1],
             (playerState) =>
                 playerState.quests[questIds.SHRINE_1]?.status === 'incomplete'
         ),
@@ -576,9 +693,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -588,7 +705,11 @@ export const allPlayerActions = {
             },
             (playerState) => {
                 if (playerState.quests[questIds.ARTEFACTS_1])
-                    return <p className="warning">You have already explored this location.</p>
+                    return (
+                        <p className="warning">
+                            You have already explored this location.
+                        </p>
+                    );
             },
             undefined,
             (playerState) => !playerState.quests[questIds.ARTEFACTS_1]
@@ -601,16 +722,30 @@ export const allPlayerActions = {
             '503px',
             (playerState) => {
                 if (!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty)
-                    return <p className="warning">You need a Library Pass to access tomes about Challenge Mode.</p>;
+                    return (
+                        <p className="warning">
+                            You need a Library Pass to access tomes about
+                            Challenge Mode.
+                        </p>
+                    );
                 if (playerState.knowsCrimson)
-                    return <p className="warning">You already know about Challenge Mode.</p>;
+                    return (
+                        <p className="warning">
+                            You already know about Challenge Mode.
+                        </p>
+                    );
                 if (playerState.quests[questIds.FINCHES_2])
-                    return <p className="warning">You haven&apos;t learnt enough about Challenge Mode outside of the Library yet.</p>;
+                    return (
+                        <p className="warning">
+                            You haven&apos;t learnt enough about Challenge Mode
+                            outside of the Library yet.
+                        </p>
+                    );
             },
+            (playerState) => !!playerState.quests[questIds.FINCHES_2],
             (playerState) =>
-                !!playerState.quests[questIds.FINCHES_2],
-            (playerState) =>
-                !!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty && !playerState.knowsCrimson
+                !!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty &&
+                !playerState.knowsCrimson
         ),
         [Actions.specificActions.LIBRARY.STUDY_ARTEFACT]: new PlayerAction(
             'Study Artefact Legends',
@@ -620,16 +755,30 @@ export const allPlayerActions = {
             '202px',
             (playerState) => {
                 if (!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty)
-                    return <p className="warning">You need a Library Pass to access tomes about artefacts.</p>;
+                    return (
+                        <p className="warning">
+                            You need a Library Pass to access tomes about
+                            artefacts.
+                        </p>
+                    );
                 if (playerState.quests[questIds.ARTEFACTS_2])
-                    return <p className="warning">You have already found the books about artefacts.</p>;
+                    return (
+                        <p className="warning">
+                            You have already found the books about artefacts.
+                        </p>
+                    );
                 if (!playerState.quests[questIds.ARTEFACTS_1])
-                    return <p className="warning">You haven&apos;t explored the Library enough yet to study these books.</p>;
+                    return (
+                        <p className="warning">
+                            You haven&apos;t explored the Library enough yet to
+                            study these books.
+                        </p>
+                    );
             },
+            (playerState) => !!playerState.quests[questIds.ARTEFACTS_1],
             (playerState) =>
-                !!playerState.quests[questIds.ARTEFACTS_1],
-            (playerState) =>
-                !!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty && !playerState.quests[questIds.ARTEFACTS_2]
+                !!playerState.inventory[itemDetails.LIBRARY_PASS.id]?.qty &&
+                !playerState.quests[questIds.ARTEFACTS_2]
         ),
         [Actions.specificActions.LIBRARY.DECODE_ARTEFACT]: new PlayerAction(
             'Decode Artefact Legends',
@@ -639,15 +788,30 @@ export const allPlayerActions = {
             '265px',
             (playerState) => {
                 if (!playerState.knowsLanguage)
-                    return <p className="warning">You don&apos;t know enough about the ancient language to decode these books.</p>;
+                    return (
+                        <p className="warning">
+                            You don&apos;t know enough about the ancient
+                            language to decode these books.
+                        </p>
+                    );
                 if (playerState.quests[questIds.ARTEFACTS_3])
-                    return <p className="warning">You have already decoded these books.</p>;
+                    return (
+                        <p className="warning">
+                            You have already decoded these books.
+                        </p>
+                    );
                 if (!playerState.quests[questIds.ARTEFACTS_2])
-                    return <p className="warning">You haven&apos;t studied the books enough to decode them yet.</p>;
+                    return (
+                        <p className="warning">
+                            You haven&apos;t studied the books enough to decode
+                            them yet.
+                        </p>
+                    );
             },
+            (playerState) => !!playerState.quests[questIds.ARTEFACTS_2],
             (playerState) =>
-                !!playerState.quests[questIds.ARTEFACTS_2],
-            (playerState) => playerState.knowsLanguage && !playerState.quests[questIds.ARTEFACTS_3]
+                playerState.knowsLanguage &&
+                !playerState.quests[questIds.ARTEFACTS_3]
         ),
     },
     [Locations.locationIds.SALMON]: {
@@ -660,9 +824,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -672,7 +836,11 @@ export const allPlayerActions = {
             },
             (playerState) => {
                 if (playerState.quests[questIds.ARGUMENT])
-                    return <p className="warning">You have already explored this location.</p>
+                    return (
+                        <p className="warning">
+                            You have already explored this location.
+                        </p>
+                    );
             },
             undefined,
             (playerState) => !playerState.quests[questIds.ARGUMENT]
@@ -684,15 +852,28 @@ export const allPlayerActions = {
             '142px',
             '542px',
             (playerState) => {
-                if (playerState.quests[questIds.ARGUMENT]?.status === 'completed')
-                    return <p className="warning">You have already confronted the children.</p>;
-                if (playerState.quests[questIds.ARGUMENT]?.status !== 'incomplete')
-                    return <p className="warning">You have not met anybody to confront yet.</p>;
+                if (
+                    playerState.quests[questIds.ARGUMENT]?.status ===
+                    'completed'
+                )
+                    return (
+                        <p className="warning">
+                            You have already confronted the children.
+                        </p>
+                    );
+                if (
+                    playerState.quests[questIds.ARGUMENT]?.status !==
+                    'incomplete'
+                )
+                    return (
+                        <p className="warning">
+                            You have not met anybody to confront yet.
+                        </p>
+                    );
             },
+            (playerState) => !!playerState.quests[questIds.ARGUMENT],
             (playerState) =>
-                !!playerState.quests[questIds.ARGUMENT],
-            (playerState) =>
-                playerState.quests[questIds.ARGUMENT]?.status === 'incomplete',
+                playerState.quests[questIds.ARGUMENT]?.status === 'incomplete'
         ),
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
@@ -737,7 +918,11 @@ export const allPlayerActions = {
             '449px',
             (playerState) => {
                 if (!playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty)
-                    return <p className="warning">You don&apos;t have any Unicorn Hair to give.</p>
+                    return (
+                        <p className="warning">
+                            You don&apos;t have any Unicorn Hair to give.
+                        </p>
+                    );
             },
             undefined,
             (playerState) =>
@@ -751,9 +936,18 @@ export const allPlayerActions = {
             '495px',
             (playerState) => {
                 if (playerState.quests[questIds.SHRINE_2]?.stages[4])
-                    return <p className="warning">You have not reached the final stage of the Shrine of the Innocent quest yet.</p>
+                    return (
+                        <p className="warning">
+                            You have not reached the final stage of the Shrine
+                            of the Innocent quest yet.
+                        </p>
+                    );
                 if (playerState.inventory[itemDetails.UNICORN_TEAR.id]?.qty)
-                    return <p className="warning">You already have a Unicorn Tear.</p>
+                    return (
+                        <p className="warning">
+                            You already have a Unicorn Tear.
+                        </p>
+                    );
             },
             (playerState) => playerState.quests[questIds.SHRINE_2]?.stages[4],
             (playerState) =>
@@ -770,9 +964,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -781,13 +975,28 @@ export const allPlayerActions = {
                 return;
             },
             (playerState) => {
-                if (playerState.quests[questIds.ARTEFACTS_4]?.status === 'completed')
-                    return <p className="warning">You have already explored this location.</p>
+                if (
+                    playerState.quests[questIds.ARTEFACTS_4]?.status ===
+                    'completed'
+                )
+                    return (
+                        <p className="warning">
+                            You have already explored this location.
+                        </p>
+                    );
                 if (playerState.foundEngraving)
-                    return <p className="warning">There doesn&apos;t seem to be anymore interesting things here...</p>
+                    return (
+                        <p className="warning">
+                            There doesn&apos;t seem to be anymore interesting
+                            things here...
+                        </p>
+                    );
             },
             undefined,
-            (playerState) => !playerState.foundEngraving || playerState.quests[questIds.ARTEFACTS_4]?.status === 'incomplete'
+            (playerState) =>
+                !playerState.foundEngraving ||
+                playerState.quests[questIds.ARTEFACTS_4]?.status ===
+                    'incomplete'
         ),
         [Actions.specificActions.STATUE.DECODE_ENGRAVING]: new PlayerAction(
             'Decode Engraving',
@@ -797,14 +1006,29 @@ export const allPlayerActions = {
             '553px',
             (playerState) => {
                 if (!playerState.foundEngraving)
-                    return <p className="warning">You have not found this engraving yet.</p>;
+                    return (
+                        <p className="warning">
+                            You have not found this engraving yet.
+                        </p>
+                    );
                 if (!playerState.knowsLanguage)
-                    return <p className="warning">You don&apos;t know enough the ancient language to decode the engraving.</p>;
+                    return (
+                        <p className="warning">
+                            You don&apos;t know enough the ancient language to
+                            decode the engraving.
+                        </p>
+                    );
                 if (playerState.quests[questIds.FINCHES_2])
-                    return <p className="warning">You have already decoded this engraving.</p>;
+                    return (
+                        <p className="warning">
+                            You have already decoded this engraving.
+                        </p>
+                    );
             },
             (playerState) => playerState.foundEngraving,
-            (playerState) => playerState.knowsLanguage && !playerState.quests[questIds.FINCHES_2],
+            (playerState) =>
+                playerState.knowsLanguage &&
+                !playerState.quests[questIds.FINCHES_2]
         ),
         /*
         [Actions.specificActions.STATUE.CAST_COOLING_AURA]: new PlayerAction(
@@ -855,7 +1079,7 @@ export const allPlayerActions = {
         */
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
-            "The Oxygen in the Statue of Triton is shared and accessible to every team. You can get 2 minutes of Oxygen for every minute that has passed since the last team used this Oxygen Stream. E.g. if the last team used this Oxygen Stream 30 minutes ago, then you can get 1 hour of Oxygen here.",
+            'The Oxygen in the Statue of Triton is shared and accessible to every team. You can get 2 minutes of Oxygen for every minute that has passed since the last team used this Oxygen Stream. E.g. if the last team used this Oxygen Stream 30 minutes ago, then you can get 1 hour of Oxygen here.',
             'As a group, sing a new nursery rhyme/ children’s song together. Person A will sing the first word, person B will sing the second, and so on (loop back to person A when everyone has sang a word). Repeat until the song is finished.',
             '826px',
             '238px',
@@ -888,8 +1112,8 @@ export const allPlayerActions = {
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
                     : playerState.pausedOxygen
-                        ? new Date(Date.now() + playerState.pausedOxygen)
-                        : new Date(0),
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -908,9 +1132,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-                        ? new Date(Date.now() + playerState.pausedOxygen)
-                        : new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -931,9 +1155,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             600000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -951,9 +1175,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             1200000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -971,9 +1195,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             1800000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -993,9 +1217,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             1800000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -1003,9 +1227,14 @@ export const allPlayerActions = {
             (): void => {
                 return;
             },
-            () => <p className="warning">Note the special task needed to buy this item!</p>
+            () => (
+                <p className="warning">
+                    Note the special task needed to buy this item!
+                </p>
+            )
         ),
-        [Actions.specificActions.STORE.BUY_BUBBLE_PASS]: new DynamicPlayerAction(
+        [Actions.specificActions.STORE
+            .BUY_BUBBLE_PASS]: new DynamicPlayerAction(
             'Buy Bubble Pass',
             'This golden pass lets you access the Bubble Factory. It has no expiry date and can be used multiple times.',
             'Pay 40 minutes of Oxygen to receive 1 x Bubble Pass.',
@@ -1014,9 +1243,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             2400000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -1061,9 +1290,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : playerState.pausedOxygen 
-						? new Date(Date.now() + playerState.pausedOxygen)
-						: new Date(0),
+                    : playerState.pausedOxygen
+                    ? new Date(Date.now() + playerState.pausedOxygen)
+                    : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -1073,7 +1302,11 @@ export const allPlayerActions = {
             },
             (playerState) => {
                 if (playerState.quests[questIds.CLOAK_1])
-                    return <p className="warning">You have already explored this location.</p>
+                    return (
+                        <p className="warning">
+                            You have already explored this location.
+                        </p>
+                    );
             },
             undefined,
             (playerState) => !playerState.quests[questIds.CLOAK_1]
@@ -1086,7 +1319,11 @@ export const allPlayerActions = {
             '197px',
             (playerState) => {
                 if (!playerState.inventory[itemDetails.PYRITE_PAN.id])
-                    return <p className="warning">You don&apos;t have a Pyrite Pan to show Alyusi.</p>
+                    return (
+                        <p className="warning">
+                            You don&apos;t have a Pyrite Pan to show Alyusi.
+                        </p>
+                    );
             },
             (playerState) =>
                 playerState.quests[questIds.CLOAK_1]?.status === 'incomplete',
@@ -1101,7 +1338,11 @@ export const allPlayerActions = {
             '177px',
             (playerState) => {
                 if (!playerState.inventory[itemDetails.BLACK_ROCK.id])
-                    return <p className="warning">You don&apos;t have a Chmyrrkyth to give Alyusi.</p>
+                    return (
+                        <p className="warning">
+                            You don&apos;t have a Chmyrrkyth to give Alyusi.
+                        </p>
+                    );
             },
             (playerState) =>
                 playerState.quests[questIds.CLOAK_2]?.status === 'incomplete',
@@ -1117,10 +1358,18 @@ export const allPlayerActions = {
             '703px',
             '382px',
             (playerState) => {
-                if (playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty) 
-                    return <p className="warning">You already have a Unicorn&apos;s Hair.</p>
-                if (playerState.inventory[itemDetails.UNICORN_TEAR.id]?.qty) 
-                    return <p className="warning">You already have a Unicorn Tear.</p>
+                if (playerState.inventory[itemDetails.UNICORN_HAIR.id]?.qty)
+                    return (
+                        <p className="warning">
+                            You already have a Unicorn&apos;s Hair.
+                        </p>
+                    );
+                if (playerState.inventory[itemDetails.UNICORN_TEAR.id]?.qty)
+                    return (
+                        <p className="warning">
+                            You already have a Unicorn Tear.
+                        </p>
+                    );
             },
             undefined,
             (playerState) =>
@@ -1133,22 +1382,22 @@ export const allPlayerActions = {
 };
 
 const resurfaceLocations = {
-    [Locations.locationIds.ALCOVE]: ["729px", "101px"],
-    [Locations.locationIds.ANCHOVY]: ["209px", "120px"],
-    [Locations.locationIds.BARNACLE]: ["729px", "113px"],
-    [Locations.locationIds.BUBBLE]: ["434px", "524px"],
-    [Locations.locationIds.CATFISH]: ["169px", "348px"],
-    [Locations.locationIds.CORALS]: ["26px", "106px"],
-    [Locations.locationIds.KELP]: ["122px", "117px"],
-    [Locations.locationIds.LIBRARY]: ["33px", "171px"],
-    [Locations.locationIds.SALMON]: ["18px", "96px"],
-    [Locations.locationIds.SHALLOWS]: ["45px", "120px"],
-    [Locations.locationIds.SHRINE]: ["52px", "123px"],
-    [Locations.locationIds.STATUE]: ["689px", "100px"],
-    [Locations.locationIds.STORE]: ["99px", "251px"],
-    [Locations.locationIds.TUNA]: ["615px", "141px"],
-    [Locations.locationIds.UMBRAL]: ["60px", "304px"],
-}
+    [Locations.locationIds.ALCOVE]: ['729px', '101px'],
+    [Locations.locationIds.ANCHOVY]: ['209px', '120px'],
+    [Locations.locationIds.BARNACLE]: ['729px', '113px'],
+    [Locations.locationIds.BUBBLE]: ['434px', '524px'],
+    [Locations.locationIds.CATFISH]: ['169px', '348px'],
+    [Locations.locationIds.CORALS]: ['26px', '106px'],
+    [Locations.locationIds.KELP]: ['122px', '117px'],
+    [Locations.locationIds.LIBRARY]: ['33px', '171px'],
+    [Locations.locationIds.SALMON]: ['18px', '96px'],
+    [Locations.locationIds.SHALLOWS]: ['45px', '120px'],
+    [Locations.locationIds.SHRINE]: ['52px', '123px'],
+    [Locations.locationIds.STATUE]: ['689px', '100px'],
+    [Locations.locationIds.STORE]: ['99px', '251px'],
+    [Locations.locationIds.TUNA]: ['615px', '141px'],
+    [Locations.locationIds.UMBRAL]: ['60px', '304px'],
+};
 
 Object.keys(allPlayerActions).forEach((key) => {
     if (Locations.locationsMapping[key]?.undersea) {
@@ -1159,7 +1408,7 @@ Object.keys(allPlayerActions).forEach((key) => {
                 ...commonUnderseaActions[Actions.ALL_UNDERWATER.RESURFACE],
                 x,
                 y,
-            }
+            },
         };
         Object.assign(allPlayerActions[key], commonActions);
     }

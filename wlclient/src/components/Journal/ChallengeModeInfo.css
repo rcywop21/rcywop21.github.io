@@ -6,7 +6,7 @@
     display: grid;
     margin-left: 4rem;
     margin-right: 4rem;
-    grid-template-columns: repeat(6, 1fr)
+    grid-template-columns: repeat(6, 1fr);
 }
 
 .challenge-mode-table > div {
@@ -19,7 +19,8 @@
     background-color: #b66;
 }
 
-.challenge-mode-table > div.header, .challenge-mode-table > div.hstart {
+.challenge-mode-table > div.header,
+.challenge-mode-table > div.hstart {
     font-weight: bold;
 }
 

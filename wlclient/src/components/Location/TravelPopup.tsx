@@ -8,7 +8,11 @@ export interface TravelPopupProps {
     isVisible: boolean;
     setVisible: React.Dispatch<React.SetStateAction<boolean>>;
     handleTravel: (a: Locations.LocationId) => () => void;
-    triggerTooltip: (t?: TooltipType, d?: TooltipData, b?: boolean) => () => void;
+    triggerTooltip: (
+        t?: TooltipType,
+        d?: TooltipData,
+        b?: boolean
+    ) => () => void;
 }
 
 function checkHiddenLocationRequirement(

@@ -13,7 +13,13 @@ import DynamicAction, { DynamicActionProps } from './DynamicAction';
 import { Locations } from 'wlcommon';
 
 const Anchovy = (props: SpecificLocationProps): React.ReactElement => {
-    const { playerState, handleAction, triggerTooltip, isMentor, globalState } = props;
+    const {
+        playerState,
+        handleAction,
+        triggerTooltip,
+        isMentor,
+        globalState,
+    } = props;
 
     const actions = allPlayerActions[Locations.locationIds.ANCHOVY];
     const actionProps = makeActionProps(
