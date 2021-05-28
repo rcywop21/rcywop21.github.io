@@ -421,7 +421,7 @@ const applyLocationActions: Record<
                 makeAdvanceQuestTransform(questIds.CHAPTER_2, 1),
                 makeAddItemTransform(itemDetails.PEARL.id, 1),
                 makeAddMessageTransform({
-                    text: `[Announcement] Team ${state.playerState.id} has found the Pearl of Asclepius!`,
+                    text: `[ANNOUNCEMENT] Team ${state.playerState.id} has found the Pearl of Asclepius!`,
                     visibility: 'public',
                 })
             )(state);

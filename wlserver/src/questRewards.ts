@@ -110,7 +110,7 @@ const transforms: Record<QuestId, Transform> = {
         )(state);
         result = makeAdvanceQuestTransform(questIds.CHAPTER_2, 0)(result);
         result = makeAddMessageTransform({
-            text: `[Announcement] Team ${state.playerState.id} has found the Unicorn's Tear!`,
+            text: `[ANNOUNCEMENT] Team ${state.playerState.id} has found the Unicorn's Tear!`,
             visibility: 'public',
         })(state);
         result.globalState.artefactsFound += 1;

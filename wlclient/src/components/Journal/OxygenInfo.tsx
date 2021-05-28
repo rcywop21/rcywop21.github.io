@@ -28,7 +28,7 @@ const getChallengeModeDescription = (
     if (parameter === null) return null;
     if (parameter === 'vague')
         return 'You are in Challenge Mode! You will receive less Oxygen from Oxygen Streams.';
-    return `You are in Challenge Mode (Oxygen Multiplier ${(parameter * 100).toFixed(
+    return `You are in Challenge Mode (${(parameter * 100).toFixed(
         1
     )}%)! You will only receive ${Util.formatDuration(
         seconds * parameter * 1000

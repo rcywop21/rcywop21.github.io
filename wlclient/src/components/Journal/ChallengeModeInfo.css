@@ -1,3 +1,30 @@
 .challengeColor {
     color: #4ae0a0;
 }
+
+.challenge-mode-table {
+    display: grid;
+    margin-left: 4rem;
+    margin-right: 4rem;
+    grid-template-columns: repeat(6, 1fr)
+}
+
+.challenge-mode-table > div {
+    padding: 8px 12px;
+    text-align: center;
+    vertical-align: center;
+}
+
+.challenge-mode-table > div.header {
+    background-color: #b66;
+}
+
+.challenge-mode-table > div.header, .challenge-mode-table > div.hstart {
+    font-weight: bold;
+}
+
+.percentage {
+    font-weight: bold;
+    color: #ff836e;
+    text-decoration-line: underline;
+}

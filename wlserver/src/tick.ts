@@ -30,12 +30,12 @@ const finishChallengeModeTransform: Transform = (state) =>
             'You have survived 30 minutes in Challenge Mode. Well done! Return to the Shrine of the Innocent to collect your reward.',
             {
                 visibility: 'public',
-                text: `[Announcement] Team ${
+                text: `[ANNOUNCEMENT] Team ${
                     state.playerState.id
-                } has completed Challenge Mode. (Highest Oxygen Multiplier: ${Math.max(
+                } has completed Challenge Mode (${Math.max(
                     15,
                     12.5 + 0.25 * state.globalState.artefactsFound
-                ).toFixed(1)}% Oxygen)`,
+                ).toFixed(1)}%)!`,
             }
         ),
         makeAdvanceQuestTransform(questIds.SHRINE_2, 4),
