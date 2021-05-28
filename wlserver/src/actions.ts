@@ -120,6 +120,7 @@ const applyLocationActions: Record<
     },
     [Locations.locationIds.STORE]: {
         [Actions.specificActions.STORE.BUY_MAP]: composite(
+            makeAddMessageTransform('With the map, you can now access more locations in the Undersea! Remember that if you want to return to the Sleepy Shores, you have to use Resurface.'),
             makeAdvanceQuestTransform(questIds.CHAPTER_1, 2),
             makePlayerStatTransform('hasMap', true),
             makeAddItemTransform(itemDetails.MAP.id, 1),
@@ -194,7 +195,7 @@ const applyLocationActions: Record<
                 `Player ${state.playerState.id} has accessed the Oxygen Stream at ${Locations.locationIds.STATUE}.`
             );
             return composite(
-                makeAddOxygenTransform(oxygenToAdd / 1000),
+                makeAddOxygenTransform(oxygenToAdd / 500),
                 updateStreamCooldownTransform
             )({
                 ...state,

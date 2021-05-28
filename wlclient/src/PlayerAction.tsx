@@ -855,7 +855,7 @@ export const allPlayerActions = {
         */
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
-            'The Statue of Triton has a publicly-accessible storage of Oxygen, which slowly builds up 1 minute of Oxygen every minute. You can get all the Oxygen inside this store. Note that this storage is shared between everyone.',
+            "The Oxygen in the Statue of Triton is shared and accessible to every team. You can get 2 minutes of Oxygen for every minute that has passed since the last team used this Oxygen Stream. E.g. if the last team used this Oxygen Stream 30 minutes ago, then you can get 1 hour of Oxygen here.",
             'Conduct a Water Parade to receive all Oxygen stored at the statue.',
             '826px',
             '238px',
