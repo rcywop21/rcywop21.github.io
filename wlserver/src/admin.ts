@@ -1,4 +1,4 @@
-import { itemDetails, ItemId, Locations, QuestId, TeamId } from 'wlcommon';
+import { itemDetails, ItemId, itemsById, Locations, QuestId, TeamId } from 'wlcommon';
 import applyAction from './actions';
 import { getCredentials, notifyPlayerState } from './connections';
 import { makeAddItemTransform, makeRemoveItemTransform } from './inventory';
@@ -226,7 +226,7 @@ const commands = {
     give: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
         const itemId = payload.shift() as ItemId;
-        if (!itemDetails[itemId]) throw `Unknown item with id ${itemId}`;
+        if (!itemsById[itemId]) throw `Unknown item with id ${itemId}`;
         const qty = parseInt(payload.shift() ?? '1');
         if (Number.isNaN(qty)) throw `Illegal quantity ${qty}.`;
         applyTransform(makeAddItemTransform(itemId, qty), playerId);
@@ -235,7 +235,7 @@ const commands = {
     take: (payload: string[], reply: Reply) => {
         const playerId = getPlayerId(payload);
         const itemId = payload.shift() as ItemId;
-        if (!itemDetails[itemId]) throw `Unknown item with id ${itemId}`;
+        if (!itemsById[itemId]) throw `Unknown item with id ${itemId}`;
         const presentQty = gameState.players[playerId]?.inventory[itemId]?.qty;
         if (!presentQty) throw `Player does not have item ${itemId}`;
         const rawQty = payload.shift();
@@ -246,7 +246,7 @@ const commands = {
         if (Number.isNaN(qty) || qty > presentQty)
             throw `Illegal quantity ${qty}`;
         applyTransform(makeRemoveItemTransform(itemId, qty), playerId);
-        reply('cmdok', 'Item awarded.');
+        reply('cmdok', 'Item taken.');
     },
 };
 
