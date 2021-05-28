@@ -1,4 +1,4 @@
-import { itemDetails, ItemId, itemsById, Locations, QuestId, TeamId } from 'wlcommon';
+import { ItemId, itemsById, Locations, QuestId, TeamId } from 'wlcommon';
 import applyAction from './actions';
 import { getCredentials, notifyPlayerState } from './connections';
 import { makeAddItemTransform, makeRemoveItemTransform } from './inventory';

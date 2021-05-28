@@ -73,7 +73,15 @@ const applyLocationActions: Record<
             if (doChallengeMode) {
                 result = makePlayerStatTransform(
                     'oxygenUntil',
-                    new Date(now + INCREMENT * Math.max(0.15, 0.125 + 0.025 * state.globalState.artefactsFound)),
+                    new Date(
+                        now +
+                            INCREMENT *
+                                Math.max(
+                                    0.15,
+                                    0.125 +
+                                        0.025 * state.globalState.artefactsFound
+                                )
+                    )
                 )(result);
                 result = makePlayerStatTransform(
                     'challengeMode',
@@ -86,7 +94,7 @@ const applyLocationActions: Record<
                 result = makePlayerStatTransform(
                     'oxygenUntil',
                     new Date(now + INCREMENT)
-                )(result)
+                )(result);
             }
             return result;
         },
@@ -120,7 +128,9 @@ const applyLocationActions: Record<
     },
     [Locations.locationIds.STORE]: {
         [Actions.specificActions.STORE.BUY_MAP]: composite(
-            makeAddMessageTransform('With the map, you can now access more locations in the Undersea! Remember that if you want to return to the Sleepy Shores, you have to use Resurface.'),
+            makeAddMessageTransform(
+                'With the map, you can now access more locations in the Undersea! Remember that if you want to return to the Sleepy Shores, you have to use Resurface.'
+            ),
             makeAdvanceQuestTransform(questIds.CHAPTER_1, 2),
             makePlayerStatTransform('hasMap', true),
             makeAddItemTransform(itemDetails.MAP.id, 1),
