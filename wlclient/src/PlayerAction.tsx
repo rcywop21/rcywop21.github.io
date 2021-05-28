@@ -308,7 +308,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -351,7 +353,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -449,7 +453,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -518,7 +524,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -568,7 +576,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -650,7 +660,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -758,7 +770,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -873,7 +887,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen
+                        ? new Date(Date.now() + playerState.pausedOxygen)
+                        : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -892,7 +908,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+                        ? new Date(Date.now() + playerState.pausedOxygen)
+                        : new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -913,7 +931,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             600000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -931,7 +951,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             1200000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -949,7 +971,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             1800000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -969,7 +993,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             1800000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -987,7 +1013,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             2400000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);
@@ -1032,7 +1060,9 @@ export const allPlayerActions = {
             (playerState) =>
                 playerState.oxygenUntil
                     ? new Date(playerState.oxygenUntil)
-                    : new Date(0),
+                    : playerState.pausedOxygen 
+						? new Date(Date.now() + playerState.pausedOxygen)
+						: new Date(0),
             300000,
             (setIsVisible, setIsEnabled): void => {
                 setIsEnabled(false);

@@ -8,6 +8,7 @@ import TritonOxygenInfo from './TritonOxygenInfo';
 export interface OxygenProps {
     playerState: PlayerState;
     globalState: GlobalState;
+    isMentor?: boolean;
 }
 
 const getChallengeModeParameter = (
@@ -20,7 +21,7 @@ const getChallengeModeParameter = (
 };
 
 const Oxygen = (props: OxygenProps): React.ReactElement => {
-    const { playerState, globalState } = props;
+    const { playerState, globalState, isMentor } = props;
 
     const challengeModeParameter = getChallengeModeParameter(
         playerState,
@@ -34,6 +35,11 @@ const Oxygen = (props: OxygenProps): React.ReactElement => {
                 Here&apos;s information regarding the oxygen streams. Note that
                 after using an Oxygen Stream, you must wait 10 minutes before
                 you can use the <b>same</b> Oxygen Stream again.
+                {isMentor && !playerState.knowsOxygen &&
+                    <span className="mentorHax"><br />
+                        {` Your cadets have not unlocked this yet. This page is unlocked by  purchasing a \
+                        "Guide to Oxygen Streams" from the General Store. `}
+                    </span>}
             </p>
             <OxygenEntry
                 locationId={Locations.locationIds.CORALS}

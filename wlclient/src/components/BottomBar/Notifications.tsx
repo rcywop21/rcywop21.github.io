@@ -16,6 +16,15 @@ export function notifToDisplayString(message: Message): string {
 const Notifications = (props: NotificationsProps): React.ReactElement => {
     const { notifications } = props;
     notifications.sort((n1, n2) => (n1.time < n2.time ? 1 : -1));
+    
+    const notifPing = new Audio("/assets/notif-sound/new-notif.ogg");
+    
+    React.useEffect(() => { 
+            console.log("ping!!!"); 
+            const p = notifPing.play(); 
+            p.then(_ => {console.log("yay");})
+                .catch(error => {console.log("boo", error.toString());});
+        }, [notifications.length]);
 
     return (
         <div className="notifications">
