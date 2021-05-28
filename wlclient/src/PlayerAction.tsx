@@ -243,7 +243,7 @@ const commonUnderseaActions = {
     [Actions.ALL_UNDERWATER.STORE_OXYGEN]: new PlayerAction(
         'Store Oxygen',
         'Store all your Oxygen (except 1.5 mins, enough for you to resurface) into your Oxygen Pump.',
-        'No task required.',
+        'Each person in your team is to name a new value. (You should keep a list of all the values that have been named so far.)',
         '870px',
         '488px',
         (playerState) => {
@@ -259,7 +259,7 @@ const commonUnderseaActions = {
     [Actions.ALL_UNDERWATER.WITHDRAW_OXYGEN]: new PlayerAction(
         'Withdraw Oxygen',
         'Withdraw all Oxygen from your Oxygen Pump.',
-        'No task required.',
+        'Each person is to say the value(s) which they previously named in ‘Stored Oxygen’. You may then reset the list.',
         '870px',
         '543px',
         (playerState) => {
@@ -493,7 +493,7 @@ export const allPlayerActions = {
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
             'There is a small oxygen stream at the Memorial Corals. By Undersea law, after topping up Oxygen, you must wait 10 minutes before you can top up Oxygen at the same Oxygen Stream.',
-            'Each person has to present a fully filled water bottle to the mentors to receive 20 minutes of Oxygen.',
+            'Together as a team, complete a 4x4 memory card game (standard speed): https://www.memozor.com/memory-games/for-adults/black-and-white-2',
             '108px',
             '438px',
             (playerState) =>
@@ -856,7 +856,7 @@ export const allPlayerActions = {
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
             "The Oxygen in the Statue of Triton is shared and accessible to every team. You can get 2 minutes of Oxygen for every minute that has passed since the last team used this Oxygen Stream. E.g. if the last team used this Oxygen Stream 30 minutes ago, then you can get 1 hour of Oxygen here.",
-            'Conduct a Water Parade to receive all Oxygen stored at the statue.',
+            'As a group, sing a new nursery rhyme/ children’s song together. Person A will sing the first word, person B will sing the second, and so on (loop back to person A when everyone has sang a word). Repeat until the song is finished.',
             '826px',
             '238px',
             (playerState) =>
