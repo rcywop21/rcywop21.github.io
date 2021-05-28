@@ -987,7 +987,7 @@ export const allPlayerActions = {
         [Actions.specificActions.STORE.BUY_BLACK_ROCK]: new DynamicPlayerAction(
             'Buy Rock',
             "It's a strange looking black rock. There are odd markings on it. Nobody knows what its uses, or properties are...",
-            'Pay 30 minutes of Oxygen to receive 1 x Mysterious Black Rock.',
+            'Follow the instructions at tinyurl.com/mysteriousblackrock, then pay 30 minutes of Oxygen to receive 1 x Mysterious Black Rock.',
             '252px',
             '495px',
             (playerState) =>
@@ -1002,7 +1002,8 @@ export const allPlayerActions = {
             },
             (): void => {
                 return;
-            }
+            },
+            () => <p className="warning">Note the special task needed to buy this item!</p>
         ),
         [Actions.specificActions.STORE.BUY_BUBBLE_PASS]: new DynamicPlayerAction(
             'Buy Bubble Pass',
@@ -1080,7 +1081,7 @@ export const allPlayerActions = {
         [Actions.specificActions.UMBRAL.GIVE_PAN]: new PlayerAction(
             'Show Pyrite Pan',
             'Show Alyusi the Pyrite Pan.',
-            'Draw a pan using the Zoom whiteboard. It should look similar to the pan on the top of the screen.',
+            'Draw a pan using the Zoom whiteboard. It should look similar to the pan in your inventory (panel at the top of the screen).',
             '579px',
             '197px',
             (playerState) => {
@@ -1111,7 +1112,7 @@ export const allPlayerActions = {
     [Locations.locationIds.WOODS]: {
         [Actions.specificActions.WOODS.GET_HAIR]: new PlayerAction(
             'Get Hair',
-            'It is said that a herd of unicorns live in the Whispering Woods, and they only appear to the pure of heart. Fortunately, we only need to find the hair that they shed.',
+            'It is said that a herd of unicorns live in the Whispering Woods, and they only appear to the pure of heart. Normally, it would be really troublesome to find one. Fortunately, we only need to find the hair that they shed.',
             "Share a point in time when you received help and support from others to receive 1 x Unicorn's Hair.",
             '703px',
             '382px',
