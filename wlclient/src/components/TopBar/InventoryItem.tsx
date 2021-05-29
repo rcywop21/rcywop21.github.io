@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLongPress, LongPressDetectEvents } from 'use-long-press';
+import { useLongPress } from 'use-long-press';
 import { isMobileDevice } from '../../util';
 import { tooltipTypes, TooltipType, TooltipData } from '../Popups/Tooltip';
 import { ItemId, itemDetails, itemsById } from 'wlcommon';
@@ -39,10 +39,6 @@ function getImg(item: ItemId): string {
     const imgFileDirectory = '/assets/inventory/';
 
     return imgFileDirectory + imgFileName;
-}
-
-function doNothing() {
-    return ;
 }
 
 const InventoryItem = (props: InventoryItemProps): React.ReactElement => {
