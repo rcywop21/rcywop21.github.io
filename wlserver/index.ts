@@ -12,6 +12,7 @@ import logger from './src/logger';
 import setupGameState from './src/startup';
 import onTick from './src/tick';
 import onBackup from './src/backup';
+import { BACKUP_INTERVAL, TICK_INTERVAL } from './src/config';
 
 setupGameState();
 
@@ -44,7 +45,7 @@ io.on('connection', (socket) => {
     );
 });
 
-setInterval(onTick, 500);
-setInterval(onBackup, 30000);
+setInterval(onTick, TICK_INTERVAL);
+setInterval(onBackup, BACKUP_INTERVAL);
 
 listen();

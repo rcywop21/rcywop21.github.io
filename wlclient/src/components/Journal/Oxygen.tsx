@@ -17,7 +17,7 @@ const getChallengeModeParameter = (
 ): ChallengeModeParameter => {
     if (!playerState.challengeMode) return null;
     if (!playerState.knowsCrimson) return 'vague';
-    return Math.max(0.15, 0.125 + 0.025 * globalState.artefactsFound);
+    return Math.max(0.3, 0.275 + 0.025 * globalState.artefactsFound);
 };
 
 const Oxygen = (props: OxygenProps): React.ReactElement => {

@@ -21,9 +21,9 @@ const TritonOxygenInfo = (props: TritonOxygenInfoProps): React.ReactElement => {
     React.useEffect(() => {
         const interval = setInterval(() => {
             setAvailableOxygen(
-                Date.now() - new Date(tritonOxygen.lastExtract).valueOf()
+                (Date.now() - new Date(tritonOxygen.lastExtract).valueOf()) * 3
             );
-        }, 25);
+        }, 33);
         return () => clearInterval(interval);
     }, [tritonOxygen]);
 
@@ -37,7 +37,7 @@ const TritonOxygenInfo = (props: TritonOxygenInfoProps): React.ReactElement => {
                     last extracted by {lastTeam}.
                 </div>
             }
-            oxygenInSeconds={availableOxygen / 10000}
+            oxygenInSeconds={availableOxygen / 1000}
             {...other}
         />
     );

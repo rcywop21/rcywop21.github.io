@@ -45,7 +45,7 @@ const questList: Quest[] = [
         description:
             'The Queen has fallen deathly ill with a rarely-known disease. The King has therefore tasked several adventuring groups with retrieving two lost healing artefacts from the Undersea. As a newcomer to the Undersea, you will need to learn how to dive, survive in the Undersea and find your way around.',
         unlocks: 20,
-        reward: ['10 minutes of Oxygen'],
+        reward: ['20 minutes of Oxygen'],
         stages: [
             "Perform the 'Dive' action at Sleepy Shores to enter the Shallows.",
             "Perform the 'Get Oxygen' action at the Memorial Corals.",
@@ -100,7 +100,7 @@ const questList: Quest[] = [
             'Get the Library Pass from the Chief Librarian',
             "Perform the 'Study Challenge Mode' action at the Marine Library",
         ],
-        reward: ['Knowledge on Challenge Mode.'],
+        reward: ['Knowledge on Challenge Mode', '10 minutes of Oxygen'],
         stageOrder: 'inOrder',
     },
     {
@@ -112,7 +112,7 @@ const questList: Quest[] = [
         stages: [
             "Perform the 'Inspire Chief Librarian' action at Anchovy Avenue.",
         ],
-        reward: ['Library Pass'],
+        reward: ['Library Pass', '5 minutes of Oxygen'],
         stageOrder: 'anyOrder',
     },
     {
@@ -161,7 +161,7 @@ const questList: Quest[] = [
         description:
             'You notice two children chasing each other with a long and pointy staff. How dangerous!',
         stages: ["Perform the 'Confront Children' action at Salmon Street."],
-        reward: ['Ancient Staff'],
+        reward: ['Ancient Staff', '5 minutes of Oxygen'],
         stageOrder: 'anyOrder',
     },
     {
@@ -236,6 +236,7 @@ const questList: Quest[] = [
             "Perform the 'Help Pyrite Lady' action at Barnacle Residences.",
         ],
         stageOrder: 'anyOrder',
+        reward: ['Pyrite Pan', '5 minutes of Oxygen']
     },
     {
         id: questIds.CLOAK_2,
@@ -268,6 +269,7 @@ const questList: Quest[] = [
             'Travel back to the Umbral Ruins.',
         ],
         stageOrder: 'inOrder',
+        reward: ['A surprise']
     },
 ];
 

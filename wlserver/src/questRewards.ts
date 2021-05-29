@@ -83,25 +83,29 @@ export const makeAdvanceQuestTransform = (
 };
 
 const transforms: Record<QuestId, Transform> = {
-    [questIds.CHAPTER_1]: makeAddOxygenTransform(10 * 60, false),
+    [questIds.CHAPTER_1]: makeAddOxygenTransform(20 * 60, false),
     [questIds.FINCHES_2]: composite(
         makeAddMessageTransform(
             'You have added information about Challenge Mode to your Journal.'
         ),
-        makePlayerStatTransform('knowsCrimson', true)
+        makePlayerStatTransform('knowsCrimson', true),
+        makeAddOxygenTransform(10 * 60, false)
     ),
     [questIds.LIBRARIAN_PASS]: composite(
         makeAdvanceQuestTransform(questIds.ARTEFACTS_1, 0),
         makeAdvanceQuestTransform(questIds.FINCHES_2, 0),
-        makeAddItemTransform(itemDetails.LIBRARY_PASS.id, 1)
+        makeAddItemTransform(itemDetails.LIBRARY_PASS.id, 1),
+        makeAddOxygenTransform(5 * 60, false)
     ),
     [questIds.ARGUMENT]: composite(
         makeAdvanceQuestTransform(questIds.ARTEFACTS_3, 1),
-        makeAddItemTransform(itemDetails.STAFF.id, 1)
+        makeAddItemTransform(itemDetails.STAFF.id, 1),
+        makeAddOxygenTransform(5 * 60, false)
     ),
     [questIds.PYRITE]: composite(
         makeAdvanceQuestTransform(questIds.CLOAK_1, 0),
-        makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1)
+        makeAddItemTransform(itemDetails.PYRITE_PAN.id, 1),
+        makeAddOxygenTransform(5 * 60, false)
     ),
     [questIds.SHRINE_2]: (state) => {
         let result = makeAddItemTransform(

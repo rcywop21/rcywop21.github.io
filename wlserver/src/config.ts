@@ -9,3 +9,5 @@ export const HOSTNAME = process.env.HNAME || '127.0.0.1';
 export const PORT = parseInt(process.env.PORT) || 8000;
 export const ALLOWED_ORIGINS =
     (process.env.ORIGINS && process.env.ORIGINS.split(',')) || '*';
+export const TICK_INTERVAL = parseInt(process.env.TICK_INTERVAL) || 1000;
+export const BACKUP_INTERVAL = parseInt(process.env.BACKUP_INTERVAL) || 60000;

@@ -15,9 +15,9 @@ import {
 
 const linkedStreamsTransform = composite(
     makeAddMessageTransform(
-        'You have received 40 minutes of Oxygen from the linked Oxygen Streams.'
+        'As another team activated the other Linked Oxygen Stream recently, you have received an extra 30 minutes of Oxygen from the linked Oxygen Streams.'
     ),
-    makeAddOxygenTransform(2400, false)
+    makeAddOxygenTransform(1800, false)
 );
 
 const linkedStreamsFailTransform = makeAddMessageTransform(

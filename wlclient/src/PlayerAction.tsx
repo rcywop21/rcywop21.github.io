@@ -228,8 +228,8 @@ const makeOxygenStreamMessage: DescriptionCreator = (
                     As you are in Challenge Mode, you will receive{' '}
                     {playerState.knowsCrimson
                         ? `only ${Math.max(
-                              15,
-                              12.5 + 2.5 * globalState.artefactsFound
+                              30,
+                              27.5 + 2.5 * globalState.artefactsFound
                           ).toFixed(1)}% of the stated Oxygen amount!`
                         : 'less Oxygen than stated!'}
                 </p>
@@ -508,7 +508,7 @@ export const allPlayerActions = {
     [Locations.locationIds.CATFISH]: {
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
-            'The Oxygen Stream at Catfish Crescent is curiously linked with the one located at Salmon Street. Both need to be activated at roughly the same time, before you can receive 40 minutes of Oxygen.',
+            'The Oxygen Stream at Catfish Crescent is curiously linked with the one located at Salmon Street. Normally, you will only receive 10 minutes of Oxygen. However, if another team activates the Oxygen Stream at Catfish Crescent soon before or after you, you will receive a BONUS 300% Oxygen!',
             'Recite Red Cross Promise.',
             '558px',
             '152px',
@@ -877,7 +877,7 @@ export const allPlayerActions = {
         ),
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
-            'The Oxygen Stream at Salmon Street is curiously linked with the one located at Catfish Crescent. Both need to be activated at roughly the same time, before you can receive 40 minutes of Oxygen.',
+            'The Oxygen Stream at Salmon Street is curiously linked with the one located at Catfish Crescent. Normally, you will only receive 10 minutes of Oxygen. However, if another team activates the Oxygen Stream at Catfish Crescent soon before or after you, you will receive a BONUS 300% Oxygen!',
             'Recite Red Cross Promise.',
             '827px',
             '127px',
@@ -1079,7 +1079,7 @@ export const allPlayerActions = {
         */
         [Actions.ALL_OXYGEN.GET_OXYGEN]: new DynamicPlayerAction(
             'Get Oxygen',
-            'The Oxygen in the Statue of Triton is shared and accessible to every team. You can get 2 minutes of Oxygen for every minute that has passed since the last team used this Oxygen Stream. E.g. if the last team used this Oxygen Stream 30 minutes ago, then you can get 1 hour of Oxygen here.',
+            'The Oxygen in the Statue of Triton is shared and accessible to every team. You can get 3 minutes of Oxygen for every minute that has passed since the last team used this Oxygen Stream. E.g. if the last team used this Oxygen Stream 20 minutes ago, then you can get 1 hour of Oxygen here.',
             'As a group, sing a new nursery rhyme/ children’s song together. Person A will sing the first word, person B will sing the second, and so on (loop back to person A when everyone has sang a word). Repeat until the song is finished.',
             '826px',
             '238px',
@@ -1125,7 +1125,7 @@ export const allPlayerActions = {
         ),
         [Actions.specificActions.STORE.BUY_GUIDE]: new DynamicPlayerAction(
             'Buy Guide',
-            "It's an introduction of all the Oxygen Streams in the Undersea.",
+            "It's an introduction of all the Oxygen Streams in the Undersea. Buying this would add more information about Oxygen Streams to your Journal.",
             'Pay 5 minutes of Oxygen to receive 1 x Guide to the Oxygen Streams of the Undersea.',
             '717px',
             '308px',

@@ -205,7 +205,7 @@ const applyLocationActions: Record<
                 `Player ${state.playerState.id} has accessed the Oxygen Stream at ${Locations.locationIds.STATUE}.`
             );
             return composite(
-                makeAddOxygenTransform(oxygenToAdd / 500),
+                makeAddOxygenTransform(Math.floor(oxygenToAdd * 3 / 1000)),
                 updateStreamCooldownTransform
             )({
                 ...state,
@@ -309,6 +309,7 @@ const applyLocationActions: Record<
                 makeAddMessageTransform(
                     'You activate the Salmon Street end of the linked Oxygen Streams, waiting for someone else to activate the other end.'
                 ),
+                makeAddOxygenTransform(600),
                 updateStreamCooldownTransform
             )({
                 ...state,
@@ -340,6 +341,7 @@ const applyLocationActions: Record<
                 makeAddMessageTransform(
                     'You activate the Catfish Crescent end of the linked Oxygen Streams, waiting for someone else to activate the other end.'
                 ),
+                makeAddOxygenTransform(600),
                 updateStreamCooldownTransform
             )({
                 ...state,

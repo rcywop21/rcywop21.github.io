@@ -60,7 +60,7 @@ const LinkedOxygenInfo = (props: LinkedOxygenInfoProps): React.ReactElement => {
             }
             cooldown={new Date(playerState.streamCooldownExpiry[locationId])}
             challengeMode={challengeMode}
-            oxygenInSeconds={2400}
+            oxygenInSeconds={600}
         />
     );
 };

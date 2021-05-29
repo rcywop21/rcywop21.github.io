@@ -33,8 +33,8 @@ const ChallengeModeInfo = (
               'Perhaps someone with more mystical knowledge can help you?';
 
     const challengeModeModifier = Math.max(
-        15,
-        12.5 + 2.5 * globalState.artefactsFound
+        30,
+        27.5 + 2.5 * globalState.artefactsFound
     ).toFixed(1);
 
     const challengeModeModifierText = (completeFinchesCode: boolean) =>
@@ -42,10 +42,10 @@ const ChallengeModeInfo = (
             <React.Fragment>
                 <p>
                     The difficulty of Challenge Mode is measured by a
-                    percentage. It starts at 15.0%. This means that when you get
-                    Oxygen, you will only get 15.0% of the normal amount of
+                    percentage. It starts at 30.0%. This means that when you get
+                    Oxygen, you will only get 30.0% of the normal amount of
                     Oxygen. For example, Diving normally gives you 20 minutes of
-                    Oxygen. With Challenge Mode (15.0%), you will only get 3
+                    Oxygen. With Challenge Mode (30.0%), you will only get 6
                     minutes of Oxygen from Diving.
                 </p>
                 <p>
@@ -62,28 +62,28 @@ const ChallengeModeInfo = (
                     <div className="header">4</div>
                     <div className="header">5</div>
                     <div className="hstart">You will receive...</div>
-                    <div>15.0% of the normal amount of Oxygen</div>
-                    <div>17.5% of the normal amount of Oxygen</div>
-                    <div>20.0% of the normal amount of Oxygen</div>
-                    <div>22.5% of the normal amount of Oxygen</div>
-                    <div>25.0% of the normal amount of Oxygen</div>
-                    <div className="header">Artefacts Found</div>
+                    <div>30.0% of the normal amount of Oxygen</div>
+                    <div>32.5% of the normal amount of Oxygen</div>
+                    <div>35.0% of the normal amount of Oxygen</div>
+                    <div>37.5% of the normal amount of Oxygen</div>
+                    <div>40.0% of the normal amount of Oxygen</div>
+                    <div className="header">Artefacts found</div>
                     <div className="header">6</div>
                     <div className="header">7</div>
                     <div className="header">8</div>
                     <div className="header">9</div>
                     <div className="header">10</div>
                     <div className="hstart">You will receive...</div>
-                    <div>27.5% of the normal amount of Oxygen</div>
-                    <div>30.0% of the normal amount of Oxygen</div>
-                    <div>32.5% of the normal amount of Oxygen</div>
-                    <div>35.0% of the normal amount of Oxygen</div>
+                    <div>42.5% of the normal amount of Oxygen</div>
+                    <div>45.0% of the normal amount of Oxygen</div>
+                    <div>47.5% of the normal amount of Oxygen</div>
+                    <div>50.0% of the normal amount of Oxygen</div>
                     <div>Game is complete!</div>
                 </div>
                 <p>
                     For example, if 5 artefacts have been found between all the
-                    groups, Challenge Mode will be at 25.0%. Then, in that
-                    situation, you will get 5 minutes of Oxygen from Diving.
+                    groups, Challenge Mode will be at 40.0%. Then, in that
+                    situation, you will get 8 minutes of Oxygen from Diving.
                 </p>
                 <p>
                     Currently, {globalState.artefactsFound} artefacts have been

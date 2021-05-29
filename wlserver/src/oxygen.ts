@@ -12,8 +12,8 @@ export const makeAddOxygenTransform = (
 ): Transform => (state) => {
     const { oxygenUntil, challengeMode, pausedOxygen } = state.playerState;
     const challengeMultiplier = Math.max(
-        150,
-        125 + state.globalState.artefactsFound * 25
+        300,
+        275 + state.globalState.artefactsFound * 25
     );
     if (pausedOxygen !== null || pausedOxygen === -1)
         throw 'You cannot perform this action while paused.';
