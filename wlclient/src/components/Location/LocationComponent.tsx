@@ -1,4 +1,6 @@
 import React from 'react';
+import { useLongPress } from 'use-long-press';
+import { isMobileDevice } from '../../util';
 import { Action, ActionProps } from './Action';
 import TravelPopup from './TravelPopup';
 import { TooltipData, TooltipType, tooltipTypes } from '../Popups/Tooltip';
@@ -238,15 +240,25 @@ const LocationComponent = (props: LocationProps): React.ReactElement => {
             '',
         ],
     };
+    
+    const handleLongPress = useLongPress(triggerTooltip(tooltipTypes.LOCATION, [
+                    playerState.locationId,
+                ]))
+                
+    const locationTitleTooltipHandlers = isMobileDevice()
+        ? {...handleLongPress}
+        : {
+            onMouseEnter: triggerTooltip(tooltipTypes.LOCATION, [
+                    playerState.locationId,
+                ]),
+            onMouseLeave: triggerTooltip()
+        };
 
     return (
         <div className="location">
             <div
                 className="currLocationTitle"
-                onMouseEnter={triggerTooltip(tooltipTypes.LOCATION, [
-                    playerState.locationId,
-                ])}
-                onMouseLeave={triggerTooltip()}
+                {...locationTitleTooltipHandlers}
             >
                 <span> {location.name} </span>
             </div>

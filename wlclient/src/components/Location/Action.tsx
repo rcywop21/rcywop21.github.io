@@ -32,17 +32,21 @@ export const Action = (props: ActionProps): React.ReactElement => {
         tooltipInfo,
     } = props;
     
-    const handleLongPress = useLongPress(() => {
-        alert("Long Pressed!");
-    });
+    const isTooltipRightSide = x.length < 5 || x < '512px';
+    
+    const handleLongPress = useLongPress(
+        triggerTooltip(
+                tooltipTypes.ACTION,
+                tooltipInfo ? tooltipInfo : ['derp', '', ''],
+                isTooltipRightSide
+            )
+    );
 
     const position = {
         top: y,
         left: x,
         display: isVisible ? '' : 'none',
     };
-
-    const isTooltipRightSide = x.length < 5 || x < '512px';
     
     const tooltipHandlers = isMobileDevice()
         ? {...handleLongPress}

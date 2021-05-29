@@ -1,4 +1,6 @@
 import React from 'react';
+import { useLongPress, LongPressDetectEvents } from 'use-long-press';
+import { isMobileDevice } from '../../util';
 import { tooltipTypes, TooltipType, TooltipData } from '../Popups/Tooltip';
 import { ItemId, itemDetails, itemsById } from 'wlcommon';
 import './InventoryItem.css';
@@ -39,18 +41,28 @@ function getImg(item: ItemId): string {
     return imgFileDirectory + imgFileName;
 }
 
+function doNothing() {
+    return ;
+}
+
 const InventoryItem = (props: InventoryItemProps): React.ReactElement => {
     const { name, triggerTooltip } = props;
 
-    const triggerTooltipWithData = triggerTooltip(tooltipTypes.INVENTORY, [
-        name,
-    ]);
+    const triggerTooltipWithData = triggerTooltip(tooltipTypes.INVENTORY, [name]);
+    
+    const handleLongPress = useLongPress(triggerTooltipWithData);
+    
+    const tooltipHandlers = isMobileDevice()
+        ? {...handleLongPress}
+        : {
+            onMouseEnter: triggerTooltipWithData,
+            onMouseLeave: triggerTooltip()
+        };
 
     return (
         <div
             className="inventoryItem"
-            onMouseEnter={triggerTooltipWithData}
-            onMouseLeave={triggerTooltip()}
+            {...tooltipHandlers}
         >
             <img src={getImg(name)} />
             <br />

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useLongPress } from 'use-long-press';
+import { isMobileDevice } from '../../util';
 import { TooltipData, TooltipType, tooltipTypes } from '../Popups/Tooltip';
 import { Locations, PlayerState } from 'wlcommon';
 import './TravelPopup.css';
@@ -67,6 +69,8 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
 
         return hiddenRequirement && regionRequirement;
     }
+    
+    
 
     return (
         <div style={{ display: visibility }}>
@@ -90,8 +94,20 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
                             const display = {
                                 display: travellable ? '' : 'none',
                             };
+                            
+                            
+                                
                             return (
-                                <button
+                                <TravelPopupButton
+                                    style={display}
+                                    location={location}
+                                    key={locationId}
+                                    handleTravelClosePopup={handleTravelClosePopup}
+                                    triggerTooltip={triggerTooltip}
+                                />
+                            );
+                                    
+                                {/*<button
                                     className="travelButton"
                                     style={display}
                                     key={locationId}
@@ -105,8 +121,7 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
                                     onMouseLeave={triggerTooltip()}
                                 >
                                     {location.name}
-                                </button>
-                            );
+                                </button>*/}
                         }
                     )}
                 </div>
@@ -114,5 +129,43 @@ const TravelPopup = (props: TravelPopupProps): React.ReactElement => {
         </div>
     );
 };
+
+interface TravelPopupButtonProps {
+    location: Locations.Location;
+    handleTravelClosePopup: (id: Locations.LocationId) => () => void;
+    triggerTooltip: (
+        t?: TooltipType,
+        d?: TooltipData,
+        b?: boolean
+    ) => () => void;
+    style: {display: string};
+}
+
+const TravelPopupButton = (props: TravelPopupButtonProps): React.ReactElement => {
+    const { location, handleTravelClosePopup, triggerTooltip, style } = props;
+    
+    const handleLongPress = useLongPress(triggerTooltip(
+            tooltipTypes.LOCATION,
+            [location.id]
+        ));
+            
+    const tooltipHandlers = isMobileDevice()
+        ? {...handleLongPress}
+        : {
+            onMouseEnter: triggerTooltip(tooltipTypes.LOCATION, [location.id]),
+            onMouseLeave: triggerTooltip()
+        };
+    
+    return (
+        <button
+            className="travelButton"
+            style={style}
+            onClick={handleTravelClosePopup(location.id)}
+            {...tooltipHandlers}
+        >
+            {location.name}
+        </button>
+    );
+}
 
 export default TravelPopup;

@@ -86,9 +86,11 @@ const Game = (props: GameProps): React.ReactElement => {
     ) {
         return () => {
             setIsTooltipVisible(type ? true : false);
+            
             if (type) {
-                setTooltipType(type);
+                setTooltipType(type);                
                 setTooltipData(data);
+
                 setIsTooltipRightSide(isRightSide);
             }
         };
@@ -109,6 +111,15 @@ const Game = (props: GameProps): React.ReactElement => {
         onActionPopupProps.mentorProps =
             gameMentorProps.onActionPopupMentorProps;
     }
+    
+    //dev
+    const tprops = {
+        isVisible: isTooltipVisible,
+        tooltipType: tooltipType,
+        data: tooltipData.toString(),
+        isRightSide: isTooltipRightSide
+    };
+    console.log(tprops);
 
     return (
         <div className={`game ${isMentor ? 'smallTopGap' : 'bigTopGap'}`}>
@@ -138,6 +149,7 @@ const Game = (props: GameProps): React.ReactElement => {
                 tooltipType={tooltipType}
                 data={tooltipData}
                 isRightSide={isTooltipRightSide}
+                setVisible={setIsTooltipVisible}
             />
             <BottomBar
                 key={playerNotifs.length}

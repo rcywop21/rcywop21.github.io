@@ -9,6 +9,7 @@ export interface TooltipProps {
     tooltipType: TooltipType;
     data: TooltipData;
     isRightSide: boolean;
+    setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const tooltipTypes = {
@@ -21,7 +22,7 @@ export const tooltipTypes = {
 export type TooltipType = typeof tooltipTypes[keyof typeof tooltipTypes];
 
 const Tooltip = (props: TooltipProps): React.ReactElement => {
-    const { isVisible, tooltipType, data, isRightSide } = props;
+    const { isVisible, tooltipType, data, isRightSide, setVisible } = props;
 
     let title = '';
     let details = <React.Fragment></React.Fragment>;
@@ -32,11 +33,13 @@ const Tooltip = (props: TooltipProps): React.ReactElement => {
 
     if (tooltipType === tooltipTypes.INVENTORY) {
         const itemData = itemsById[data[0]];
-        title = itemData.name;
-        details = <p>{itemData.description}</p>;
+        if (itemData) {
+            title = itemData.name;
+            details = <p>{itemData.description}</p>;
+        }
     }
 
-    if (tooltipType === tooltipTypes.ACTION) {
+    if (tooltipType === tooltipTypes.ACTION && data.length === 3) {
         title = data[0];
         const reqLine = data[2] ? (
             <p>
@@ -53,8 +56,10 @@ const Tooltip = (props: TooltipProps): React.ReactElement => {
 
     if (tooltipType === tooltipTypes.LOCATION) {
         const locationData = Locations.locationsMapping[data[0]];
-        title = locationData.name;
-        details = <p>{locationData.description}</p>;
+        if (locationData) {
+            title = locationData.name;
+            details = <p>{locationData.description}</p>;
+        }
     }
 
     const style = {
@@ -64,7 +69,7 @@ const Tooltip = (props: TooltipProps): React.ReactElement => {
     const side = isRightSide ? 'rightTooltip' : 'leftTooltip';
 
     return (
-        <div className={`tooltip ${side}`} style={style}>
+        <div className={`tooltip ${side}`} onClick={() => { setVisible(false); }}style={style}>
             <h2 className="tooltipTitle">{title}</h2>
             <div className="tooltipText">{details}</div>
         </div>
