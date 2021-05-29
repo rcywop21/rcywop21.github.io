@@ -1,4 +1,6 @@
 import React from 'react';
+import { useLongPress } from 'use-long-press';
+import { isMobileDevice } from '../../util';
 import { tooltipTypes, TooltipType, TooltipData } from '../Popups/Tooltip';
 import './Action.css';
 
@@ -29,6 +31,10 @@ export const Action = (props: ActionProps): React.ReactElement => {
         triggerTooltip,
         tooltipInfo,
     } = props;
+    
+    const handleLongPress = useLongPress(() => {
+        alert("Long Pressed!");
+    });
 
     const position = {
         top: y,
@@ -37,18 +43,24 @@ export const Action = (props: ActionProps): React.ReactElement => {
     };
 
     const isTooltipRightSide = x.length < 5 || x < '512px';
+    
+    const tooltipHandlers = isMobileDevice()
+        ? {...handleLongPress}
+        : {
+            onMouseEnter: triggerTooltip(
+                tooltipTypes.ACTION,
+                tooltipInfo ? tooltipInfo : ['derp', '', ''],
+                isTooltipRightSide
+            ),
+            onMouseLeave: triggerTooltip()
+        };
 
     return (
         <div
             className={`action ${isEnabled ? 'enabled' : 'disabled'}`}
             style={position}
             onClick={isEnabled ? handleAction : undefined}
-            onMouseEnter={triggerTooltip(
-                tooltipTypes.ACTION,
-                tooltipInfo ? tooltipInfo : ['derp', '', ''],
-                isTooltipRightSide
-            )}
-            onMouseLeave={triggerTooltip()}
+            {...tooltipHandlers}
         >
             <p>{display}</p>
         </div>
