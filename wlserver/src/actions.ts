@@ -116,7 +116,8 @@ const applyLocationActions: Record<
                 makeAdvanceQuestTransform(questIds.FINCHES, 0),
                 makePlayerStatTransform('knowsLanguage', true),
                 makeAddMessageTransform(
-                    'After some hard work and effort, you are now able to understand the ancient language.'
+                    'After some hard work and effort, you are now able to understand the ancient language.',
+                    'To decode anything written in the ancient language, you will have to use a Caesar cipher. Feel free to Google for a Caesar cipher decoder to use for the rest of this exercise.'
                 )
             )(state);
         },
