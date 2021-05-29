@@ -138,6 +138,10 @@ export const killTransform: Transform = (state) => {
         }
     );
 
+    if (state.playerState.quests[questIds.SHRINE_2]?.stages[0]) {
+        playerQuests[questIds.SHRINE_2].stages[0] = true;
+    }
+
     return composite(
         makeAddMessageTransform(
             'You ran out of Oxygen and blacked out. You wake up, washed out on Sleepy Shores. You may have lost progress on parts of your adventure...'
