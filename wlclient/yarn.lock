@@ -11284,6 +11284,11 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
+use-long-press@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/use-long-press/-/use-long-press-1.0.5.tgz#b5e3ac557342421ff60313d41b0c3c1c2ae55ca0"
+  integrity sha512-8KxGqU0m0BeTbmk3LLNUUA3okO0v59D6mwAlxByViT94vIvW3/CASOM8ZFQLfHvizF2Zr94LEg7kzo8Coi6Qjw==
+
 use@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
@@ -11635,7 +11640,9 @@ which@^2.0.1, which@^2.0.2:
     isexe "^2.0.0"
 
 "wlcommon@file:../wlcommon":
-  version "0.1.0"
+  version "1.2.0"
+  dependencies:
+    wlcommon "file:../../../.cache/yarn/v6/npm-wlcommon-1.2.0-d0166aac-f447-4574-8f52-d6366bda141a-1622301481095/node_modules/wlcommon"
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
